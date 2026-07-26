@@ -33,3 +33,11 @@ classifiers = [
   "Operating System :: OS Independent",
   "Typing :: Typed"
 ]
+
+[project.urls]
+Homepage = "https://rtbnext.de"
+Documentation = "https://sdk.rtbnext.de"
+Repository = "https://github.com/rtbnext/sdk-python"
+
+[tool.hatch.build.targets.wheel]
+packages = [ "src/rtbnext" ]
