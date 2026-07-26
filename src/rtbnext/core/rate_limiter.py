@@ -24,7 +24,6 @@ class RateLimiter:
 
   def __init__ ( self, options: RateLimiterOptions ) -> None:
     self._options = options
-
     self._tokens = options.max_requests
     self._refill_interval = options.per_ms / options.max_requests / 1000
 
@@ -41,3 +40,12 @@ class RateLimiter:
 
       if not future.done():
         future.set_result( None )
+
+  async def _burst_refill ( self ) -> None:
+    """Refill all tokens after the configured interval."""
+
+    await asyncio.sleep( self._options.per_ms / 1000 )
+
+    self._tokens = self._options.max_requests
+    self._task = None
+    self._process_queue()
