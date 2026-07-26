@@ -1,9 +1,14 @@
+from __future__ import annotations
+
+import asyncio
+from collections import deque
 from dataclasses import dataclass
 
 
 @dataclass( slots= True, frozen= True )
 class RateLimiterOptions:
-  """Options for the rate limiter."""
+  """Configuration options for the rate limiter."""
+
   max_requests: int
   per_ms: int
 
