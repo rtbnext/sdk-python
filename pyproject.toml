@@ -1,0 +1,7 @@
+[project]
+name = "rtbnext"
+version = "1.0.0"
+description = "Official Python SDK for the RTBNext API."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
