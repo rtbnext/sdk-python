@@ -15,9 +15,18 @@ class RateLimiterOptions:
 
 class RateLimiter:
   """
-  Token-based rate limiter for controlling request throughput.
+  Token-based rate limiter.
 
-  Supports two limiting strategies:
-  - burst: allows short request bursts up to the configured limit
-  - spread: distributes requests evenly over the configured interval
+  Supports two strategies:
+  - burst: allows short bursts of requests
+  - spread: distributes requests evenly over time
   """
+
+  def __init__ ( self, options: RateLimiterOptions ) -> None:
+    self._options = options
+
+    self._tokens = options.max_requests
+    self._refill_interval = options.per_ms / options.max_requests / 1000
+
+    self._queue: deque[ asyncio.Future[ None ] ] = deque()
+    self._task: asyncio.Task[ None ] | None = None
