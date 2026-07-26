@@ -85,3 +85,26 @@ class RateLimiter:
       self._task = asyncio.create_task( self._burst_refill() )
 
     await future
+
+  async def spread ( self ) -> None:
+    """
+    Acquire a token using spread mode.
+
+    Tokens are replenished continuously, distributing requests evenly
+    across the configured time window.
+    """
+
+    if self._tokens > 0:
+      self._tokens -= 1
+
+      if self._task is None:
+        self._task = asyncio.create_task( self._spread_refill() )
+
+      return
+
+    loop = asyncio.get_running_loop()
+    future = loop.create_future()
+
+    self._queue.append( future )
+
+    await future
