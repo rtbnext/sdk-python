@@ -49,3 +49,17 @@ class RateLimiter:
     self._tokens = self._options.max_requests
     self._task = None
     self._process_queue()
+
+  async def _spread_refill ( self ) -> None:
+    """Continuously refill tokens one by one."""
+
+    while True:
+      await asyncio.sleep( self._refill_interval )
+
+      if self._tokens < self._options.max_requests:
+        self._tokens += 1
+        self._process_queue()
+
+      if self._tokens == self._options.max_requests and not self._queue:
+        self._task = None
+        return
