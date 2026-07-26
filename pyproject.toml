@@ -10,9 +10,10 @@ readme = "README.md"
 license = "MIT"
 requires-python = ">=3.10"
 
-authors = [
-  { name = "Paul Köhler (komed3)", email = "webmaster@komed3.de" }
-]
+authors = [ {
+  name = "Paul Köhler (komed3)",
+  email = "webmaster@komed3.de"
+} ]
 
 keywords = [
   "rtbnext",
@@ -34,10 +35,13 @@ classifiers = [
   "Typing :: Typed"
 ]
 
+dependencies = []
+
 [project.urls]
 Homepage = "https://rtbnext.de"
 Documentation = "https://sdk.rtbnext.de"
 Repository = "https://github.com/rtbnext/sdk-python"
+"Bug Tracker" = "https://github.com/rtbnext/sdk-python/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = [ "src/rtbnext" ]
