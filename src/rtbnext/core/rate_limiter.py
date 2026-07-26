@@ -5,7 +5,7 @@ from collections import deque
 from dataclasses import dataclass
 
 
-@dataclass( slots= True, frozen= True )
+@dataclass ( slots= True, frozen= True )
 class RateLimiterOptions:
   """Configuration options for the rate limiter."""
 
@@ -63,3 +63,25 @@ class RateLimiter:
       if self._tokens == self._options.max_requests and not self._queue:
         self._task = None
         return
+
+  async def burst ( self ) -> None:
+    """
+    Acquire a token using burst mode.
+
+    Allows immediate requests until the bucket is empty.
+    Afterwards, requests wait until the bucket is completely refilled.
+    """
+
+    if self._tokens > 0:
+      self._tokens -= 1
+      return
+
+    loop = asyncio.get_running_loop()
+    future = loop.create_future()
+
+    self._queue.append( future )
+
+    if self._task is None:
+      self._task = asyncio.create_task( self._burst_refill() )
+
+    await future
