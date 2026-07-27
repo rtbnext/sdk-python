@@ -199,3 +199,33 @@ class ResourceLoader:
         await self._cache.set( path, state )
 
         return state
+
+    def _is_expired ( self, state: ResourceState ) -> bool:
+        """
+        Determine whether a cached resource has expired.
+        """
+
+        return state.expires is not None and state.expires <= time()
+
+    def valid ( self, state: ResourceState | None ) -> bool:
+        """
+        Determine whether a cached resource is valid.
+
+        Args:
+            state:
+                Cached resource state.
+
+        Returns:
+            ``True`` if the cached resource is valid.
+        """
+
+        return (
+            state is not None
+            and (
+                self._mode == "session"
+                or (
+                    self._mode == "ttl"
+                    and not self._is_expired( state )
+                )
+            )
+        )
