@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Iterator
-from typing import Generic, TypeVar
+from typing import Generic, Self, TypeVar
 
 T = TypeVar( "T" )
 
@@ -14,6 +14,10 @@ class CollectionBase ( Generic[ T ] ):
     def __init__ ( self, items: list[ T ], total: int | None = None ) -> None:
         self._items = items
         self._total = len( items ) if total is None else total
+
+    def _clone ( self, items: list[ T ] ) -> Self:
+        """Return a new collection instance with the given items."""
+        return self.__class__ ( items, self._total )
 
     @property
     def items ( self ) -> list[ T ]:
@@ -73,3 +77,12 @@ class CollectionBase ( Generic[ T ] ):
     def __getitem__ ( self, index: int ) -> T:
         """Return an item by index."""
         return self._items[ index ]
+
+    def take ( self, count: int ) -> Self:
+        return self._clone( self._items[ : count ] )
+
+    def skip ( self, count: int ) -> Self:
+        return self._clone( self._items[ count : ] )
+
+    def slice ( self, start: int | None = None, end: int | None = None ) -> Self:
+        return self._clone( self._items[ start : end ] )
