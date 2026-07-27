@@ -33,7 +33,6 @@ class RateLimiter:
         self._options = options
         self._tokens = options.max_requests
         self._refill_interval = options.per_ms / options.max_requests / 1000
-
         self._queue: deque[ asyncio.Future[ None ] ] = deque()
         self._task: asyncio.Task[ None ] | None = None
 
@@ -44,7 +43,6 @@ class RateLimiter:
             self._tokens -= 1
 
         future = self._queue.popleft()
-
         if not future.done():
             future.set_result( None )
 
@@ -85,7 +83,6 @@ class RateLimiter:
 
         loop = asyncio.get_running_loop()
         future = loop.create_future()
-
         self._queue.append( future )
 
         if self._task is None:
@@ -111,7 +108,6 @@ class RateLimiter:
 
         loop = asyncio.get_running_loop()
         future = loop.create_future()
-
         self._queue.append( future )
 
         await future

@@ -62,7 +62,6 @@ class ResourceLoader:
         """
 
         options = options or CacheOptions()
-
         self._client = client
         self._mode = options.mode
 
@@ -73,3 +72,62 @@ class ResourceLoader:
                 self._cache = MemoryCache()
             case _:
                 self._cache = options.type
+
+    def _create_state ( self, response: HttpResponse, previous: ResourceState | None = None ) -> ResourceState:
+        """
+        Create a cached resource state from an HTTP response.
+
+        Args:
+            response:
+                HTTP response returned by the server.
+
+            previous:
+                Previous cached resource state.
+
+        Returns:
+            The updated resource state.
+        """
+
+        now = time()
+        cache_control = response.headers.get( "Cache-Control", "" )
+
+        max_age = next(
+            (
+                int( part.split( "=" )[ 1 ] )
+                for part in cache_control.split( "," )
+                if part.strip().startswith( "max-age=" )
+            ),
+            None
+        )
+
+        expires = (
+            now + max_age
+            if max_age is not None
+            else previous.expires if previous else None
+        )
+
+        etag = response.headers.get( "ETag" ) or (
+            previous.etag if previous else None
+        )
+
+        last_modified = response.headers.get( "Last-Modified" ) or (
+            previous.last_modified if previous else None
+        )
+
+        if response.status == 304 and previous:
+            response = type( response )(
+                url= response.url,
+                ok= True,
+                status= previous.response.status,
+                body= previous.response.body,
+                headers= response.headers,
+                latency= response.latency
+            )
+
+        return ResourceState(
+            response= response,
+            created= now,
+            expires= expires,
+            etag= etag,
+            last_modified= last_modified
+        )
