@@ -10,8 +10,8 @@ from __future__ import annotations
 import asyncio
 from typing import Any, Awaitable, Callable, Generic, Self, TypeVar
 
+from rtbnext.core.http_client import HttpResponse, RequestOptions
 from rtbnext.core.resource import ResourceLoader, ResourceState
-from rtbnext.core.http_client import RequestOptions, HttpResponse
 
 
 D = TypeVar( "D" )
