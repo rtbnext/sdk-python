@@ -83,7 +83,7 @@ class HttpClient:
 
     self._client = httpx.AsyncClient(
       headers= self._create_headers(),
-      follow_redirects= True,
+      follow_redirects= True
     )
 
     self._pending: dict[ str, asyncio.Task[ HttpResponse ] ] = {}
@@ -122,10 +122,59 @@ class HttpClient:
     headers: dict[ str, str ] = {
       "User-Agent": agent,
       "X-Client-Name": client.name,
-      "X-Client-Version": str( client.version ),
+      "X-Client-Version": str( client.version )
     }
 
     if client.contact:
       headers[ "X-Client-Contact" ] = client.contact
 
     return httpx.Headers( headers )
+
+  async def _execute( self, url: str, options: RequestOptions | None = None ) -> HttpResponse:
+    """
+    Execute a single HTTP request.
+
+    Args:
+      url:
+        The absolute URL to request.
+
+      options:
+        Optional request-specific configuration.
+
+    Returns:
+      The HTTP response.
+
+    Raises:
+      RuntimeError:
+        If the request could not be completed.
+    """
+
+    mode = options.mode if options else "burst"
+    await getattr( self._limiter, mode )()
+
+    try:
+      start = perf_counter()
+
+      response = await self._client.get(
+        url,
+        headers= options.headers if options else None,
+        timeout= (
+          options.timeout
+          if options and options.timeout is not None
+          else self._options.timeout
+        )
+      )
+
+      latency = round( ( perf_counter() - start ) * 1000 )
+
+      return HttpResponse(
+        url= str( response.url ),
+        ok= response.is_success,
+        status= response.status_code,
+        body= response.content,
+        headers= response.headers,
+        latency= latency
+      )
+  
+    except Exception as exc:
+      raise RuntimeError( f"Fetch failed: { exc }" ) from exc
