@@ -8,7 +8,7 @@ from typing import Generic, TypeVar
 T = TypeVar( "T" )
 
 
-class CollectionBase( Generic[ T ] ):
+class CollectionBase ( Generic[ T ] ):
     """Base class for immutable SDK collections."""
 
     def __init__ ( self, items: list[ T ], total: int | None = None ) -> None:
@@ -61,3 +61,15 @@ class CollectionBase( Generic[ T ] ):
 
         for index, item in enumerate( self._items ):
             callback( item, index )
+
+    def __iter__ ( self ) -> Iterator[ T ]:
+        """Iterate over all items."""
+        return iter( self._items )
+
+    def __len__ ( self ) -> int:
+        """Return the number of items."""
+        return len( self._items )
+
+    def __getitem__ ( self, index: int ) -> T:
+        """Return an item by index."""
+        return self._items[ index ]
