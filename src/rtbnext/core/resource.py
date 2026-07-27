@@ -18,9 +18,6 @@ from rtbnext.core.http_client import HttpClient, HttpResponse, RequestOptions
 from rtbnext.resource.resource import Resource
 
 
-CacheMode = Literal[ "ttl", "session", "revalidate" ]
-
-
 @dataclass ( slots= True )
 class CacheOptions:
     """
@@ -28,7 +25,7 @@ class CacheOptions:
     """
 
     type: Cache | Literal[ False, "memory" ] = "memory"
-    mode: CacheMode = "ttl"
+    mode: Literal[ "ttl", "session", "revalidate" ] = "ttl"
 
 
 @dataclass ( slots= True )

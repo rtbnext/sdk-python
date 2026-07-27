@@ -14,6 +14,7 @@ from typing import Literal
 from urllib.parse import urljoin
 
 import httpx
+from httpx._types import HeaderTypes
 
 from rtbnext.core.rate_limiter import RateLimiter, RateLimiterOptions
 
@@ -49,7 +50,7 @@ class RequestOptions:
     Options for an individual HTTP request.
     """
 
-    headers: dict[ str, str ] | None = None
+    headers: HeaderTypes | None = None
     mode: Literal[ "burst", "spread" ] = "burst"
     timeout: float | None = None
 
