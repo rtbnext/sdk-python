@@ -217,3 +217,13 @@ class HttpClient:
     """
 
     await self._client.aclose()
+
+  async def __aenter__ ( self ) -> HttpClient:
+    """Return the HTTP client when entering an async context."""
+
+    return self
+
+  async def __aexit__ ( self, *_ ):
+    """Close the HTTP client when leaving an async context."""
+
+    await self.aclose()
