@@ -3,13 +3,18 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Iterator
-from typing import Any, Generic, TypeVar
+from typing import Any, Generic, TypedDict, TypeVar
 
-from rtbnext.core.parser import D, ParserFn
+from rtbnext.core.parser import ParserFn
 from rtbnext.core.resource import ResourceLoader
 from rtbnext.resource.collection import CollectionBase
 from rtbnext.resource.resource import Resource
 
+
+class DateData ( TypedDict ):
+    dates: list[ str ]
+
+D = TypeVar( "D", bound= DateData )
 R = TypeVar( "R" )
 T = TypeVar( "T" )
 
@@ -139,3 +144,10 @@ class DateableResource ( Resource[ D ], Generic[ D, R ] ):
     ) -> DateCollection[ R ]:
         """Creates a date collection."""
         return DateCollection( dates, self._factory, total if total is not None else len( dates ) )
+
+    async def get ( self ) -> DateCollection[ R ]:
+        """Returns the indexed date collection."""
+
+        return await self._transform(
+            lambda data: self._collect_dates( list( reversed( data[ "dates" ] ) ) )
+        )
