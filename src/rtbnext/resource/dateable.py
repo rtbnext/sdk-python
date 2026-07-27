@@ -12,6 +12,7 @@ from rtbnext.resource.resource import Resource
 
 
 class DateData ( TypedDict ):
+    """Ensure `dates` is included in the dict."""
     dates: list[ str ]
 
 D = TypeVar( "D", bound= DateData )
