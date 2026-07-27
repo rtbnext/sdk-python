@@ -46,3 +46,34 @@ class TextParser:
             raise RuntimeError( "Response contains no data." )
 
         return response.body.decode( "utf-8" )
+
+
+class JsonParser ( TextParser ):
+    """
+    Parses HTTP response bodies as JSON.
+
+    Extends TextParser by decoding the response body and
+    converting it into Python objects.
+    """
+
+    @staticmethod
+    def parse ( response: HttpResponse ) -> Any:
+        """
+        Parse an HTTP response body as JSON.
+
+        Args:
+            response:
+                HTTP response to parse.
+
+        Returns:
+            The parsed JSON value.
+
+        Raises:
+            RuntimeError:
+                If JSON parsing fails.
+        """
+
+        try:
+            return json.loads ( TextParser.parse( response ) )
+        except Exception as exc:
+            raise RuntimeError( f"Failed to parse JSON: { exc }" ) from exc
