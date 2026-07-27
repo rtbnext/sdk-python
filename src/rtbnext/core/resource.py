@@ -119,9 +119,9 @@ class ResourceLoader:
         )
 
         if response.status == 304 and previous:
-            response = type( response )(
-                url= response.url,
-                ok= True,
+            response = HttpResponse(
+                url= previous.response.url,
+                ok= previous.response.ok,
                 status= previous.response.status,
                 body= previous.response.body,
                 headers= response.headers,
