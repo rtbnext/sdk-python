@@ -4,9 +4,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Callable, Generic, TypeVar, cast
+from typing import Callable, Generic, TypeVar
 
-from rtbnext.core.http_client import HttpResponse
 from rtbnext.core.parser import D, ParserFn
 from rtbnext.core.resource import ResourceLoader
 from rtbnext.resource.resource import Resource
@@ -195,6 +194,4 @@ class IndexableResource ( Resource[ D ], Generic[ D, R ] ):
             Nested resource accessor structure.
         """
 
-        return await self._transform(
-            lambda data: self._traverse( data )
-        )
+        return await self._transform( self._traverse )

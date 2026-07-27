@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import asyncio
-from typing import Any, Awaitable, Callable, Generic, Self, TypeVar
+from typing import Any, Awaitable, Callable, Generic, Self
 
 from rtbnext.core.http_client import RequestOptions
 from rtbnext.core.parser import D, ParserFn
