@@ -1,2 +1,2 @@
 [MESSAGES CONTROL]
-disable=unnecessary-ellipsis
+disable=unnecessary-ellipsis, too-few-public-methods
