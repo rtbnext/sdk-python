@@ -186,3 +186,15 @@ class IndexableResource ( Resource[ D ], Generic[ D, R ] ):
             return result
 
         return None
+
+    async def get ( self ) -> object:
+        """
+        Return the lazily generated index tree.
+
+        Returns:
+            Nested resource accessor structure.
+        """
+
+        return await self._transform(
+            lambda data: self._traverse( data )
+        )
