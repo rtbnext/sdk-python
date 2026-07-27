@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+from datetime import datetime, timezone
 import re
 
 
@@ -28,3 +29,32 @@ def sanitize ( value: object, delimiter: str = "-" ) -> str:
     result = re.sub( rf"[{ re.escape( delimiter ) }]{{2,}}", delimiter, result )
 
     return result
+
+
+def ymd ( value: object ) -> str:
+    """
+    Convert a value to an UTC date string, the returned format is ``YYYY-MM-DD``.
+
+    Args:
+        value:
+            Value convertible to a date.
+
+    Returns:
+        UTC formatted date string.
+
+    Raises:
+        ValueError:
+            If the value cannot be parsed.
+    """
+
+    text = str( value )
+
+    try:
+        date = datetime.fromisoformat( text.replace( "Z", "+00:00" ) )
+    except ValueError:
+        date = datetime.strptime( text, "%Y-%m-%d" )
+
+    if date.tzinfo is None:
+        date = date.replace( tzinfo= timezone.utc )
+
+    return date.astimezone( timezone.utc ).strftime( "%Y-%m-%d" )
