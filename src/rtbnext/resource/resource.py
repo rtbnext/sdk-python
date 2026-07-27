@@ -129,3 +129,39 @@ class Resource ( Generic[ D ] ):
         for event in events:
             for handler in self._hooks.get( event, set() ):
                 handler( self )
+
+    def on ( self, event: str, handler: Callable[ [ Self ], None ] ) -> Self:
+        """
+        Register an event handler.
+
+        Args:
+            event:
+                Event name.
+
+            handler:
+                Callback invoked when the event occurs.
+
+        Returns:
+            The current resource instance.
+        """
+
+        self._hooks.setdefault( event, set() ).add( handler )
+        return self
+
+    def off ( self, event: str, handler: Callable[ [ Self ], None ] ) -> Self:
+        """
+        Remove an event handler.
+
+        Args:
+            event:
+                Event name.
+
+            handler:
+                Handler to remove.
+
+        Returns:
+            The current resource instance.
+        """
+
+        self._hooks.get( event, set() ).discard( handler )
+        return self
