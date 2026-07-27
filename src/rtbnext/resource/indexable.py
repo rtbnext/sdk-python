@@ -155,3 +155,34 @@ class IndexableResource ( Resource[ D ], Generic[ D, R ] ):
         """
 
         return _IndexAccessor( self._factory, path, keys )
+
+    def _traverse ( self, value: object, path: tuple[ str, ... ] = () ) -> object:
+        """
+        Convert parsed index data into an accessor tree.
+
+        Args:
+            value:
+                Parsed resource value.
+            path:
+                Current index path.
+
+        Returns:
+            Traversable resource tree.
+        """
+
+        keys = self._keys( value )
+        if keys is not None:
+            return self._create_index( keys, path )
+
+        if isinstance( value, dict ):
+            result: dict[ str, object ] = {}
+
+            for key, child in value.items():
+                if key == "$metadata":
+                    continue
+
+                result[ key ] = self._traverse( child, ( *path, key ) )
+
+            return result
+
+        return None
