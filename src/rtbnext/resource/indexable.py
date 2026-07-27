@@ -135,3 +135,23 @@ class IndexableResource ( Resource[ D ], Generic[ D, R ] ):
                 return tuple( str( key ) for key in items.keys() )
 
         return None
+
+    def _create_index (
+        self,
+        keys: tuple[ str, ... ],
+        path: tuple[ str, ... ]
+    ) -> _IndexAccessor[ R ]:
+        """
+        Create a lazy accessor node.
+
+        Args:
+            keys:
+                Available child keys.
+            path:
+                Current traversal path.
+
+        Returns:
+            Lazy accessor instance.
+        """
+
+        return _IndexAccessor( self._factory, path, keys )
