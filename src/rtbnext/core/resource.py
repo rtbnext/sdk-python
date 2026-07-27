@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from time import time
 from typing import Any, Callable, Generic, Literal, TypeVar, TYPE_CHECKING
 import httpx
-from rtbnext.core.http_client import HttpResponse, HttpClient
+from rtbnext.core.http_client import HttpResponse, HttpClient, RequestOptions
 from rtbnext.core.cache import Cache, EmptyCache, MemoryCache
 from rtbnext.resource.resource import Resource
 
@@ -73,7 +73,11 @@ class ResourceLoader:
             case _:
                 self._cache = options.type
 
-    def _create_state ( self, response: HttpResponse, previous: ResourceState | None = None ) -> ResourceState:
+    def _create_state (
+        self,
+        response: HttpResponse,
+        previous: ResourceState | None = None
+    ) -> ResourceState:
         """
         Create a cached resource state from an HTTP response.
 
@@ -131,3 +135,45 @@ class ResourceLoader:
             etag= etag,
             last_modified= last_modified
         )
+
+    async def _fetch (
+        self,
+        path: str,
+        previous: ResourceState | None = None,
+        options: RequestOptions | None = None
+    ) -> ResourceState:
+        """
+        Fetch a resource from the network.
+
+        Conditional request headers are automatically added when a previous
+        resource state is available.
+
+        Args:
+            path:
+                Resource path.
+
+            previous:
+                Previous cached resource state.
+
+            options:
+                Additional request options.
+
+        Returns:
+            The updated resource state.
+        """
+
+        headers = httpx.Headers( options.headers if options else None )
+
+        if previous and previous.etag:
+            headers[ "If-None-Match" ] = previous.etag
+        if previous and previous.last_modified:
+            headers[ "If-Modified-Since" ] = previous.last_modified
+
+        request_options = RequestOptions(
+            headers= headers,
+            mode= options.mode if options else "burst",
+            timeout= options.timeout if options else None
+        )
+
+        response = await self._client.request( path, request_options )
+        return self._create_state( response, previous )
