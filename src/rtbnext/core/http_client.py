@@ -130,7 +130,7 @@ class HttpClient:
 
     return httpx.Headers( headers )
 
-  async def _execute( self, url: str, options: RequestOptions | None = None ) -> HttpResponse:
+  async def _execute ( self, url: str, options: RequestOptions | None = None ) -> HttpResponse:
     """
     Execute a single HTTP request.
 
@@ -175,6 +175,38 @@ class HttpClient:
         headers= response.headers,
         latency= latency
       )
-  
+
     except Exception as exc:
       raise RuntimeError( f"Fetch failed: { exc }" ) from exc
+
+  async def request ( self, path: str, options: RequestOptions | None = None ) -> HttpResponse:
+    """
+    Send a request relative to the configured base URL.
+
+    If another coroutine is already requesting the same URL,
+    the existing request is reused.
+
+    Args:
+      path:
+        Relative request path.
+  
+      options:
+        Optional request configuration.
+  
+    Returns:
+      The HTTP response.
+    """
+
+    url = urljoin( self._options.base_url, path )
+
+    existing = self._pending.get( url )
+    if existing:
+      return await existing
+
+    task = asyncio.create_task( self._execute( url, options ) )
+    self._pending[ url ] = task
+
+    try:
+      return await task
+    finally:
+      self._pending.pop( url, None )
