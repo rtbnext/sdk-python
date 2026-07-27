@@ -116,3 +116,16 @@ class Resource ( Generic[ D ] ):
             self._transformed = asyncio.create_task( execute() )
 
         return await self._transformed
+
+    def _emit ( self, *events: str ) -> None:
+        """
+        Emit lifecycle events.
+
+        Args:
+            events:
+                Event names to emit.
+        """
+
+        for event in events:
+            for handler in self._hooks.get( event, set() ):
+                handler( self )
