@@ -209,3 +209,18 @@ class Resource ( Generic[ D ] ):
             await self._loading
         finally:
             self._loading = None
+
+    async def refresh ( self, options: RequestOptions | None = None ) -> None:
+        """
+        Refresh the resource from the network.
+
+        Args:
+            options:
+                Optional request options.
+        """
+
+        self._state = await self._loader.refresh( self._path, options )
+        self._loaded = True
+
+        self._reset()
+        self._emit( "refresh", "update" )
