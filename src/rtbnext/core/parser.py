@@ -21,20 +21,7 @@ class TextParser:
 
     @staticmethod
     def parse ( response: HttpResponse ) -> str:
-        """
-        Convert an HTTP response body to UTF-8 text.
-
-        Args:
-            response:
-                HTTP response to parse.
-
-        Returns:
-            The decoded response text.
-
-        Raises:
-            RuntimeError:
-                If the request failed or contains no data.
-        """
+        """Convert an HTTP response body to UTF-8 text."""
 
         if not response.ok:
             raise RuntimeError( f"Request failed with status { response.status }." )
@@ -54,20 +41,7 @@ class JsonParser ( TextParser ):
 
     @staticmethod
     def parse ( response: HttpResponse ) -> Any:
-        """
-        Parse an HTTP response body as JSON.
-
-        Args:
-            response:
-                HTTP response to parse.
-
-        Returns:
-            The parsed JSON value.
-
-        Raises:
-            RuntimeError:
-                If JSON parsing fails.
-        """
+        """Parse an HTTP response body as JSON."""
 
         try:
             return json.loads( TextParser.parse( response ) )
@@ -85,44 +59,18 @@ class CsvParser ( TextParser ):
 
     @staticmethod
     def _parse_value ( value: str ) -> str | int | float:
-        """
-        Convert a CSV field value.
-
-        Numeric values are converted to numbers where possible.
-
-        Args:
-            value:
-                Raw CSV field value.
-
-        Returns:
-            Parsed value.
-        """
+        """Convert a CSV field value."""
 
         value = value.strip()
 
         try:
-            if "." in value:
-                return float( value )
-
-            return int( value )
-
+            return ( float( value ) if "." in value else int( value ) )
         except ValueError:
             return value
 
     @staticmethod
     def _parse_line ( line: str, delimiter: str ) -> list[ str | int | float ]:
-        """
-        Parse a single CSV line.
-
-        Args:
-            line:
-                CSV line.
-            delimiter:
-                Field delimiter.
-
-        Returns:
-            Parsed field values.
-        """
+        """Parse a single CSV line."""
 
         values: list[ str | int | float ] = []
         value = ""
@@ -136,7 +84,6 @@ class CsvParser ( TextParser ):
                 if quoted and index + 1 < len( line ) and line[ index + 1 ] == '"':
                     value += '"'
                     index += 1
-
                 else:
                     quoted = not quoted
 
@@ -154,18 +101,7 @@ class CsvParser ( TextParser ):
 
     @staticmethod
     def parse ( response: HttpResponse, delimiter: str = "," ) -> list[ list[ str | int | float ] ]:
-        """
-        Parse an HTTP response body as CSV.
-
-        Args:
-            response:
-                HTTP response to parse.
-            delimiter:
-                CSV field delimiter.
-
-        Returns:
-            Parsed CSV rows.
-        """
+        """Parse an HTTP response body as CSV."""
 
         return [
             CsvParser._parse_line( line, delimiter )
