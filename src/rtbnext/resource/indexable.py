@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import Callable, Generic, TypeVar
 
 from rtbnext.core.parser import D, ParserFn
@@ -13,14 +12,6 @@ from rtbnext.resource.resource import Resource
 R = TypeVar( "R" )
 IndexFn = Callable[ [ tuple[ str, ... ] ], R ]
 KeysFn = Callable[ [ object ], tuple[ str, ... ] | None ]
-
-
-@dataclass ( slots= True )
-class IndexOptions( Generic[ R ] ):
-    """Configuration for index traversal."""
-
-    index: IndexFn[ R ]
-    keys: KeysFn | None = None
 
 
 class _IndexAccessor ( Generic[ R ] ):
@@ -61,12 +52,13 @@ class IndexableResource ( Resource[ D ], Generic[ D, R ] ):
         path: str,
         loader: ResourceLoader,
         parser: ParserFn[ D ],
-        options: IndexOptions[ R ]
+        index: IndexFn[ R ],
+        keys: KeysFn | None
     ) -> None:
         super().__init__( path, loader, parser )
 
-        self._factory = options.index
-        self._keys = options.keys or self._default_keys
+        self._factory = index
+        self._keys = keys or self._default_keys
 
     @staticmethod
     def _default_keys ( value: object ) -> tuple[ str, ... ] | None:
