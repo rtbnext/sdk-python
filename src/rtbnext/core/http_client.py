@@ -87,3 +87,45 @@ class HttpClient:
     )
 
     self._pending: dict[ str, asyncio.Task[ HttpResponse ] ] = {}
+
+  def _create_headers ( self ) -> httpx.Headers:
+    """
+    Create the default headers sent with every request.
+
+    Returns:
+      A configured set of HTTP headers.
+
+    Raises:
+      ValueError:
+        If the client name or version is empty.
+    """
+
+    client = self._options.client
+
+    if not client.name.strip():
+      raise ValueError( "Client name is required." )
+    if not str( client.version ).strip():
+      raise ValueError("Client version is required.")
+
+    info = "; ".join(
+      value
+      for value in ( client.contact, client.email )
+      if value
+    )
+
+    agent = (
+      f"{ client.name }/{ client.version }"
+      f"{ f' ({ info })' if info else '' }"
+      f" @rtbnext/sdk/{ self._options.sdk_version }"
+    )
+
+    headers: dict[ str, str ] = {
+      "User-Agent": agent,
+      "X-Client-Name": client.name,
+      "X-Client-Version": str( client.version ),
+    }
+
+    if client.contact:
+      headers[ "X-Client-Contact" ] = client.contact
+
+    return httpx.Headers( headers )
