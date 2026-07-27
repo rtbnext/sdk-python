@@ -114,3 +114,19 @@ class MemoryCache ( Cache ):
         """
 
         self._store: dict[ str, ResourceState ] = {}
+
+    @property
+    def size ( self ) -> int:
+        return len( self._store )
+
+    async def get ( self, key: str ) -> ResourceState | None:
+        return self._store.get( key )
+
+    async def set ( self, key: str, value: ResourceState ) -> None:
+        self._store[ key ] = value
+
+    async def delete ( self, key: str ) -> None:
+        self._store.pop( key, None )
+
+    async def clear ( self ) -> None:
+        self._store.clear()
