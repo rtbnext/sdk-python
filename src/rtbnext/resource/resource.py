@@ -5,11 +5,54 @@ Implements the base resource wrapper for HTTP responses.
 """
 
 
-from typing import Any
+from __future__ import annotations
+
+import asyncio
+from typing import Any, Awaitable, Callable, Generic, Self, TypeVar
+
+from rtbnext.core.resource import ResourceLoader, ResourceState
+from rtbnext.core.http_client import RequestOptions, HttpResponse
 
 
-class Resource [ Any ]:
-    """Resource class."""
+D = TypeVar( "D" )
+ParserFn = Callable[ [ HttpResponse ], D ]
 
-    def valid ( self ) -> bool:
-        return False
+
+class Resource ( Generic[ D ] ):
+    """
+    Base resource wrapper for lazy loading, parsing and cache state management.
+
+    Resources are loaded only when data is requested. Loaded responses are kept
+    as resource state while parsed values are cached separately.
+    """
+
+    def __init__ ( self, path: str, loader: ResourceLoader, parser: ParserFn[ D ] ) -> None:
+        """
+        Create a new resource wrapper.
+
+        Args:
+            path:
+                API resource path.
+
+            loader:
+                Resource loader used for fetching and caching.
+
+            parser:
+                Function used to parse HTTP responses.
+        """
+
+        self._path = path
+        self._loader = loader
+        self._parser = parser
+
+        self._hooks: dict[ str, set[ Callable[ [ Self ], None ] ] ] = {}
+
+        self._loaded = False
+        self._loading: asyncio.Task[ None ] | None = None
+
+        self._state: ResourceState | None = None
+
+        self._parsed = False
+        self._value: D | None = None
+
+        self._transformed: Any | Awaitable[ Any ] | None = None
