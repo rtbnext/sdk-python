@@ -42,16 +42,6 @@ class ResourceLoader:
     """
 
     def __init__ ( self, client: HttpClient, options: CacheOptions | None = None ) -> None:
-        """
-        Create a new resource loader.
-
-        Args:
-            client:
-                HTTP client used to perform resource requests.
-            options:
-                Cache configuration.
-        """
-
         options = options or CacheOptions()
         self._client = client
         self._mode = options.mode
@@ -69,34 +59,19 @@ class ResourceLoader:
         response: HttpResponse,
         previous: ResourceState | None = None
     ) -> ResourceState:
-        """
-        Create a cached resource state from an HTTP response.
+        """Create a cached resource state from an HTTP response."""
 
-        Args:
-            response:
-                HTTP response returned by the server.
-            previous:
-                Previous cached resource state.
-
-        Returns:
-            The updated resource state.
-        """
-
-        now = time()
+        created = time()
         cache_control = response.headers.get( "Cache-Control", "" )
 
-        max_age = next(
-            (
-                int( part.split( "=" )[ 1 ] )
-                for part in cache_control.split( "," )
-                if part.strip().startswith( "max-age=" )
-            ),
-            None
-        )
+        max_age = next( (
+            int( part.split( "=" )[ 1 ] )
+            for part in cache_control.split( "," )
+            if part.strip().startswith( "max-age=" )
+        ), None )
 
         expires = (
-            now + max_age
-            if max_age is not None
+            created + max_age if max_age is not None
             else previous.expires if previous else None
         )
 
@@ -118,13 +93,7 @@ class ResourceLoader:
                 latency= response.latency
             )
 
-        return ResourceState(
-            response= response,
-            created= now,
-            expires= expires,
-            etag= etag,
-            last_modified= last_modified
-        )
+        return ResourceState( response, created, expires, etag, last_modified )
 
     async def _fetch (
         self,
@@ -132,23 +101,7 @@ class ResourceLoader:
         previous: ResourceState | None = None,
         options: RequestOptions | None = None
     ) -> ResourceState:
-        """
-        Fetch a resource from the network.
-
-        Conditional request headers are automatically added when a previous
-        resource state is available.
-
-        Args:
-            path:
-                Resource path.
-            previous:
-                Previous cached resource state.
-            options:
-                Additional request options.
-
-        Returns:
-            The updated resource state.
-        """
+        """Fetch a resource from the network."""
 
         headers = httpx.Headers( options.headers if options else None )
 
@@ -164,70 +117,28 @@ class ResourceLoader:
         )
 
         response = await self._client.request( path, request_options )
-
         return self._create_state( response, previous )
 
     async def refresh ( self, path: str, options: RequestOptions | None = None ) -> ResourceState:
-        """
-        Refresh a cached resource.
-
-        Args:
-            path:
-                Resource path.
-            options:
-                Optional request configuration.
-
-        Returns:
-            The refreshed resource state.
-        """
+        """Refresh a cached resource."""
 
         cached = await self._cache.get( path )
         state = await self._fetch( path, cached, options )
         await self._cache.set( path, state )
-
         return state
 
     def _is_expired ( self, state: ResourceState ) -> bool:
         """Determine whether a cached resource has expired."""
-
         return state.expires is not None and state.expires <= time()
 
     def valid ( self, state: ResourceState | None ) -> bool:
-        """
-        Determine whether a cached resource is valid.
-
-        Args:
-            state:
-                Cached resource state.
-
-        Returns:
-            ``True`` if the cached resource is valid.
-        """
-
-        return (
-            state is not None
-            and (
-                self._mode == "session"
-                or (
-                    self._mode == "ttl"
-                    and not self._is_expired( state )
-                )
-            )
-        )
+        """Determine whether a cached resource is valid."""
+        return ( state is not None and ( self._mode == "session" or (
+            self._mode == "ttl" and not self._is_expired( state )
+        ) ) )
 
     async def load ( self, path: str, options: RequestOptions | None = None ) -> ResourceState:
-        """
-        Load a resource using the configured cache policy.
-
-        Args:
-            path:
-                Resource path.
-            options:
-                Optional request configuration.
-
-        Returns:
-            The loaded resource state.
-        """
+        """Load a resource using the configured cache policy."""
 
         if self._mode == "revalidate":
             return await self.refresh( path, options )
@@ -245,23 +156,14 @@ class ResourceLoader:
     @property
     def size ( self ) -> int:
         """Return the number of cached resource states."""
-
         return self._cache.size
 
     async def delete ( self, path: str ) -> None:
-        """
-        Remove a resource from the cache.
-
-        Args:
-            path:
-                Cache key.
-        """
-
+        """Remove a resource from the cache."""
         await self._cache.delete( path )
 
     async def clear ( self ) -> None:
         """Remove all cached resource states."""
-
         await self._cache.clear()
 
 
@@ -277,26 +179,12 @@ class ResourcePool ( Generic[ R ] ):
     """
 
     def __init__ ( self ) -> None:
-        """Create an empty resource pool."""
-
         self._resources: dict[ str, R ] = {}
 
     def get ( self, path: str, factory: Callable[ [], R ] ) -> R:
-        """
-        Return an existing valid resource or create a new one.
-
-        Args:
-            path:
-                Resource path.
-            factory:
-                Factory used to construct a new resource.
-
-        Returns:
-            The resource instance.
-        """
+        """Return an existing valid resource or create a new one."""
 
         existing = self._resources.get( path )
-
         if existing and existing.valid:
             return existing
 
@@ -308,10 +196,8 @@ class ResourcePool ( Generic[ R ] ):
     @property
     def size ( self ) -> int:
         """Return the number of pooled resources."""
-
         return len( self._resources )
 
     def clear ( self ) -> None:
         """Remove all pooled resources."""
-
         self._resources.clear()
