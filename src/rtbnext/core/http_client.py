@@ -65,14 +65,6 @@ class HttpClient:
     """
 
     def __init__ ( self, options: HttpClientOptions ) -> None:
-        """
-        Create a new HTTP client.
-
-        Args:
-            options:
-                Configuration options for the client.
-        """
-
         self._options = options
         self._limiter = RateLimiter( options.limiter )
         self._pending: dict[ str, asyncio.Task[ HttpResponse ] ] = {}
@@ -83,16 +75,7 @@ class HttpClient:
         )
 
     def _create_headers ( self ) -> httpx.Headers:
-        """
-        Create the default headers sent with every request.
-
-        Returns:
-            A configured set of HTTP headers.
-
-        Raises:
-            ValueError:
-                If the client name or version is empty.
-        """
+        """Create the default headers sent with every request."""
 
         client = self._options.client
 
@@ -101,11 +84,7 @@ class HttpClient:
         if not str( client.version ).strip():
             raise ValueError("Client version is required.")
 
-        info = "; ".join(
-            value
-            for value in ( client.contact, client.email )
-            if value
-        )
+        info = "; ".join( value for value in ( client.contact, client.email ) if value )
 
         agent = (
             f"{ client.name }/{ client.version }"
@@ -113,34 +92,18 @@ class HttpClient:
             f" @rtbnext/sdk/{ self._options.sdk_version }"
         )
 
-        headers: dict[ str, str ] = {
-            "User-Agent": agent,
-            "X-Client-Name": client.name,
-            "X-Client-Version": str( client.version )
-        }
+        headers = httpx.Headers()
+        headers[ "User-Agent" ] = agent
+        headers[ "X-Client-Name" ] = client.name
+        headers[ "X-Client-Version" ] = str( client.version )
 
         if client.contact:
             headers[ "X-Client-Contact" ] = client.contact
 
-        return httpx.Headers( headers )
+        return headers
 
     async def _execute ( self, url: str, options: RequestOptions | None = None ) -> HttpResponse:
-        """
-        Execute a single HTTP request.
-
-        Args:
-            url:
-                The absolute URL to request.
-            options:
-                Optional request-specific configuration.
-
-        Returns:
-            The HTTP response.
-
-        Raises:
-            RuntimeError:
-                If the request could not be completed.
-        """
+        """Execute a single HTTP request."""
 
         mode = options.mode if options else "burst"
         await getattr( self._limiter, mode )()
@@ -173,21 +136,7 @@ class HttpClient:
             raise RuntimeError( f"Fetch failed: { exc }" ) from exc
 
     async def request ( self, path: str, options: RequestOptions | None = None ) -> HttpResponse:
-        """
-        Send a request relative to the configured base URL.
-
-        If another coroutine is already requesting the same URL,
-        the existing request is reused.
-
-        Args:
-            path:
-                Relative request path.
-            options:
-                Optional request configuration.
-
-        Returns:
-            The HTTP response.
-        """
+        """Send a request relative to the configured base URL."""
 
         url = urljoin( self._options.base_url, path )
 
@@ -205,15 +154,12 @@ class HttpClient:
 
     async def aclose ( self ) -> None:
         """Close the underlying HTTP client and release network resources."""
-
         await self._client.aclose()
 
     async def __aenter__ ( self ) -> HttpClient:
         """Return the HTTP client when entering an async context."""
-
         return self
 
     async def __aexit__ ( self, *_ ):
         """Close the HTTP client when leaving an async context."""
-
         await self.aclose()

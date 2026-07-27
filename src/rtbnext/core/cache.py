@@ -23,40 +23,15 @@ class Cache ( Protocol ):
         ...
 
     async def get ( self, key: str ) -> ResourceState | None:
-        """
-        Retrieve a cached resource state.
-
-        Args:
-            key:
-                The cache key associated with the resource.
-
-        Returns:
-            The cached resource state if present, otherwise ``None``.
-        """
+        """Retrieve a cached resource state."""
         ...
 
     async def set ( self, key: str, value: ResourceState ) -> None:
-        """
-        Store a resource state.
-
-        If the key already exists, the previous value is replaced.
-
-        Args:
-            key:
-                The cache key.
-            value:
-                The resource state to store.
-        """
+        """Store a resource state."""
         ...
 
     async def delete ( self, key: str ) -> None:
-        """
-        Remove a resource state from the cache.
-
-        Args:
-            key:
-                The cache key.
-        """
+        """Remove a resource state from the cache."""
         ...
 
     async def clear ( self ) -> None:
@@ -100,10 +75,6 @@ class MemoryCache ( Cache ):
     """
 
     def __init__ ( self ) -> None:
-        """
-        Create an empty in-memory cache.
-        """
-
         self._store: dict[ str, ResourceState ] = {}
 
     @property
