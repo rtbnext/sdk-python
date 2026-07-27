@@ -56,3 +56,22 @@ class Resource ( Generic[ D ] ):
         self._value: D | None = None
 
         self._transformed: Any | Awaitable[ Any ] | None = None
+
+    def _reset ( self ) -> None:
+        """Reset parsed values after loading or refreshing."""
+
+        self._parsed = False
+        self._value = None
+        self._transformed = None
+
+    def _parse ( self ) -> D:
+        """Parse the current response body."""
+
+        if self._state is None:
+            raise RuntimeError( "Resource has not been loaded." )
+
+        self._value = self._parser( self._state.response )
+        self._parsed = True
+        self._emit( "parse" )
+
+        return self._value
