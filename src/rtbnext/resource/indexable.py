@@ -1,3 +1,6 @@
+"""Implement the resource wrapper for nested indexable endpoints."""
+
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -19,3 +22,50 @@ class IndexOptions( Generic[ R ] ):
 
     index: IndexFn[ R ]
     keys: KeysFn | None = None
+
+
+class _IndexAccessor ( Generic[ R ] ):
+    """Lazy accessor object for index traversal."""
+
+    def __init__ (
+        self,
+        factory: IndexFn[ R ],
+        path: tuple[ str, ... ],
+        keys: tuple[ str, ... ]
+    ) -> None:
+        """
+        Create a lazy index accessor.
+
+        Args:
+            factory:
+                Resource resolver.
+            path:
+                Current traversal path.
+            keys:
+                Available child keys.
+        """
+
+        self._factory = factory
+        self._path = path
+        self._keys = keys
+
+
+    def __getattr__ ( self, key: str ) -> R:
+        """
+        Resolve a nested resource.
+
+        Args:
+            key:
+                Index key.
+
+        Returns:
+            The resolved resource.
+
+        Raises:
+            AttributeError:
+                If the key does not exist.
+        """
+
+        if key not in self._keys:
+            raise AttributeError( f"Unknown index key: { key }" )
+        return self._factory( ( *self._path, key ) )
