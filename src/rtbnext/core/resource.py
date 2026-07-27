@@ -283,3 +283,20 @@ class ResourceLoader:
         """
 
         await self._cache.clear()
+
+
+R = TypeVar( "R", bound= Resource[ Any ] )
+
+
+class ResourcePool ( Generic[ R ] ):
+    """
+    Stores and reuses resource instances by their resource path.
+
+    Valid resources are reused, while invalid resources are replaced with
+    newly created instances.
+    """
+
+    def __init__ ( self ) -> None:
+        """Create an empty resource pool."""
+
+        self._resources: dict[ str, R ] = {}
