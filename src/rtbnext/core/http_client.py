@@ -15,7 +15,7 @@ from urllib.parse import urljoin
 
 import httpx
 
-from .rate_limiter import RateLimiter, RateLimiterOptions
+from rtbnext.core.rate_limiter import RateLimiter, RateLimiterOptions
 
 
 @dataclass ( slots= True, frozen= True )

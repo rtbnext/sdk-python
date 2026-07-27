@@ -1,7 +1,7 @@
 """
 CACHE
 
-Implements ...
+Implements a cache interface for storing and retrieving resource states.
 """
 
 
@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import Protocol
 
-from .resource import ResourceState
+from rtbnext.core.resource import ResourceState
 
 
 class Cache ( Protocol ):
