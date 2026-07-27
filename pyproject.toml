@@ -10,10 +10,9 @@ readme = "README.md"
 license = "MIT"
 requires-python = ">= 3.10"
 
-authors = [ {
-  name = "Paul Köhler (komed3)",
-  email = "webmaster@komed3.de"
-} ]
+authors = [
+  { name = "Paul Köhler (komed3)", email = "webmaster@komed3.de" }
+]
 
 keywords = [
   "rtbnext",
