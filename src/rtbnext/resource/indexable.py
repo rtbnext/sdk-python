@@ -32,38 +32,13 @@ class _IndexAccessor ( Generic[ R ] ):
         path: tuple[ str, ... ],
         keys: tuple[ str, ... ]
     ) -> None:
-        """
-        Create a lazy index accessor.
-
-        Args:
-            factory:
-                Resource resolver.
-            path:
-                Current traversal path.
-            keys:
-                Available child keys.
-        """
-
         self._factory = factory
         self._path = path
         self._keys = keys
 
 
     def __getattr__ ( self, key: str ) -> R:
-        """
-        Resolve a nested resource.
-
-        Args:
-            key:
-                Index key.
-
-        Returns:
-            The resolved resource.
-
-        Raises:
-            AttributeError:
-                If the key does not exist.
-        """
+        """Resolve a nested resource."""
 
         if key not in self._keys:
             raise AttributeError( f"Unknown index key: { key }" )
@@ -88,20 +63,6 @@ class IndexableResource ( Resource[ D ], Generic[ D, R ] ):
         parser: ParserFn[ D ],
         options: IndexOptions[ R ]
     ) -> None:
-        """
-        Create a new indexable resource.
-
-        Args:
-            path:
-                API resource path.
-            loader:
-                Resource loader used for fetching data.
-            parser:
-                Parser used to decode responses.
-            options:
-                Index traversal configuration.
-        """
-
         super().__init__( path, loader, parser )
 
         self._factory = options.index
@@ -109,20 +70,7 @@ class IndexableResource ( Resource[ D ], Generic[ D, R ] ):
 
     @staticmethod
     def _default_keys ( value: object ) -> tuple[ str, ... ] | None:
-        """
-        Extract index keys from common API structures.
-
-        Supports:
-        - lists of keys
-        - objects containing an ``items`` mapping
-
-        Args:
-            value:
-                Parsed resource value.
-
-        Returns:
-            Available keys or ``None``.
-        """
+        """Extract index keys from common API structures."""
 
         if isinstance( value, list ):
             return tuple( str( item ) for item in value )
@@ -140,34 +88,11 @@ class IndexableResource ( Resource[ D ], Generic[ D, R ] ):
         keys: tuple[ str, ... ],
         path: tuple[ str, ... ]
     ) -> _IndexAccessor[ R ]:
-        """
-        Create a lazy accessor node.
-
-        Args:
-            keys:
-                Available child keys.
-            path:
-                Current traversal path.
-
-        Returns:
-            Lazy accessor instance.
-        """
-
+        """Create a lazy accessor node."""
         return _IndexAccessor( self._factory, path, keys )
 
     def _traverse ( self, value: object, path: tuple[ str, ... ] = () ) -> object:
-        """
-        Convert parsed index data into an accessor tree.
-
-        Args:
-            value:
-                Parsed resource value.
-            path:
-                Current index path.
-
-        Returns:
-            Traversable resource tree.
-        """
+        """Convert parsed index data into an accessor tree."""
 
         keys = self._keys( value )
         if keys is not None:
@@ -187,11 +112,5 @@ class IndexableResource ( Resource[ D ], Generic[ D, R ] ):
         return None
 
     async def get ( self ) -> object:
-        """
-        Return the lazily generated index tree.
-
-        Returns:
-            Nested resource accessor structure.
-        """
-
+        """Return the lazily generated index tree."""
         return await self._transform( self._traverse )
