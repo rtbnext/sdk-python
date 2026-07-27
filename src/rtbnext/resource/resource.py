@@ -165,3 +165,17 @@ class Resource ( Generic[ D ] ):
 
         self._hooks.get( event, set() ).discard( handler )
         return self
+
+    @property
+    def valid ( self ) -> bool:
+        """
+        Return whether the current resource state is still valid.
+
+        Resources that have not been loaded yet are considered valid.
+        """
+
+        return (
+            not self._loaded
+            or self._state is None
+            or self._loader.valid( self._state )
+        )
