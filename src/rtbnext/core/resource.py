@@ -176,4 +176,26 @@ class ResourceLoader:
         )
 
         response = await self._client.request( path, request_options )
+
         return self._create_state( response, previous )
+
+    async def refresh ( self, path: str, options: RequestOptions | None = None ) -> ResourceState:
+        """
+        Refresh a cached resource.
+
+        Args:
+            path:
+                Resource path.
+
+            options:
+                Optional request configuration.
+
+        Returns:
+            The refreshed resource state.
+        """
+
+        cached = await self._cache.get( path )
+        state = await self._fetch( path, cached, options )
+        await self._cache.set( path, state )
+
+        return state
