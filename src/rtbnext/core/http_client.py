@@ -17,6 +17,19 @@ class ClientIdentity:
   """
 
   name: str
-  version: str
+  version: str | int
   contact: str | None = None
   email: str | None = None
+
+
+@dataclass ( slots= True, frozen= True )
+class HttpClientOptions:
+  """
+  Configuration options for the HTTP client.
+  """
+
+  base_url: str
+  sdk_version: str
+  client: ClientIdentity
+  limiter: RateLimiterOptions
+  timeout: float
