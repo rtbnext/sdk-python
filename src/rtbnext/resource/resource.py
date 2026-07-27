@@ -85,6 +85,23 @@ class Resource ( Generic[ D ] ):
 
         return self._value
 
+    def _value_or_raise ( self ) -> D:
+        """
+        Return the parsed resource value or raise an error if unavailable.
+
+        Returns:
+            The parsed resource value.
+
+        Raises:
+            RuntimeError:
+                If the resource value is unavailable.
+        """
+
+        if self._value is None:
+            raise RuntimeError( "Resource value unavailable." )
+
+        return self._value
+
     async def _transform ( self, fn: Callable[ [ D ], Awaitable[ Any ] | Any ] ) -> Any:
         """
         Transform parsed resource data and cache the result.
@@ -224,3 +241,20 @@ class Resource ( Generic[ D ] ):
 
         self._reset()
         self._emit( "refresh", "update" )
+
+    async def data ( self ) -> D:
+        """
+        Return parsed resource data.
+
+        The resource is loaded lazily and parsed only once.
+
+        Returns:
+            Parsed resource value.
+        """
+
+        await self.load()
+
+        if not self._parsed:
+            return self._parse()
+
+        return self._value_or_raise()
