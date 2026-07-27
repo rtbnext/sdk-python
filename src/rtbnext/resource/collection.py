@@ -79,10 +79,13 @@ class CollectionBase ( Generic[ T ] ):
         return self._items[ index ]
 
     def take ( self, count: int ) -> Self:
+        """Return a new collection with the first `count` items."""
         return self._clone( self._items[ : count ] )
 
     def skip ( self, count: int ) -> Self:
+        """Return a new collection without the first `count` items."""
         return self._clone( self._items[ count : ] )
 
     def slice ( self, start: int | None = None, end: int | None = None ) -> Self:
+        """Return a new collection with the items from `start` to `end`."""
         return self._clone( self._items[ start : end ] )

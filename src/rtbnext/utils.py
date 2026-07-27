@@ -17,7 +17,7 @@ def sanitize ( value: object, delimiter: str = "-" ) -> str:
 
 
 def ymd ( value: object ) -> str:
-    """Convert a value to an UTC date string, the returned format is ``YYYY-MM-DD``."""
+    """Convert a value to an UTC date string, the returned format is `YYYY-MM-DD`."""
 
     text = str( value )
 

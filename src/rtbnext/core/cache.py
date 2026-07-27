@@ -43,7 +43,7 @@ class EmptyCache ( Cache ):
     """
     Cache implementation that never stores any data.
 
-    All read operations return ``None``, while write operations are ignored.
+    All read operations return `None`, while write operations are ignored.
     This implementation can be used to disable caching without changing the
     SDK's cache interface.
     """
