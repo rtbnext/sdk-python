@@ -7,7 +7,7 @@ Implements the HTTP response body parser classes.
 from __future__ import annotations
 
 import json
-from typing import Any, TypeVar, cast
+from typing import TypeVar
 
 from rtbnext.core.http_client import HttpResponse
 
@@ -57,7 +57,7 @@ class JsonParser ( TextParser ):
     """
 
     @staticmethod
-    def parse ( response: HttpResponse ) -> Any:
+    def parse ( response: HttpResponse, type_: type[ T ] ) -> T:
         """
         Parse an HTTP response body as JSON.
 
@@ -74,6 +74,6 @@ class JsonParser ( TextParser ):
         """
 
         try:
-            return json.loads ( TextParser.parse( response ) )
+            return json.loads( TextParser.parse( response ) )
         except Exception as exc:
             raise RuntimeError( f"Failed to parse JSON: { exc }" ) from exc
