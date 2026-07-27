@@ -69,3 +69,41 @@ class _IndexAccessor ( Generic[ R ] ):
         if key not in self._keys:
             raise AttributeError( f"Unknown index key: { key }" )
         return self._factory( ( *self._path, key ) )
+
+
+class IndexableResource ( Resource[ D ], Generic[ D, R ] ):
+    """
+    Resource wrapper for nested indexable endpoints.
+
+    This class provides lazy traversal over API indexes by exposing generated
+    accessors for nested keys.
+
+    The underlying resource data is loaded only once and transformed into a
+    reusable accessor tree.
+    """
+
+    def __init__ (
+        self,
+        path: str,
+        loader: ResourceLoader,
+        parser: ParserFn[ D ],
+        options: IndexOptions[ R ]
+    ) -> None:
+        """
+        Create a new indexable resource.
+
+        Args:
+            path:
+                API resource path.
+            loader:
+                Resource loader used for fetching data.
+            parser:
+                Parser used to decode responses.
+            options:
+                Index traversal configuration.
+        """
+
+        super().__init__( path, loader, parser )
+
+        self._factory = options.index
+        self._keys = options.keys or self._default_keys
