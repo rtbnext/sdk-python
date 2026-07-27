@@ -81,8 +81,8 @@ class HttpClient:
         Create a new HTTP client.
 
         Args:
-          options:
-            Configuration options for the client.
+            options:
+                Configuration options for the client.
         """
 
         self._options = options
@@ -100,11 +100,11 @@ class HttpClient:
         Create the default headers sent with every request.
 
         Returns:
-          A configured set of HTTP headers.
+            A configured set of HTTP headers.
 
         Raises:
-          ValueError:
-            If the client name or version is empty.
+            ValueError:
+                If the client name or version is empty.
         """
 
         client = self._options.client
@@ -142,18 +142,18 @@ class HttpClient:
         Execute a single HTTP request.
 
         Args:
-          url:
-            The absolute URL to request.
+            url:
+                The absolute URL to request.
 
-          options:
-            Optional request-specific configuration.
+            options:
+                Optional request-specific configuration.
 
         Returns:
-          The HTTP response.
+            The HTTP response.
 
         Raises:
-          RuntimeError:
-            If the request could not be completed.
+            RuntimeError:
+                If the request could not be completed.
         """
 
         mode = options.mode if options else "burst"
@@ -194,14 +194,14 @@ class HttpClient:
         the existing request is reused.
 
         Args:
-          path:
-            Relative request path.
+            path:
+                Relative request path.
       
-          options:
-            Optional request configuration.
+            options:
+                Optional request configuration.
       
         Returns:
-          The HTTP response.
+            The HTTP response.
         """
 
         url = urljoin( self._options.base_url, path )

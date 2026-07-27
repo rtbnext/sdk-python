@@ -33,11 +33,11 @@ class Cache ( Protocol ):
         Retrieve a cached resource state.
 
         Args:
-          key:
-            The cache key associated with the resource.
+            key:
+                The cache key associated with the resource.
 
         Returns:
-          The cached resource state if present, otherwise ``None``.
+            The cached resource state if present, otherwise ``None``.
         """
         ...
 
@@ -48,11 +48,11 @@ class Cache ( Protocol ):
         If the key already exists, the previous value is replaced.
 
         Args:
-          key:
-            The cache key.
+            key:
+                The cache key.
 
-          value:
-            The resource state to store.
+            value:
+                The resource state to store.
         """
         ...
 
@@ -61,8 +61,8 @@ class Cache ( Protocol ):
         Remove a resource state from the cache.
 
         Args:
-          key:
-            The cache key.
+            key:
+                The cache key.
         """
         ...
 
