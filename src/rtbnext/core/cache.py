@@ -97,3 +97,20 @@ class EmptyCache ( Cache ):
 
     async def clear ( self ) -> None:
         return
+
+
+class MemoryCache ( Cache ):
+    """
+    Simple in-memory cache backed by a dictionary.
+
+    Suitable for short-lived applications where persistence is not required.
+    Cached entries remain until they are explicitly removed or the cache is
+    cleared.
+    """
+
+    def __init__ ( self ) -> None:
+        """
+        Create an empty in-memory cache.
+        """
+
+        self._store: dict[ str, ResourceState ] = {}
