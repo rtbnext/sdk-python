@@ -79,13 +79,12 @@ class HttpClient:
 
         self._options = options
         self._limiter = RateLimiter( options.limiter )
+        self._pending: dict[ str, asyncio.Task[ HttpResponse ] ] = {}
 
         self._client = httpx.AsyncClient(
             headers= self._create_headers(),
             follow_redirects= True
         )
-
-        self._pending: dict[ str, asyncio.Task[ HttpResponse ] ] = {}
 
     def _create_headers ( self ) -> httpx.Headers:
         """
