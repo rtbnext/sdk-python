@@ -77,8 +77,9 @@ class DateCollection ( CollectionBase[ str ], Generic[ T ] ):
         """Filters resources by month."""
 
         return self._clone( [
-            date for date in self._items if date.startswith( f"{ year }-{ month:02d }-" ) ]
-        )
+            date for date in self._items
+            if date.startswith( f"{ year }-{ month:02d }-" )
+        ] )
 
     def before ( self, date: str ) -> DateCollection[ T ]:
         """Returns resources before a date."""
