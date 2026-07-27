@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from http_client import HttpResponse
+from .http_client import HttpResponse
 
 
 @dataclass ( slots= True )
