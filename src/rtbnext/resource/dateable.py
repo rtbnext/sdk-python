@@ -15,7 +15,14 @@ T = TypeVar( "T" )
 
 
 class DateCollection ( CollectionBase[ str ], Generic[ T ] ):
-    """Collection wrapper for date-indexed resources."""
+    """
+    Collection wrapper for date-indexed resources.
+
+    This class provides convenient filtering and mapping operations for resources
+    that are indexed by date values. It allows for lazy resolution of resources
+    based on their date keys, while maintaining the underlying collection of date
+    strings.
+    """
 
     def __init__ (
         self,
@@ -107,7 +114,13 @@ class DateCollection ( CollectionBase[ str ], Generic[ T ] ):
 
 
 class DateableResource ( Resource[ D ], Generic[ D, R ] ):
-    """Resource wrapper for date-indexed endpoints."""
+    """
+    Resource wrapper for date-indexed endpoints.
+
+    This class provides lazy traversal over API endpoints that are indexed
+    by date values. It allows for convenient access to resources based on
+    their date keys, while maintaining the underlying resource data.
+    """
 
     def __init__ (
         self,

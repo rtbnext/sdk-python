@@ -9,7 +9,12 @@ T = TypeVar( "T" )
 
 
 class CollectionBase ( Generic[ T ] ):
-    """Provides common immutable collection slicing operations."""
+    """
+    Provides common immutable collection slicing operations.
+    
+    This class serves as a base for resource collections, providing methods to
+    manipulate and access the underlying items while maintaining immutability.
+    """
 
     def __init__ ( self, items: list[ T ], total: int | None = None ) -> None:
         self._items = items
