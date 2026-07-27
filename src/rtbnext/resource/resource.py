@@ -65,7 +65,16 @@ class Resource ( Generic[ D ] ):
         self._transformed = None
 
     def _parse ( self ) -> D:
-        """Parse the current response body."""
+        """
+        Parse the loaded HTTP response.
+
+        Returns:
+            The parsed resource value.
+
+        Raises:
+            RuntimeError:
+                If the resource has not been loaded yet.
+        """
 
         if self._state is None:
             raise RuntimeError( "Resource has not been loaded." )
@@ -77,12 +86,24 @@ class Resource ( Generic[ D ] ):
         return self._value
 
     async def _transform ( self, fn: Callable[ [ D ], Awaitable[ Any ] | Any ] ) -> Any:
-        """Transform parsed resource data and cache the result."""
+        """
+        Transform parsed resource data and cache the result.
+
+        The transformation is executed only once. Concurrent callers reuse
+        the same pending task.
+
+        Args:
+            fn:
+                Transformation function.
+
+        Returns:
+            The transformed value.
+        """
 
         if self._transformed is None:
+
             async def execute() -> Any:
-                result = await self.data()
-                value = fn( result )
+                value = fn( await self.data() )
 
                 if asyncio.iscoroutine( value ):
                     value = await value
