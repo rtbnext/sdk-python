@@ -210,3 +210,10 @@ class HttpClient:
       return await task
     finally:
       self._pending.pop( url, None )
+
+  async def aclose ( self ) -> None:
+    """
+    Close the underlying HTTP client and release network resources.
+    """
+
+    await self._client.aclose()
