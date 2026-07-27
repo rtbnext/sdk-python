@@ -39,3 +39,25 @@ class CollectionBase( Generic[ T ] ):
     def last ( self ) -> T | None:
         """Return the last item."""
         return self._items[ -1 ] if self._items else None
+
+    def at ( self, index: int ) -> T | None:
+        """Return the item at the given index."""
+
+        try:
+            return self._items[ index ]
+        except IndexError:
+            return None
+
+    def to_list ( self ) -> list[ T ]:
+        """Return a shallow copy of the collection."""
+        return list( self._items )
+
+    def map ( self, callback: Callable[ [ T, int ], object ] ) -> list[ object ]:
+        """Map all items to a new list."""
+        return [ callback( item, index ) for index, item in enumerate( self._items ) ]
+
+    def for_each ( self, callback: Callable[ [ T, int ], None ] ) -> None:
+        """Call a function for every item."""
+
+        for index, item in enumerate( self._items ):
+            callback( item, index )
