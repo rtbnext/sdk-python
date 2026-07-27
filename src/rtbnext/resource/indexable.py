@@ -107,3 +107,31 @@ class IndexableResource ( Resource[ D ], Generic[ D, R ] ):
 
         self._factory = options.index
         self._keys = options.keys or self._default_keys
+
+    @staticmethod
+    def _default_keys ( value: object ) -> tuple[ str, ... ] | None:
+        """
+        Extract index keys from common API structures.
+
+        Supports:
+        - lists of keys
+        - objects containing an ``items`` mapping
+
+        Args:
+            value:
+                Parsed resource value.
+
+        Returns:
+            Available keys or ``None``.
+        """
+
+        if isinstance( value, list ):
+            return tuple( str( item ) for item in value )
+
+        if isinstance( value, dict ):
+            items = value.get( "items" )
+
+            if isinstance( items, dict ):
+                return tuple( str( key ) for key in items.keys() )
+
+        return None
