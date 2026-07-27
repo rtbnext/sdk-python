@@ -325,3 +325,18 @@ class ResourcePool ( Generic[ R ] ):
         self._resources[ path ] = resource
 
         return resource
+
+    @property
+    def size ( self ) -> int:
+        """
+        Return the number of pooled resources.
+        """
+
+        return len( self._resources )
+
+    def clear ( self ) -> None:
+        """
+        Remove all pooled resources.
+        """
+
+        self._resources.clear()
