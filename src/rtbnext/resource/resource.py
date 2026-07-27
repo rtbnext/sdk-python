@@ -6,12 +6,9 @@ from __future__ import annotations
 import asyncio
 from typing import Any, Awaitable, Callable, Generic, Self, TypeVar
 
-from rtbnext.core.http_client import HttpResponse, RequestOptions
+from rtbnext.core.http_client import RequestOptions
+from rtbnext.core.parser import D, ParserFn
 from rtbnext.core.resource import ResourceLoader, ResourceState
-
-
-D = TypeVar( "D" )
-ParserFn = Callable[ [ HttpResponse ], D ]
 
 
 class Resource ( Generic[ D ] ):

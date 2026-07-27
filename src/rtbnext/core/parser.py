@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 import json
-from typing import Any
+from typing import Any, Callable, TypeVar
 
 from rtbnext.core.http_client import HttpResponse
+
+D = TypeVar( "D" )
+ParserFn = Callable[ [ HttpResponse ], D ]
 
 
 class TextParser:
