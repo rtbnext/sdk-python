@@ -20,9 +20,7 @@ from rtbnext.core.rate_limiter import RateLimiter, RateLimiterOptions
 
 @dataclass ( slots= True, frozen= True )
 class ClientIdentity:
-    """
-    Information used to identify the client making API requests.
-    """
+    """Information used to identify the client making API requests."""
 
     name: str
     version: str | int
@@ -32,9 +30,7 @@ class ClientIdentity:
 
 @dataclass ( slots= True, frozen= True )
 class HttpClientOptions:
-    """
-    Configuration options for the HTTP client.
-    """
+    """Configuration options for the HTTP client."""
 
     base_url: str
     sdk_version: str
@@ -45,9 +41,7 @@ class HttpClientOptions:
 
 @dataclass ( slots= True, frozen= True )
 class RequestOptions:
-    """
-    Options for an individual HTTP request.
-    """
+    """Options for an individual HTTP request."""
 
     headers: httpx.Headers | dict[ str, str ] | None = None
     mode: Literal[ "burst", "spread" ] = "burst"
@@ -56,9 +50,7 @@ class RequestOptions:
 
 @dataclass ( slots= True, frozen= True )
 class HttpResponse:
-    """
-    Represents the response returned by an HTTP request.
-    """
+    """Represents the response returned by an HTTP request."""
 
     url: str
     ok: bool
@@ -219,9 +211,7 @@ class HttpClient:
             self._pending.pop( url, None )
 
     async def aclose ( self ) -> None:
-        """
-        Close the underlying HTTP client and release network resources.
-        """
+        """Close the underlying HTTP client and release network resources."""
 
         await self._client.aclose()
 

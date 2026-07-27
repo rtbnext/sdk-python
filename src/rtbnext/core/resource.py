@@ -20,9 +20,7 @@ from rtbnext.resource.resource import Resource
 
 @dataclass ( slots= True )
 class CacheOptions:
-    """
-    Configuration options for the resource loader cache.
-    """
+    """Configuration options for the resource loader cache."""
 
     type: Cache | Literal[ False, "memory" ] = "memory"
     mode: Literal[ "ttl", "session", "revalidate" ] = "ttl"
@@ -30,9 +28,7 @@ class CacheOptions:
 
 @dataclass ( slots= True )
 class ResourceState:
-    """
-    Represents the state of a cached resource.
-    """
+    """Represents the state of a cached resource."""
 
     response: HttpResponse
     created: float
@@ -201,9 +197,7 @@ class ResourceLoader:
         return state
 
     def _is_expired ( self, state: ResourceState ) -> bool:
-        """
-        Determine whether a cached resource has expired.
-        """
+        """Determine whether a cached resource has expired."""
 
         return state.expires is not None and state.expires <= time()
 
@@ -260,9 +254,7 @@ class ResourceLoader:
 
     @property
     def size ( self ) -> int:
-        """
-        Return the number of cached resource states.
-        """
+        """Return the number of cached resource states."""
 
         return self._cache.size
 
@@ -278,9 +270,7 @@ class ResourceLoader:
         await self._cache.delete( path )
 
     async def clear ( self ) -> None:
-        """
-        Remove all cached resource states.
-        """
+        """Remove all cached resource states."""
 
         await self._cache.clear()
 
@@ -328,15 +318,11 @@ class ResourcePool ( Generic[ R ] ):
 
     @property
     def size ( self ) -> int:
-        """
-        Return the number of pooled resources.
-        """
+        """Return the number of pooled resources."""
 
         return len( self._resources )
 
     def clear ( self ) -> None:
-        """
-        Remove all pooled resources.
-        """
+        """Remove all pooled resources."""
 
         self._resources.clear()
