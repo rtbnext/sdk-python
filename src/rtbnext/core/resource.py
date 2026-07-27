@@ -229,3 +229,31 @@ class ResourceLoader:
                 )
             )
         )
+
+    async def load ( self, path: str, options: RequestOptions | None = None ) -> ResourceState:
+        """
+        Load a resource using the configured cache policy.
+
+        Args:
+            path:
+                Resource path.
+
+            options:
+                Optional request configuration.
+
+        Returns:
+            The loaded resource state.
+        """
+
+        if self._mode == "revalidate":
+            return await self.refresh( path, options )
+
+        cached = await self._cache.get( path )
+        if cached and self.valid( cached ):
+            return cached
+
+        state = await self._fetch( path, None, options )
+        if self._mode == "session" or state.expires is not None:
+            await self._cache.set( path, state )
+
+        return state
