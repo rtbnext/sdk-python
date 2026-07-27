@@ -102,7 +102,7 @@ class Resource ( Generic[ D ] ):
 
         if self._transformed is None:
 
-            async def execute() -> Any:
+            async def execute () -> Any:
                 value = fn( await self.data() )
 
                 if asyncio.iscoroutine( value ):
@@ -179,3 +179,33 @@ class Resource ( Generic[ D ] ):
             or self._state is None
             or self._loader.valid( self._state )
         )
+
+    async def load ( self, options: RequestOptions | None = None ) -> None:
+        """
+        Load the resource if it has not already been loaded.
+
+        Multiple concurrent calls share the same loading task.
+
+        Args:
+            options:
+                Optional request options.
+        """
+
+        if self._loaded:
+            return
+
+        if self._loading is None:
+
+            async def execute () -> None:
+                self._state = await self._loader.load( self._path, options )
+                self._loaded = True
+
+                self._reset()
+                self._emit( "load", "update" )
+
+            self._loading = asyncio.create_task( execute() )
+
+        try:
+            await self._loading
+        finally:
+            self._loading = None
