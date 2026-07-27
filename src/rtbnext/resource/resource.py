@@ -1,8 +1,4 @@
-"""
-RESOURCE
-
-Implements the base resource wrapper for HTTP responses.
-"""
+"""Implements the base resource wrapper for HTTP responses."""
 
 
 from __future__ import annotations
@@ -33,10 +29,8 @@ class Resource ( Generic[ D ] ):
         Args:
             path:
                 API resource path.
-
             loader:
                 Resource loader used for fetching and caching.
-
             parser:
                 Function used to parse HTTP responses.
         """
@@ -154,7 +148,6 @@ class Resource ( Generic[ D ] ):
         Args:
             event:
                 Event name.
-
             handler:
                 Callback invoked when the event occurs.
 
@@ -172,7 +165,6 @@ class Resource ( Generic[ D ] ):
         Args:
             event:
                 Event name.
-
             handler:
                 Handler to remove.
 

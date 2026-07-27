@@ -1,8 +1,4 @@
-"""
-CACHE
-
-Implements a cache interface for storing and retrieving resource states.
-"""
+"""Implements a cache interface for storing and retrieving resource states."""
 
 
 from __future__ import annotations
@@ -48,7 +44,6 @@ class Cache ( Protocol ):
         Args:
             key:
                 The cache key.
-
             value:
                 The resource state to store.
         """

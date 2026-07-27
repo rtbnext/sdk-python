@@ -1,8 +1,4 @@
-"""
-HTTP CLIENT
-
-Implements an HTTP client with built-in rate limiting and request deduplication.
-"""
+"""Implements an HTTP client with built-in rate limiting and request deduplication."""
 
 
 from __future__ import annotations
@@ -135,7 +131,6 @@ class HttpClient:
         Args:
             url:
                 The absolute URL to request.
-
             options:
                 Optional request-specific configuration.
 
@@ -187,10 +182,9 @@ class HttpClient:
         Args:
             path:
                 Relative request path.
-      
             options:
                 Optional request configuration.
-      
+
         Returns:
             The HTTP response.
         """

@@ -1,8 +1,4 @@
-"""
-RATE LIMITER
-
-Implements a token-based rate limiter with support for burst and spread strategies.
-"""
+"""Implements a token-based rate limiter with support for burst and spread strategies."""
 
 
 from __future__ import annotations

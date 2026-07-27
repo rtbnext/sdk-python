@@ -1,8 +1,4 @@
-"""
-PARSER
-
-Implements the HTTP response body parser classes.
-"""
+"""Implements the HTTP response body parser classes."""
 
 from __future__ import annotations
 
@@ -118,7 +114,6 @@ class CsvParser ( TextParser ):
         Args:
             line:
                 CSV line.
-
             delimiter:
                 Field delimiter.
 
@@ -162,7 +157,6 @@ class CsvParser ( TextParser ):
         Args:
             response:
                 HTTP response to parse.
-
             delimiter:
                 CSV field delimiter.
 

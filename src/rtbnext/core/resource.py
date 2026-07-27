@@ -1,8 +1,4 @@
-"""
-RESOURCE
-
-Implements the resource loader and pooling of resource states.
-"""
+"""Implements the resource loader and pooling of resource states."""
 
 
 from __future__ import annotations
@@ -52,7 +48,6 @@ class ResourceLoader:
         Args:
             client:
                 HTTP client used to perform resource requests.
-
             options:
                 Cache configuration.
         """
@@ -80,7 +75,6 @@ class ResourceLoader:
         Args:
             response:
                 HTTP response returned by the server.
-
             previous:
                 Previous cached resource state.
 
@@ -147,10 +141,8 @@ class ResourceLoader:
         Args:
             path:
                 Resource path.
-
             previous:
                 Previous cached resource state.
-
             options:
                 Additional request options.
 
@@ -182,7 +174,6 @@ class ResourceLoader:
         Args:
             path:
                 Resource path.
-
             options:
                 Optional request configuration.
 
@@ -231,7 +222,6 @@ class ResourceLoader:
         Args:
             path:
                 Resource path.
-
             options:
                 Optional request configuration.
 
@@ -298,7 +288,6 @@ class ResourcePool ( Generic[ R ] ):
         Args:
             path:
                 Resource path.
-
             factory:
                 Factory used to construct a new resource.
 
