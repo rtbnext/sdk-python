@@ -5,8 +5,12 @@ from __future__ import annotations
 from collections.abc import Callable, Iterator
 from typing import Any, Generic, TypeVar
 
+from rtbnext.core.parser import D, ParserFn
+from rtbnext.core.resource import ResourceLoader
 from rtbnext.resource.collection import CollectionBase
+from rtbnext.resource.resource import Resource
 
+R = TypeVar( "R" )
 T = TypeVar( "T" )
 
 
@@ -100,3 +104,17 @@ class DateCollection ( CollectionBase[ str ], Generic[ T ] ):
     def between ( self, start: str, end: str ) -> DateCollection[ T ]:
         """Returns resources inside a date range."""
         return self._clone( [ item for item in self._items if start <= item <= end ] )
+
+
+class DateableResource ( Resource[ D ], Generic[ D, R ] ):
+    """Resource wrapper for date-indexed endpoints."""
+
+    def __init__ (
+        self,
+        path: str,
+        loader: ResourceLoader,
+        parser: ParserFn[ D ],
+        date: Callable[ [ str ], R ]
+    ):
+        super().__init__( path, loader, parser )
+        self._factory = date
