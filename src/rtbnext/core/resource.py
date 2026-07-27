@@ -300,3 +300,28 @@ class ResourcePool ( Generic[ R ] ):
         """Create an empty resource pool."""
 
         self._resources: dict[ str, R ] = {}
+
+    def get ( self, path: str, factory: Callable[ [], R ] ) -> R:
+        """
+        Return an existing valid resource or create a new one.
+
+        Args:
+            path:
+                Resource path.
+
+            factory:
+                Factory used to construct a new resource.
+
+        Returns:
+            The resource instance.
+        """
+
+        existing = self._resources.get( path )
+
+        if existing and existing.valid:
+            return existing
+
+        resource = factory()
+        self._resources[ path ] = resource
+
+        return resource
