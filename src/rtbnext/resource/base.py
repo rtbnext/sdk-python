@@ -154,3 +154,13 @@ class Resource( Generic[ D ] ):
         self._loaded = True
         self._reset()
         self._emit( "refresh", "update" )
+
+    async def data( self ) -> D:
+        """Return parsed resource data."""
+
+        await self.load()
+
+        if not self._parsed:
+            return self._parse()
+
+        return self._value_or_raise()
