@@ -37,6 +37,9 @@ class CollectionBase( Generic[ T ] ):
     def __iter__( self ) -> Iterator[ T ] | map[ Any ]:
         return iter( self._items ) if self._factory is None else map( self._factory, self._items )
 
+    def __contains__( self, item: object ) -> bool:
+        return item in self._items
+
     def _clone( self, items: list[ T ] ) -> Self:
         """Create a new collection instance with replaced items."""
 
