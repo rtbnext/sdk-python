@@ -13,9 +13,9 @@ from __future__ import annotations
 import asyncio
 from collections import deque
 from time import monotonic
-from typing import Literal
+from typing import Literal, TypeAlias
 
-RateLimiterMode = Literal[ "burst", "spread" ]
+RateLimiterMode: TypeAlias = Literal[ "burst", "spread" ]
 
 
 class RateLimiter:
