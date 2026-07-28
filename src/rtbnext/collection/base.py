@@ -6,7 +6,7 @@ Implements the base collection shared by all resource collections.
 
 from __future__ import annotations
 
-from typing import Generic, Self, TypeVar
+from typing import Any, Callable, Generic, Self, TypeVar
 
 T = TypeVar( "T" )
 
@@ -19,14 +19,18 @@ class CollectionBase( Generic[ T ] ):
     manipulate and access the underlying items while maintaining immutability.
     """
 
-    def __init__( self, items: list[ T ], total: int | None = None ) -> None:
-        self._items = items
+    def __init__(
+        self, items: list[ T ], *,
+        factory: Callable[ [ T ], Any ] | None = None,
+        total: int | None = None
+    ) -> None:
+        self._items, self._factory = items, factory
         self._total = len( items ) if total is None else total
 
     def _clone( self, items: list[ T ] ) -> Self:
         """Create a new collection instance with replaced items."""
 
-        return self.__class__( items, self._total )
+        return self.__class__( items, factory= self._factory, total= self._total )
 
     @property
     def total( self ) -> int:
