@@ -44,6 +44,22 @@ class CollectionBase( Generic[ T ] ):
 
         return len( self._items )
 
+    @property
+    def first( self ) -> T | Any | None:
+        """Returns the first item."""
+
+        return None if not self._items else (
+            self._factory( self._items[ 0 ] ) if self._factory else self._items[ 0 ]
+        )
+
+    @property
+    def last( self ) -> T | Any | None:
+        """Returns the last item."""
+
+        return None if not self._items else (
+            self._factory( self._items[ -1 ] ) if self._factory else self._items[ -1 ]
+        )
+
     def take( self, count: int ) -> Self:
         """Return a collection containing the first items."""
 
