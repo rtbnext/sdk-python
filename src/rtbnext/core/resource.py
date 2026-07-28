@@ -8,15 +8,18 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from time import time
-from typing import Literal, TypeAlias
+from typing import Any, Callable, Generic, Literal, TypeAlias, TypeVar
 
 import httpx
 
 from rtbnext.core.cache import Cache, EmptyCache, MemoryCache
-from rtbnext.core.http_client import HttpClient, HttpHeader, HttpResponse, RateLimitMode
+from rtbnext.core.http_client import (HttpClient, HttpHeader, HttpResponse,
+                                      RateLimitMode)
+from rtbnext.resource.base import Resource
 
 CacheType: TypeAlias = Cache | Literal[ False, "memory" ]
 CachMode: TypeAlias = Literal[ "ttl", "session", "revalidate" ]
+R = TypeVar( "R", bound= Resource[ Any ] )
 
 
 @dataclass( slots= True )
@@ -160,3 +163,35 @@ class ResourceLoader:
         """Remove all cached resource states."""
 
         await self._cache.clear()
+
+
+class ResourcePool( Generic[ R ] ):
+    """
+    Stores and reuses resource instances by their resource path.
+
+    Valid resources are reused, while invalid resources are replaced with
+    newly created instances.
+    """
+
+    def __init__( self ) -> None:
+        self._resources: dict[ str, R ] = {}
+
+    def get( self, path: str, factory: Callable[ [], R ] ) -> R:
+        """Return an existing valid resource or create a new one."""
+
+        if ( res := self._resources.get( path ) ) and getattr( res, "valid", False ):
+            return res
+
+        self._resources[ path ] = res = factory()
+        return res
+
+    @property
+    def size( self ) -> int:
+        """Return the number of pooled resources."""
+
+        return len( self._resources )
+
+    def clear( self ) -> None:
+        """Remove all pooled resources."""
+
+        self._resources.clear()

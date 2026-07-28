@@ -18,3 +18,7 @@ class Resource ( Generic[ D ] ):
     Resources are loaded only when data is requested. Loaded responses are kept
     as resource state while parsed values are cached separately.
     """
+
+    @property
+    def valid( self ) -> bool:
+        return False
