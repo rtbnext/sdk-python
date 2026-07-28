@@ -20,4 +20,10 @@ class RateLimiter:
 
     def __init__ ( self, max_requests: int, per_ms: int ) -> None:
         self._max_requests = max_requests
-        self._per_ms = per_ms
+        self._per_seconds = per_ms / 1000
+        self._interval = self._per_seconds / max_requests
+
+        self._burst = deque[ float ]()
+        self._next_allowed = 0.0
+
+        self._lock = asyncio.Lock()
