@@ -4,8 +4,13 @@ Defaults
 Declares default values for options.
 """
 
-from rtbnext.core.rate_limiter import RateLimitMode
-from rtbnext.core.resource import CacheMode, CacheType
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from rtbnext.core.rate_limiter import RateLimitMode
+    from rtbnext.core.resource import CacheMode, CacheType
 
 DEFAULT_API_URL: str = "https://api.rtbnext.de"
 
