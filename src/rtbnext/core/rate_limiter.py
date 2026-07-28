@@ -22,8 +22,7 @@ class RateLimiter:
     """Async rate limiter supporting burst and spread strategies."""
 
     def __init__( self, max_requests: int, per_seconds: float ) -> None:
-        self._max_requests = max_requests
-        self._per_seconds = per_seconds
+        self._max_requests, self._per_seconds = max_requests, per_seconds
         self._interval = self._per_seconds / max_requests
 
         self._burst = deque[ float ]()
