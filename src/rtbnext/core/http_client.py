@@ -14,6 +14,7 @@ from typing import Literal
 from urllib.parse import urljoin
 
 import httpx
+
 from rtbnext import __api__, __version__
 from rtbnext.core.rate_limiter import RateLimiter
 
