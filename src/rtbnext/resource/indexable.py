@@ -15,8 +15,8 @@ from rtbnext.resource.base import Resource
 
 R = TypeVar( "R" )
 type PathParts = tuple[ str, ... ]
-type IndexFn[ R ] = Callable[ [ tuple[ str, ... ] ], R ]
-type KeysFn = Callable[ [ object ], tuple[ str, ... ] | None ]
+type IndexFn[ R ] = Callable[ [ PathParts ], R ]
+type KeysFn = Callable[ [ object ], PathParts | None ]
 
 
 class _IndexAccessor( Generic[ R ] ):
