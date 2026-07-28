@@ -10,13 +10,14 @@ from __future__ import annotations
 import asyncio
 from dataclasses import dataclass
 from time import perf_counter
-from typing import Literal
 from urllib.parse import urljoin
 
 import httpx
 
 from rtbnext import __api__, __version__
 from rtbnext.core.rate_limiter import RateLimiter, RateLimiterMode
+
+HttpHeader = httpx.Headers | dict[ str, str ] | None
 
 
 @dataclass( slots= True, frozen= True )
@@ -94,7 +95,7 @@ class HttpClient:
 
     async def _execute(
         self, url: str, *,
-        headers: httpx.Headers | dict[ str, str ] | None = None,
+        headers: HttpHeader = None,
         mode: RateLimiterMode = "burst",
         timeout: float | None = None
     ) -> HttpResponse:
@@ -121,3 +122,27 @@ class HttpClient:
             headers= response.headers,
             latency= round( ( perf_counter() - start ) * 1000 )
         )
+
+    async def request(
+        self, path: str, *,
+        headers: HttpHeader = None,
+        mode: RateLimiterMode = "burst",
+        timeout: float | None = None,
+    ) -> HttpResponse:
+        """Send a request relative to the configured base URL."""
+
+        url = urljoin( self._base_url, path )
+
+        if task := self._pending.get( url ):
+            return await task
+
+        task = asyncio.create_task(
+            self._execute( url, headers= headers, mode= mode, timeout= timeout )
+        )
+
+        self._pending[ url ] = task
+
+        try:
+            return await task
+        finally:
+            self._pending.pop( url, None )
