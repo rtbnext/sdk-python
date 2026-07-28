@@ -33,10 +33,7 @@ class RateLimiter:
 
         async with self._lock:
             now = monotonic()
-
-            if self._next_allowed < now:
-                self._next_allowed = now
-
+            self._next_allowed = max( self._next_allowed, now )
             wait = self._next_allowed - now
             self._next_allowed += self._interval
 
