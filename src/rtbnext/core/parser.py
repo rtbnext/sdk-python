@@ -8,12 +8,12 @@ JSON responses and CSV data.
 import csv
 import json
 from io import StringIO
-from typing import Any, Callable, TypeAlias, TypeVar
+from typing import Any, Callable, TypeVar
 
 from rtbnext.core.http_client import HttpResponse
 
 D = TypeVar( "D" )
-ParserFn: TypeAlias = Callable[ [ HttpResponse ], D ]
+type ParserFn[ D ] = Callable[ [ HttpResponse ], D ]
 
 
 class Parser:

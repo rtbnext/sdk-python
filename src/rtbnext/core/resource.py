@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from time import time
-from typing import Any, Callable, Generic, Literal, TypeAlias, TypeVar
+from typing import Any, Callable, Generic, Literal, TypeVar
 
 import httpx
 
@@ -19,8 +19,8 @@ from rtbnext.defaults import (DEFAULT_CACHE_MODE, DEFAULT_CACHE_TYPE,
                               DEFAULT_RATE_LIMIT_MODE, DEFAULT_TIMEOUT)
 from rtbnext.resource.base import Resource
 
-CacheType: TypeAlias = Cache | Literal[ False, "memory" ]
-CacheMode: TypeAlias = Literal[ "ttl", "session", "revalidate" ]
+type CacheType = Cache | Literal[ False, "memory" ]
+type CacheMode = Literal[ "ttl", "session", "revalidate" ]
 R = TypeVar( "R", bound= Resource[ Any ] )
 
 

@@ -10,7 +10,6 @@ from __future__ import annotations
 import asyncio
 from dataclasses import dataclass
 from time import perf_counter
-from typing import TypeAlias
 from urllib.parse import urljoin
 
 import httpx
@@ -21,7 +20,7 @@ from rtbnext.defaults import (DEFAULT_API_URL, DEFAULT_MAX_REQUESTS,
                               DEFAULT_PER_SECONDS, DEFAULT_RATE_LIMIT_MODE,
                               DEFAULT_TIMEOUT)
 
-HttpHeader: TypeAlias = httpx.Headers | dict[ str, str ] | None
+type HttpHeader = httpx.Headers | dict[ str, str ] | None
 
 
 @dataclass( slots= True, frozen= True )

@@ -13,11 +13,11 @@ from __future__ import annotations
 import asyncio
 from collections import deque
 from time import monotonic
-from typing import Literal, TypeAlias
+from typing import Literal
 
 from rtbnext.defaults import DEFAULT_MAX_REQUESTS, DEFAULT_PER_SECONDS
 
-RateLimitMode: TypeAlias = Literal[ "burst", "spread" ]
+type RateLimitMode = Literal[ "burst", "spread" ]
 
 
 class RateLimiter:
