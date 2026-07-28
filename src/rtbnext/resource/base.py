@@ -5,12 +5,13 @@ Implements the base resource wrapper for HTTP responses.
 """
 
 from __future__ import annotations
-
 import asyncio
 from typing import Any, Awaitable, Callable, Generic, Self
-
 from rtbnext.core.parser import D, ParserFn
 from rtbnext.core.resource import ResourceLoader, ResourceState
+from rtbnext.core.rate_limiter import RateLimitMode
+from rtbnext.defaults import DEFAULT_RATE_LIMIT_MODE, DEFAULT_TIMEOUT
+from rtbnext.core.http_client import HttpHeader
 
 type TransformFn[ D ] = Callable[ [ D ], Awaitable[ Any ] | Any ]
 
@@ -104,7 +105,36 @@ class Resource( Generic[ D ] ):
         return self
 
     @property
-    def valid ( self ) -> bool:
+    def valid( self ) -> bool:
         """Return whether the current resource state is still valid."""
 
         return ( not self._loaded or self._state is None or self._loader.valid( self._state ) )
+
+    async def load(
+        self, *,
+        headers: HttpHeader = None,
+        mode: RateLimitMode = DEFAULT_RATE_LIMIT_MODE,
+        timeout: float | None = DEFAULT_TIMEOUT
+    ) -> None:
+        """Load the resource if it has not already been loaded."""
+
+        if self._loaded:
+            return
+
+        if self._loading is None:
+
+            async def execute () -> None:
+                self._state = await self._loader.load(
+                    self._path, headers= headers, mode= mode, timeout= timeout
+                )
+
+                self._loaded = True
+                self._reset()
+                self._emit( "load", "update" )
+
+            self._loading = asyncio.create_task( execute() )
+
+        try:
+            await self._loading
+        finally:
+            self._loading = None
