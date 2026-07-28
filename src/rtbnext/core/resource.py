@@ -144,3 +144,19 @@ class ResourceLoader:
             await self._cache.set( path, state )
 
         return state
+
+    @property
+    def size( self ) -> int:
+        """Return the number of cached resource states."""
+
+        return self._cache.size
+
+    async def delete( self, path: str ) -> None:
+        """Remove a resource from the cache."""
+
+        await self._cache.delete( path )
+
+    async def clear( self ) -> None:
+        """Remove all cached resource states."""
+
+        await self._cache.clear()
