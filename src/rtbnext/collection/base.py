@@ -27,3 +27,15 @@ class CollectionBase( Generic[ T ] ):
         """Create a new collection instance with replaced items."""
 
         return self.__class__( items, self._total )
+
+    @property
+    def total( self ) -> int:
+        """Return the total number of available items."""
+
+        return self._total
+
+    @property
+    def count( self ) -> int:
+        """Return the number of items currently contained."""
+
+        return len( self._items )
