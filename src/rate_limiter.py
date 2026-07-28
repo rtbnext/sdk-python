@@ -18,7 +18,7 @@ from time import monotonic
 class RateLimiter:
     """Async rate limiter supporting burst and spread strategies."""
 
-    def __init__ ( self, max_requests: int, per_ms: int ) -> None:
+    def __init__( self, max_requests: int, per_ms: int ) -> None:
         self._max_requests = max_requests
         self._per_seconds = per_ms / 1000
         self._interval = self._per_seconds / max_requests
@@ -28,7 +28,7 @@ class RateLimiter:
 
         self._lock = asyncio.Lock()
 
-    async def _spread_refill ( self ) -> None:
+    async def _spread_refill( self ) -> None:
         """Wait until the next evenly distributed request is allowed."""
 
         async with self._lock:
@@ -40,7 +40,7 @@ class RateLimiter:
         if wait > 0:
             await asyncio.sleep( wait )
 
-    async def burst ( self ) -> None:
+    async def burst( self ) -> None:
         """
         Allow up to max_requests immediately.
         Further requests wait until the rolling window expires.
@@ -61,7 +61,7 @@ class RateLimiter:
 
             await asyncio.sleep( wait )
 
-    async def spread ( self ) -> None:
+    async def spread( self ) -> None:
         """Distribute requests evenly across the configured time window."""
 
         await self._spread_refill()
