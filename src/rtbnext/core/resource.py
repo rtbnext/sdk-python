@@ -9,10 +9,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from time import time
 from typing import Literal, TypeAlias
+
 import httpx
 
 from rtbnext.core.cache import Cache, EmptyCache, MemoryCache
-from rtbnext.core.http_client import HttpClient, HttpResponse, HttpHeader, RateLimitMode
+from rtbnext.core.http_client import HttpClient, HttpHeader, HttpResponse, RateLimitMode
 
 CacheType: TypeAlias = Cache | Literal[ False, "memory" ]
 CachMode: TypeAlias = Literal[ "ttl", "session", "revalidate" ]
@@ -79,8 +80,7 @@ class ResourceLoader:
         return ResourceState( res, created, expires, etag, last_modified )
 
     async def _fetch(
-        self, path: str, *,
-        prev: ResourceState | None = None,
+        self, path: str, prev: ResourceState | None = None, *,
         headers: HttpHeader = None,
         mode: RateLimitMode = "burst",
         timeout: float | None = None
@@ -106,7 +106,7 @@ class ResourceLoader:
         """Refresh a cached resource."""
 
         state = await self._fetch(
-            path, prev= await self._cache.get( path ),
+            path, await self._cache.get( path ),
             headers= headers, mode= mode, timeout= timeout
         )
 
@@ -124,3 +124,23 @@ class ResourceLoader:
         return ( state is not None and ( self._mode == "session" or (
             self._mode == "ttl" and not self._is_expired( state )
         ) ) )
+
+    async def load(
+        self, path: str, *,
+        headers: HttpHeader = None,
+        mode: RateLimitMode = "burst",
+        timeout: float | None = None
+    ) -> ResourceState:
+        """Load a resource using the configured cache policy."""
+
+        if self._mode == "revalidate":
+            return await self.refresh( path, headers= headers, mode= mode, timeout= timeout )
+
+        if ( cached := await self._cache.get( path ) ) and self.valid( cached ):
+            return cached
+
+        state = await self._fetch( path, None, headers= headers, mode= mode, timeout= timeout )
+        if self._mode == "session" or state.expires:
+            await self._cache.set( path, state )
+
+        return state
