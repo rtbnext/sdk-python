@@ -15,6 +15,7 @@ import httpx
 from rtbnext.core.cache import Cache, EmptyCache, MemoryCache
 from rtbnext.core.http_client import (HttpClient, HttpHeader, HttpResponse,
                                       RateLimitMode)
+from rtbnext.defaults import DEFAULT_RATE_LIMIT_MODE, DEFAULT_TIMEOUT
 from rtbnext.resource.base import Resource
 
 CacheType: TypeAlias = Cache | Literal[ False, "memory" ]
@@ -88,8 +89,8 @@ class ResourceLoader:
     async def _fetch(
         self, path: str, prev: ResourceState | None = None, *,
         headers: HttpHeader = None,
-        mode: RateLimitMode = "burst",
-        timeout: float | None = None
+        mode: RateLimitMode = DEFAULT_RATE_LIMIT_MODE,
+        timeout: float | None = DEFAULT_TIMEOUT
     ) -> ResourceState:
         """Fetch a resource from the network."""
 
@@ -106,8 +107,8 @@ class ResourceLoader:
     async def refresh(
         self, path: str, *,
         headers: HttpHeader = None,
-        mode: RateLimitMode = "burst",
-        timeout: float | None = None
+        mode: RateLimitMode = DEFAULT_RATE_LIMIT_MODE,
+        timeout: float | None = DEFAULT_TIMEOUT
     ) -> ResourceState:
         """Refresh a cached resource."""
 
@@ -134,8 +135,8 @@ class ResourceLoader:
     async def load(
         self, path: str, *,
         headers: HttpHeader = None,
-        mode: RateLimitMode = "burst",
-        timeout: float | None = None
+        mode: RateLimitMode = DEFAULT_RATE_LIMIT_MODE,
+        timeout: float | None = DEFAULT_TIMEOUT
     ) -> ResourceState:
         """Load a resource using the configured cache policy."""
 
