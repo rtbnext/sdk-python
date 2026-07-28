@@ -7,6 +7,7 @@ Implements the resource loader and pooling of resource states.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from time import time
 from typing import Literal, TypeAlias
 
 from rtbnext.core.cache import Cache, EmptyCache, MemoryCache
@@ -48,3 +49,30 @@ class ResourceLoader:
             case "memory": self._cache = MemoryCache()
             case _ if isinstance( cache, Cache ): self._cache = cache
             case _: raise ValueError( f"Invalid cache type: { cache }" )
+
+    def _create_state (
+        self,
+        res: HttpResponse,
+        prev: ResourceState | None = None
+    ) -> ResourceState:
+        """Create a cached resource state from an HTTP response."""
+
+        created = time()
+
+        max_age = next( (
+            int( p.split( "=" )[ 1 ] )
+            for p in res.headers.get( "Cache-Control", "" ).split( "," )
+            if p.strip().startswith( "max-age=" )
+        ), None )
+
+        expires = created + max_age if max_age is not None else getattr( prev, "expires", None )
+        etag = res.headers.get( "ETag" ) or getattr( prev, "etag", None )
+        last_modified = res.headers.get( "Last-Modified" ) or getattr( prev, "last_modified", None )
+
+        if res.status == 304 and prev:
+            res = HttpResponse(
+                prev.response.url, prev.response.ok, prev.response.status,
+                prev.response.body, res.headers, res.latency
+            )
+
+        return ResourceState( res, created, expires, etag, last_modified )
