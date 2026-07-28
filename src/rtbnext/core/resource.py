@@ -15,7 +15,8 @@ import httpx
 from rtbnext.core.cache import Cache, EmptyCache, MemoryCache
 from rtbnext.core.http_client import (HttpClient, HttpHeader, HttpResponse,
                                       RateLimitMode)
-from rtbnext.defaults import DEFAULT_RATE_LIMIT_MODE, DEFAULT_TIMEOUT
+from rtbnext.defaults import (DEFAULT_CACHE_MODE, DEFAULT_CACHE_TYPE,
+                              DEFAULT_RATE_LIMIT_MODE, DEFAULT_TIMEOUT)
 from rtbnext.resource.base import Resource
 
 CacheType: TypeAlias = Cache | Literal[ False, "memory" ]
@@ -45,8 +46,8 @@ class ResourceLoader:
     def __init__(
         self, *,
         client: HttpClient,
-        cache: CacheType = "memory",
-        mode: CacheMode = "ttl"
+        cache: CacheType = DEFAULT_CACHE_TYPE,
+        mode: CacheMode = DEFAULT_CACHE_MODE
     ) -> None:
         self._client, self._mode = client, mode
 

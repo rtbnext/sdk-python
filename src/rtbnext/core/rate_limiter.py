@@ -15,13 +15,19 @@ from collections import deque
 from time import monotonic
 from typing import Literal, TypeAlias
 
+from rtbnext.defaults import DEFAULT_MAX_REQUESTS, DEFAULT_PER_SECONDS
+
 RateLimitMode: TypeAlias = Literal[ "burst", "spread" ]
 
 
 class RateLimiter:
     """Async rate limiter supporting burst and spread strategies."""
 
-    def __init__( self, max_requests: int, per_seconds: float ) -> None:
+    def __init__(
+        self,
+        max_requests: int = DEFAULT_MAX_REQUESTS,
+        per_seconds: float = DEFAULT_PER_SECONDS
+    ) -> None:
         self._max_requests, self._per_seconds = max_requests, per_seconds
         self._interval = self._per_seconds / max_requests
 

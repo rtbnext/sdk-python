@@ -15,8 +15,11 @@ from urllib.parse import urljoin
 
 import httpx
 
-from rtbnext import __api__, __version__
+from rtbnext import __version__
 from rtbnext.core.rate_limiter import RateLimiter, RateLimitMode
+from rtbnext.defaults import (DEFAULT_API_URL, DEFAULT_MAX_REQUESTS,
+                              DEFAULT_PER_SECONDS, DEFAULT_RATE_LIMIT_MODE,
+                              DEFAULT_TIMEOUT)
 
 HttpHeader: TypeAlias = httpx.Headers | dict[ str, str ] | None
 
@@ -61,10 +64,10 @@ class HttpClient:
     def __init__(
         self, *,
         client: ClientIdentity,
-        base_url: str = __api__,
-        max_requests: int = 60,
-        per_seconds: float = 10,
-        timeout: float = 30
+        base_url: str = DEFAULT_API_URL,
+        max_requests: int = DEFAULT_MAX_REQUESTS,
+        per_seconds: float = DEFAULT_PER_SECONDS,
+        timeout: float = DEFAULT_TIMEOUT
     ) -> None:
         self._base_url, self._client_info, self._timeout = base_url, client, timeout
 
@@ -96,8 +99,8 @@ class HttpClient:
     async def _execute(
         self, url: str, *,
         headers: HttpHeader = None,
-        mode: RateLimitMode = "burst",
-        timeout: float | None = None
+        mode: RateLimitMode = DEFAULT_RATE_LIMIT_MODE,
+        timeout: float | None = DEFAULT_TIMEOUT
     ) -> HttpResponse:
         """Execute a single HTTP request."""
 
@@ -120,8 +123,8 @@ class HttpClient:
     async def request(
         self, path: str, *,
         headers: HttpHeader = None,
-        mode: RateLimitMode = "burst",
-        timeout: float | None = None
+        mode: RateLimitMode = DEFAULT_RATE_LIMIT_MODE,
+        timeout: float | None = DEFAULT_TIMEOUT
     ) -> HttpResponse:
         """Send a request relative to the configured base URL."""
 
