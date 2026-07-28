@@ -22,6 +22,15 @@ class Parser:
     """
 
     @staticmethod
+    def _number( value: str ) -> str | int | float:
+        value = value.strip()
+
+        try:
+            return float( value ) if "." in value else int( value ) if value else value
+        except ValueError:
+            return value
+
+    @staticmethod
     def text( res: HttpResponse ) -> str:
         """Convert an HTTP response body to UTF-8 text."""
 
