@@ -25,3 +25,13 @@ class RateLimiter:
         self._refill_interval = per_ms / max_requests / 1000
         self._queue: deque[ asyncio.Future[ None ] ] = deque()
         self._task: asyncio.Task[ None ] | None = None
+
+    def _process_queue ( self ) -> None:
+        """Process waiting requests while tokens are available."""
+
+        while self._tokens > 0 and self._queue:
+            self._tokens -= 1
+
+            future = self._queue.popleft()
+            if not future.done():
+                future.set_result( None )
