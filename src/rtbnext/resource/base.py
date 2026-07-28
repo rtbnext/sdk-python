@@ -104,5 +104,7 @@ class Resource( Generic[ D ] ):
         return self
 
     @property
-    def valid( self ) -> bool:
-        return False
+    def valid ( self ) -> bool:
+        """Return whether the current resource state is still valid."""
+
+        return ( not self._loaded or self._state is None or self._loader.valid( self._state ) )
