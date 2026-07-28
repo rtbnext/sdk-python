@@ -27,3 +27,18 @@ class RateLimiter:
         self._next_allowed = 0.0
 
         self._lock = asyncio.Lock()
+
+    async def _spread_refill ( self ) -> None:
+        """Wait until the next evenly distributed request is allowed."""
+
+        async with self._lock:
+            now = monotonic()
+
+            if self._next_allowed < now:
+                self._next_allowed = now
+
+            wait = self._next_allowed - now
+            self._next_allowed += self._interval
+
+        if wait > 0:
+            await asyncio.sleep( wait )
