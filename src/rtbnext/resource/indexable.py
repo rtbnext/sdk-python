@@ -33,6 +33,11 @@ class _IndexAccessor( Generic[ R ] ):
 
         return self._factory( ( *self._path, key ) )
 
+    def __dir__( self ) -> list[ str ]:
+        """Return the list of available index keys."""
+
+        return sorted( ( *super().__dir__(), *self._keys ) )
+
 
 class IndexableResource( Resource[ D ], Generic[ D, R ] ):
     """
