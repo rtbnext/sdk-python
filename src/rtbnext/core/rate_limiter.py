@@ -15,7 +15,7 @@ from collections import deque
 from time import monotonic
 from typing import Literal, TypeAlias
 
-RateLimiterMode: TypeAlias = Literal[ "burst", "spread" ]
+RateLimitMode: TypeAlias = Literal[ "burst", "spread" ]
 
 
 class RateLimiter:
@@ -69,7 +69,7 @@ class RateLimiter:
 
         await self._spread_refill()
 
-    async def acquire( self, mode: RateLimiterMode = "burst" ) -> None:
+    async def acquire( self, mode: RateLimitMode = "burst" ) -> None:
         """Acquire permission to perform a request."""
 
         if mode == "burst":

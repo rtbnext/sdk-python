@@ -10,14 +10,15 @@ from __future__ import annotations
 import asyncio
 from dataclasses import dataclass
 from time import perf_counter
+from typing import TypeAlias
 from urllib.parse import urljoin
 
 import httpx
 
 from rtbnext import __api__, __version__
-from rtbnext.core.rate_limiter import RateLimiter, RateLimiterMode
+from rtbnext.core.rate_limiter import RateLimiter, RateLimitMode
 
-HttpHeader = httpx.Headers | dict[ str, str ] | None
+HttpHeader: TypeAlias = httpx.Headers | dict[ str, str ] | None
 
 
 @dataclass( slots= True, frozen= True )
@@ -28,6 +29,12 @@ class ClientIdentity:
     version: str
     contact: str | None = None
     email: str | None = None
+
+    def __post_init__( self ) -> None:
+        if not self.name.strip():
+            raise ValueError( "Client name is required." )
+        if not self.version.strip():
+            raise ValueError( "Client version is required." )
 
 
 @dataclass( slots= True, frozen= True )
