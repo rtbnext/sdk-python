@@ -13,7 +13,7 @@ T = TypeVar( "T" )
 
 class CollectionBase( Generic[ T ] ):
     """
-    Provides common immutable collection slicing operations.
+    Provides common immutable collection operations.
 
     This class serves as a base for resource collections, providing methods to
     manipulate and access the underlying items while maintaining immutability.
@@ -100,3 +100,8 @@ class CollectionBase( Generic[ T ] ):
         """Return a collection containing a sliced range of items."""
 
         return self._clone( self._items[ start : end ] )
+
+    def reversed( self ) -> Self:
+        """Return a collection containing reversed items."""
+
+        return self._clone( self._items[ ::-1 ] )
