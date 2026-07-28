@@ -51,7 +51,7 @@ class ResourceLoader:
             case _ if isinstance( cache, Cache ): self._cache = cache
             case _: raise ValueError( f"Invalid cache type: { cache }" )
 
-    def _create_state (
+    def _create_state(
         self,
         res: HttpResponse,
         prev: ResourceState | None = None
@@ -78,7 +78,7 @@ class ResourceLoader:
 
         return ResourceState( res, created, expires, etag, last_modified )
 
-    async def _fetch (
+    async def _fetch(
         self, path: str, *,
         prev: ResourceState | None = None,
         headers: HttpHeader = None,
@@ -97,7 +97,7 @@ class ResourceLoader:
         res = await self._client.request( path, headers= headers, mode= mode, timeout= timeout )
         return self._create_state( res, prev )
 
-    async def refresh (
+    async def refresh(
         self, path: str, *,
         headers: HttpHeader = None,
         mode: RateLimitMode = "burst",
@@ -112,3 +112,15 @@ class ResourceLoader:
 
         await self._cache.set( path, state )
         return state
+
+    def _is_expired( self, state: ResourceState ) -> bool:
+        """Determine whether a cached resource has expired."""
+
+        return state.expires is not None and state.expires <= time()
+
+    def valid( self, state: ResourceState | None ) -> bool:
+        """Determine whether a cached resource is valid."""
+
+        return ( state is not None and ( self._mode == "session" or (
+            self._mode == "ttl" and not self._is_expired( state )
+        ) ) )
