@@ -25,3 +25,15 @@ class ClientIdentity:
     version: str
     contact: str | None = None
     email: str | None = None
+
+
+@dataclass( slots= True, frozen= True )
+class HttpResponse:
+    """Represents the response returned by an HTTP request."""
+
+    url: str
+    ok: bool
+    status: int
+    body: bytes
+    headers: httpx.Headers
+    latency: int
