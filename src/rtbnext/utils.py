@@ -1,4 +1,8 @@
-"""Implement utility methods."""
+"""
+Utils
+
+Implements utility methods.
+"""
 
 
 from __future__ import annotations
