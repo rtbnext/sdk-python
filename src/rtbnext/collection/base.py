@@ -65,6 +65,14 @@ class CollectionBase( Generic[ T ] ):
 
         return [ ( self._factory( i ) if self._factory else i ) for i in self._items ]
 
+    def map( self, callback: Callable[ [ T, int ], Any ] ):
+        """Map items."""
+
+        return [
+            callback( self._factory( i ) if self._factory else i, idx )
+            for idx, i in enumerate( self._items )
+        ]
+
     def take( self, count: int ) -> Self:
         """Return a collection containing the first items."""
 
