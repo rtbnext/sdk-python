@@ -1,5 +1,5 @@
 [MESSAGES CONTROL]
-disable=unnecessary-ellipsis, too-few-public-methods
+disable=unnecessary-ellipsis
 
 [DESIGN]
 max-attributes=12
