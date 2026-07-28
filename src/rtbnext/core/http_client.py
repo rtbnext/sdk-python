@@ -66,9 +66,7 @@ class HttpClient:
         per_seconds: float = 10,
         timeout: float = 30
     ) -> None:
-        self._base_url = base_url
-        self._client_info = client
-        self._timeout = timeout
+        self._base_url, self._client_info, self._timeout = base_url, client, timeout
 
         self._limiter = RateLimiter( max_requests, per_seconds )
         self._client = httpx.AsyncClient( headers= self._create_headers(), follow_redirects= True )
