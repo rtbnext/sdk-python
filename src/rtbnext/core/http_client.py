@@ -62,7 +62,7 @@ class HttpClient:
         client: ClientIdentity,
         base_url: str = __api__,
         max_requests: int = 60,
-        per_seconds: int = 10,
+        per_seconds: float = 10,
         timeout: float = 30
     ) -> None:
         self._base_url = base_url
@@ -77,12 +77,6 @@ class HttpClient:
         """Create the default headers sent with every request."""
 
         client = self._client_info
-
-        if not client.name.strip():
-            raise ValueError( "Client name is required." )
-        if not client.version.strip():
-            raise ValueError( "Client version is required." )
-
         info = "; ".join( value for value in ( client.contact, client.email ) if value )
 
         headers = httpx.Headers( {
@@ -103,7 +97,7 @@ class HttpClient:
     async def _execute(
         self, url: str, *,
         headers: HttpHeader = None,
-        mode: RateLimiterMode = "burst",
+        mode: RateLimitMode = "burst",
         timeout: float | None = None
     ) -> HttpResponse:
         """Execute a single HTTP request."""
@@ -113,9 +107,8 @@ class HttpClient:
         try:
             start = perf_counter()
             response = await self._client.get(
-                url,
-                headers= headers,
-                timeout= timeout or self._timeout
+                url, headers= headers,
+                timeout= self._timeout if timeout is None else timeout
             )
 
         except httpx.HTTPError as exc:
@@ -133,7 +126,7 @@ class HttpClient:
     async def request(
         self, path: str, *,
         headers: HttpHeader = None,
-        mode: RateLimiterMode = "burst",
+        mode: RateLimitMode = "burst",
         timeout: float | None = None,
     ) -> HttpResponse:
         """Send a request relative to the configured base URL."""
@@ -143,9 +136,9 @@ class HttpClient:
         if task := self._pending.get( url ):
             return await task
 
-        task = asyncio.create_task(
-            self._execute( url, headers= headers, mode= mode, timeout= timeout )
-        )
+        task = asyncio.create_task( self._execute(
+            url, headers= headers, mode= mode, timeout= timeout
+        ) )
 
         self._pending[ url ] = task
 
