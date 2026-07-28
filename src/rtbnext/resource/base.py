@@ -54,6 +54,14 @@ class Resource( Generic[ D ] ):
 
         return self._value
 
+    def _value_or_raise ( self ) -> D:
+        """Return the parsed resource value or raise an error if unavailable."""
+
+        if self._value is None:
+            raise RuntimeError( "Resource value unavailable." )
+
+        return self._value
+
     @property
     def valid( self ) -> bool:
         return False
