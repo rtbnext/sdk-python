@@ -5,13 +5,15 @@ Implements the base resource wrapper for HTTP responses.
 """
 
 from __future__ import annotations
+
 import asyncio
 from typing import Any, Awaitable, Callable, Generic, Self
-from rtbnext.core.parser import D, ParserFn
-from rtbnext.core.resource import ResourceLoader, ResourceState
-from rtbnext.core.rate_limiter import RateLimitMode
-from rtbnext.defaults import DEFAULT_RATE_LIMIT_MODE, DEFAULT_TIMEOUT
+
 from rtbnext.core.http_client import HttpHeader
+from rtbnext.core.parser import D, ParserFn
+from rtbnext.core.rate_limiter import RateLimitMode
+from rtbnext.core.resource import ResourceLoader, ResourceState
+from rtbnext.defaults import DEFAULT_RATE_LIMIT_MODE, DEFAULT_TIMEOUT
 
 type TransformFn[ D ] = Callable[ [ D ], Awaitable[ Any ] | Any ]
 
@@ -68,7 +70,6 @@ class Resource( Generic[ D ] ):
         """Transform parsed resource data and cache the result."""
 
         if self._transformed is None:
-
             async def execute () -> Any:
                 value = fn( await self.data() )
 
@@ -108,7 +109,7 @@ class Resource( Generic[ D ] ):
     def valid( self ) -> bool:
         """Return whether the current resource state is still valid."""
 
-        return ( not self._loaded or self._state is None or self._loader.valid( self._state ) )
+        return not self._loaded or self._state is None or self._loader.valid( self._state )
 
     async def load(
         self, *,
@@ -122,7 +123,6 @@ class Resource( Generic[ D ] ):
             return
 
         if self._loading is None:
-
             async def execute () -> None:
                 self._state = await self._loader.load(
                     self._path, headers= headers, mode= mode, timeout= timeout
@@ -159,8 +159,4 @@ class Resource( Generic[ D ] ):
         """Return parsed resource data."""
 
         await self.load()
-
-        if not self._parsed:
-            return self._parse()
-
-        return self._value_or_raise()
+        return self._parse() if not self._parsed else self._value_or_raise()
