@@ -13,6 +13,9 @@ from __future__ import annotations
 import asyncio
 from collections import deque
 from time import monotonic
+from typing import Literal
+
+RateLimiterMode = Literal[ "burst", "spread" ]
 
 
 class RateLimiter:
@@ -65,3 +68,11 @@ class RateLimiter:
         """Distribute requests evenly across the configured time window."""
 
         await self._spread_refill()
+
+    async def acquire( self, mode: RateLimiterMode = "burst" ) -> None:
+        """Acquire permission to perform a request."""
+
+        if mode == "burst":
+            await self.burst()
+        else:
+            await self.spread()
