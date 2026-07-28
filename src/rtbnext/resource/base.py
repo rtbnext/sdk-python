@@ -37,6 +37,13 @@ class Resource( Generic[ D ] ):
 
         self._transformed: Any | Awaitable[ Any ] | None = None
 
+    def _emit( self, *events: str ) -> None:
+        """Emit lifecycle events."""
+
+        for event in events:
+            for handler in self._hooks.get( event, set() ):
+                handler( self )
+
     def _reset( self ) -> None:
         """Reset parsed values after loading or refreshing."""
 
@@ -76,7 +83,7 @@ class Resource( Generic[ D ] ):
 
         return await self._transformed
 
-    def _value_or_raise ( self ) -> D:
+    def _value_or_raise( self ) -> D:
         """Return the parsed resource value or raise an error if unavailable."""
 
         if self._value is None:
