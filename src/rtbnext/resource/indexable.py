@@ -73,3 +73,18 @@ class IndexableResource( Resource[ D ], Generic[ D, R ] ):
         """Create a lazy accessor node."""
 
         return _IndexAccessor( self._factory, path, keys )
+
+    def _traverse( self, value: object, path: PathParts = () ) -> object:
+        """Convert parsed index data into an accessor tree."""
+
+        if ( keys := self._keys( value ) ) is not None:
+            return self._create_index( keys, path )
+
+        if isinstance( value, dict ):
+            return {
+                key: self._traverse( val, ( *path, key ) )
+                for key, val in value.items()
+                if key != "$metadata"
+            }
+
+        return None
