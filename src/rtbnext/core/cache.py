@@ -9,11 +9,12 @@ such as in-memory caches or external databases.
 
 from __future__ import annotations
 
-from typing import Protocol
+from typing import Protocol, runtime_checkable
 
 from rtbnext.core.resource import ResourceState
 
 
+@runtime_checkable
 class Cache( Protocol ):
     """
     Interface for cache implementations.
