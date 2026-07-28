@@ -146,3 +146,18 @@ class HttpClient:
             return await task
         finally:
             self._pending.pop( url, None )
+
+    async def aclose( self ) -> None:
+        """Close the underlying HTTP client and release network resources."""
+
+        await self._client.aclose()
+
+    async def __aenter__( self ) -> HttpClient:
+        """Return the HTTP client when entering an async context."""
+
+        return self
+
+    async def __aexit__( self, *_ ):
+        """Close the HTTP client when leaving an async context."""
+
+        await self.aclose()
