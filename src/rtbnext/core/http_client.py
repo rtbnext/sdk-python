@@ -14,6 +14,7 @@ from typing import Literal
 from urllib.parse import urljoin
 
 import httpx
+from rtbnext import __api__, __version__
 from rtbnext.core.rate_limiter import RateLimiter
 
 
@@ -51,7 +52,7 @@ class HttpClient:
         self,
         *,
         client: ClientIdentity,
-        base_url: str = "https://api.rtbnext.de",
+        base_url: str = __api__,
         max_requests: int = 60,
         per_seconds: int = 10,
         timeout: float = 30
@@ -67,3 +68,30 @@ class HttpClient:
             headers= self._create_headers(),
             follow_redirects= True
         )
+
+    def _create_headers( self ) -> httpx.Headers:
+        """Create the default headers sent with every request."""
+
+        client = self._client_info
+
+        if not client.name.strip():
+            raise ValueError( "Client name is required." )
+        if not client.version.strip():
+            raise ValueError( "Client version is required." )
+
+        info = "; ".join( value for value in ( client.contact, client.email ) if value )
+
+        headers = httpx.Headers( {
+            "User-Agent": (
+                f"{ client.name }/{ client.version }"
+                f"{ f' ({ info })' if info else '' }"
+                f" @rtbnext/sdk/{ __version__ }"
+            ),
+            "X-Client-Name": client.name,
+            "X-Client-Version": client.version,
+        } )
+
+        if client.contact:
+            headers[ "X-Client-Contact" ] = client.contact
+
+        return headers
