@@ -18,7 +18,7 @@ from rtbnext.core.http_client import (HttpClient, HttpHeader, HttpResponse,
 from rtbnext.resource.base import Resource
 
 CacheType: TypeAlias = Cache | Literal[ False, "memory" ]
-CachMode: TypeAlias = Literal[ "ttl", "session", "revalidate" ]
+CacheMode: TypeAlias = Literal[ "ttl", "session", "revalidate" ]
 R = TypeVar( "R", bound= Resource[ Any ] )
 
 
@@ -45,7 +45,7 @@ class ResourceLoader:
         self, *,
         client: HttpClient,
         cache: CacheType = "memory",
-        mode: CachMode = "ttl"
+        mode: CacheMode = "ttl"
     ) -> None:
         self._client, self._mode = client, mode
 
@@ -76,11 +76,14 @@ class ResourceLoader:
 
         if res.status == 304 and prev:
             res = HttpResponse(
-                prev.response.url, prev.response.ok, prev.response.status,
-                prev.response.body, res.headers, res.latency
+                url= prev.response.url, ok= prev.response.ok, status= prev.response.status,
+                body= prev.response.body, headers= res.headers, latency= res.latency
             )
 
-        return ResourceState( res, created, expires, etag, last_modified )
+        return ResourceState(
+            response= res, created= created, expires= expires,
+            etag= etag, last_modified= last_modified
+        )
 
     async def _fetch(
         self, path: str, prev: ResourceState | None = None, *,
