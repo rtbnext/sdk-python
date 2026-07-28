@@ -74,6 +74,12 @@ class HttpClient:
         self._client = httpx.AsyncClient( headers= self._create_headers(), follow_redirects= True )
         self._pending: dict[ str, asyncio.Task[ HttpResponse ] ] = {}
 
+    async def __aenter__( self ) -> HttpClient:
+        return self
+
+    async def __aexit__( self, *_ ):
+        await self.aclose()
+
     def _create_headers( self ) -> httpx.Headers:
         """Create the default headers sent with every request."""
 
@@ -145,13 +151,3 @@ class HttpClient:
         """Close the underlying HTTP client and release network resources."""
 
         await self._client.aclose()
-
-    async def __aenter__( self ) -> HttpClient:
-        """Return the HTTP client when entering an async context."""
-
-        return self
-
-    async def __aexit__( self, *_ ):
-        """Close the HTTP client when leaving an async context."""
-
-        await self.aclose()
