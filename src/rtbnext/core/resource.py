@@ -9,9 +9,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from time import time
 from typing import Literal, TypeAlias
+import httpx
 
 from rtbnext.core.cache import Cache, EmptyCache, MemoryCache
-from rtbnext.core.http_client import HttpClient, HttpResponse
+from rtbnext.core.http_client import HttpClient, HttpResponse, HttpHeader, RateLimitMode
 
 CacheType: TypeAlias = Cache | Literal[ False, "memory" ]
 CachMode: TypeAlias = Literal[ "ttl", "session", "revalidate" ]
@@ -76,3 +77,22 @@ class ResourceLoader:
             )
 
         return ResourceState( res, created, expires, etag, last_modified )
+
+    async def _fetch (
+        self, path: str, *,
+        prev: ResourceState | None = None,
+        headers: HttpHeader = None,
+        mode: RateLimitMode = "burst",
+        timeout: float | None = None
+    ) -> ResourceState:
+        """Fetch a resource from the network."""
+
+        headers = httpx.Headers( headers or {} )
+
+        if prev and prev.etag:
+            headers[ "If-None-Match" ] = prev.etag
+        if prev and prev.last_modified:
+            headers[ "If-Modified-Since" ] = prev.last_modified
+
+        res = await self._client.request( path, headers= headers, mode= mode, timeout= timeout )
+        return self._create_state( res, prev )

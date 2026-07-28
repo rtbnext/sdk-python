@@ -105,7 +105,7 @@ class HttpClient:
 
         try:
             start = perf_counter()
-            response = await self._client.get(
+            res = await self._client.get(
                 url, headers= headers,
                 timeout= self._timeout if timeout is None else timeout
             )
@@ -114,11 +114,11 @@ class HttpClient:
             raise RuntimeError( f"Fetch failed: { exc }" ) from exc
 
         return HttpResponse(
-            url= str( response.url ),
-            ok= response.is_success,
-            status= response.status_code,
-            body= response.content,
-            headers= response.headers,
+            url= str( res.url ),
+            ok= res.is_success,
+            status= res.status_code,
+            body= res.content,
+            headers= res.headers,
             latency= round( ( perf_counter() - start ) * 1000 )
         )
 
