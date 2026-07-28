@@ -106,20 +106,15 @@ class HttpClient:
         try:
             start = perf_counter()
             res = await self._client.get(
-                url, headers= headers,
-                timeout= self._timeout if timeout is None else timeout
+                url, headers= headers, timeout= self._timeout if timeout is None else timeout
             )
 
         except httpx.HTTPError as exc:
             raise RuntimeError( f"Fetch failed: { exc }" ) from exc
 
         return HttpResponse(
-            url= str( res.url ),
-            ok= res.is_success,
-            status= res.status_code,
-            body= res.content,
-            headers= res.headers,
-            latency= round( ( perf_counter() - start ) * 1000 )
+            str( res.url ), res.is_success, res.status_code, res.content, res.headers,
+            round( ( perf_counter() - start ) * 1000 )
         )
 
     async def request(
