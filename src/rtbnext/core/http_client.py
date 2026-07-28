@@ -33,6 +33,7 @@ class ClientIdentity:
     def __post_init__( self ) -> None:
         if not self.name.strip():
             raise ValueError( "Client name is required." )
+
         if not self.version.strip():
             raise ValueError( "Client version is required." )
 
@@ -86,7 +87,7 @@ class HttpClient:
                 f" @rtbnext/sdk/{ __version__ }"
             ),
             "X-Client-Name": client.name,
-            "X-Client-Version": client.version,
+            "X-Client-Version": client.version
         } )
 
         if client.contact:
@@ -127,7 +128,7 @@ class HttpClient:
         self, path: str, *,
         headers: HttpHeader = None,
         mode: RateLimitMode = "burst",
-        timeout: float | None = None,
+        timeout: float | None = None
     ) -> HttpResponse:
         """Send a request relative to the configured base URL."""
 
