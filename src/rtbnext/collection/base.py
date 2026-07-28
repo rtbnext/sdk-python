@@ -60,6 +60,11 @@ class CollectionBase( Generic[ T ] ):
             self._factory( self._items[ -1 ] ) if self._factory else self._items[ -1 ]
         )
 
+    def to_array( self ) -> list[ T ] | list[ Any ]:
+        """Returns all items as list."""
+
+        return [ ( self._factory( i ) if self._factory else i ) for i in self._items ]
+
     def take( self, count: int ) -> Self:
         """Return a collection containing the first items."""
 
