@@ -26,7 +26,7 @@ class Resource( Generic[ D ] ):
     as resource state while parsed values are cached separately.
     """
 
-    def __init__( self, path: str, loader: ResourceLoader, parser: ParserFn[ D ] ) -> None:
+    def __init__( self, path: str, *, loader: ResourceLoader, parser: ParserFn[ D ] ) -> None:
         self._path, self._loader, self._parser = path, loader, parser
 
         self._hooks: dict[ str, set[ Callable[ [ Self ], None ] ] ] = {}
