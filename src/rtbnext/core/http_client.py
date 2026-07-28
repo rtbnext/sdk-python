@@ -130,11 +130,9 @@ class HttpClient:
         if task := self._pending.get( url ):
             return await task
 
-        task = asyncio.create_task( self._execute(
+        self._pending[ url ] = task = asyncio.create_task( self._execute(
             url, headers= headers, mode= mode, timeout= timeout
         ) )
-
-        self._pending[ url ] = task
 
         try:
             return await task
