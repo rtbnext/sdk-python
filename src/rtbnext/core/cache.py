@@ -55,3 +55,29 @@ class Cache( Protocol ):
     async def clear( self ) -> None:
         """Remove all resource states from the cache."""
         ...
+
+
+class EmptyCache( Cache ):
+    """
+    Cache implementation that never stores any data.
+
+    All read operations return `None`, while write operations are ignored.
+    This implementation can be used to disable caching without changing the
+    SDK's cache interface.
+    """
+
+    @property
+    def size( self ) -> int:
+        return 0
+
+    async def get( self, _key: str ) -> ResourceState | None:
+        return None
+
+    async def set( self, _key: str, _value: ResourceState ) -> None:
+        pass
+
+    async def delete( self, _key: str ) -> None:
+        pass
+
+    async def clear( self ) -> None:
+        pass
