@@ -12,6 +12,8 @@ from typing import Any, Awaitable, Callable, Generic, Self
 from rtbnext.core.parser import D, ParserFn
 from rtbnext.core.resource import ResourceLoader, ResourceState
 
+type TransformFn[ D ] = Callable[ [ D ], Awaitable[ Any ] | Any ]
+
 
 class Resource( Generic[ D ] ):
     """
@@ -53,6 +55,26 @@ class Resource( Generic[ D ] ):
         self._emit( "parse" )
 
         return self._value
+
+    async def _transform( self, fn: TransformFn[ D ] ) -> Any:
+        """Transform parsed resource data and cache the result."""
+
+        if self._transformed is None:
+
+            async def execute () -> Any:
+                value = fn( await self.data() )
+
+                if asyncio.iscoroutine( value ):
+                    value = await value
+
+                self._transformed = value
+                self._emit( "transform" )
+
+                return value
+
+            self._transformed = asyncio.create_task( execute() )
+
+        return await self._transformed
 
     def _value_or_raise ( self ) -> D:
         """Return the parsed resource value or raise an error if unavailable."""
