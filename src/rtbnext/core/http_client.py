@@ -16,7 +16,7 @@ from urllib.parse import urljoin
 import httpx
 
 from rtbnext import __api__, __version__
-from rtbnext.core.rate_limiter import RateLimiter
+from rtbnext.core.rate_limiter import RateLimiter, RateLimiterMode
 
 
 @dataclass( slots= True, frozen= True )
@@ -50,8 +50,7 @@ class HttpClient:
     """
 
     def __init__(
-        self,
-        *,
+        self, *,
         client: ClientIdentity,
         base_url: str = __api__,
         max_requests: int = 60,
@@ -63,12 +62,8 @@ class HttpClient:
         self._timeout = timeout
 
         self._limiter = RateLimiter( max_requests, per_seconds )
+        self._client = httpx.AsyncClient( headers= self._create_headers(), follow_redirects= True )
         self._pending: dict[ str, asyncio.Task[ HttpResponse ] ] = {}
-
-        self._client = httpx.AsyncClient(
-            headers= self._create_headers(),
-            follow_redirects= True
-        )
 
     def _create_headers( self ) -> httpx.Headers:
         """Create the default headers sent with every request."""
@@ -96,3 +91,33 @@ class HttpClient:
             headers[ "X-Client-Contact" ] = client.contact
 
         return headers
+
+    async def _execute(
+        self, url: str, *,
+        headers: httpx.Headers | dict[ str, str ] | None = None,
+        mode: RateLimiterMode = "burst",
+        timeout: float | None = None
+    ) -> HttpResponse:
+        """Execute a single HTTP request."""
+
+        await self._limiter.acquire( mode )
+
+        try:
+            start = perf_counter()
+            response = await self._client.get(
+                url,
+                headers= headers,
+                timeout= timeout or self._timeout
+            )
+
+        except httpx.HTTPError as exc:
+            raise RuntimeError( f"Fetch failed: { exc }" ) from exc
+
+        return HttpResponse(
+            url= str( response.url ),
+            ok= response.is_success,
+            status= response.status_code,
+            body= response.content,
+            headers= response.headers,
+            latency= round( ( perf_counter() - start ) * 1000 )
+        )
