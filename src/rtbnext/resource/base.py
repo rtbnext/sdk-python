@@ -17,6 +17,8 @@ from rtbnext.defaults import DEFAULT_RATE_LIMIT_MODE, DEFAULT_TIMEOUT
 
 type TransformFn[ D ] = Callable[ [ D ], Awaitable[ Any ] | Any ]
 
+_EMPTY_HOOKS: frozenset = frozenset()
+
 
 class Resource( Generic[ D ] ):
     """
@@ -44,7 +46,7 @@ class Resource( Generic[ D ] ):
         """Emit lifecycle events."""
 
         for event in events:
-            for handler in self._hooks.get( event, set() ):
+            for handler in self._hooks.get( event, _EMPTY_HOOKS ):
                 handler( self )
 
     def _reset( self ) -> None:
@@ -123,21 +125,22 @@ class Resource( Generic[ D ] ):
             return
 
         if self._loading is None:
-            async def execute () -> None:
-                self._state = await self._loader.load(
-                    self._path, headers= headers, mode= mode, timeout= timeout
-                )
+            async def execute() -> None:
+                try:
+                    self._state = await self._loader.load(
+                        self._path, headers= headers, mode= mode, timeout= timeout
+                    )
 
-                self._loaded = True
-                self._reset()
-                self._emit( "load", "update" )
+                    self._loaded = True
+                    self._reset()
+                    self._emit( "load", "update" )
+
+                finally:
+                    self._loading = None
 
             self._loading = asyncio.create_task( execute() )
 
-        try:
-            await self._loading
-        finally:
-            self._loading = None
+        await self._loading
 
     async def refresh(
         self, *,
