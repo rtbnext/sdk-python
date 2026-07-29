@@ -16,6 +16,7 @@ T = TypeVar( "T" )
 U = TypeVar( "U" )
 
 type ItemFactory[ T, R ] = Callable[ [ T ], R ] | None
+type DateResolver[ T ] = Callable[ [ T ], str ] | None
 
 
 class CollectionBase( Generic[ T, R ] ):
