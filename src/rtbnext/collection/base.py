@@ -233,7 +233,12 @@ class IndexCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
         return self._cursor > 0
 
     def at( self, index: int ) -> T | R | None:
-        ...
+        """Return the item at the given index."""
+
+        if not 0 <= index < self.count:
+            return None
+
+        return self._resolve( self._items[ index ] )
 
     def page( self, page: int, per_page: int = DEFAULT_PER_PAGE ) -> Self:
         ...
