@@ -47,8 +47,27 @@ class CollectCollection( IndexCollectionBase[ T, R ], Generic[ T, R ] ):
     ) -> None:
         super().__init__( items, factory= factory, total= total )
 
-        self._find = find
-        self._search = search
+        self._find = find or self._default_find
+        self._search = search or self._default_search
+
+    @staticmethod
+    def _default_find( items: list[ T ], uri_like: str ) -> T | None:
+        """Return the first item matching a URI-like string."""
+
+        uri = sanitize( uri_like )
+        return next( ( item for item in items if item[ "uri" ] == uri ), None )
+
+    @staticmethod
+    def _default_search( item: T, query: str, terms: list[ str ] ) -> bool:
+        """Return whether an item matches a search query."""
+
+        name = item.get( "searchName" ) or sanitize( item.get( "name", "" ) )
+        text = item.get( "text", "" )
+
+        return (
+            query in name or query in text
+            or all( term in name or term in text for term in terms )
+        )
 
     def _clone( self, items: list[ T ] ) -> CollectCollection[ T, R ]:
         """Create a new collection preserving configuration."""
@@ -130,4 +149,16 @@ class CollectCollection( IndexCollectionBase[ T, R ], Generic[ T, R ] ):
             self._items,
             key= lambda item: ( item.get( key ) is None, item.get( key ) ),
             reverse= descending
+        ) )
+
+    def sort(
+        self, key: Callable[ [ T | R ], K ], *,
+        reverse: bool = False
+    ) -> CollectCollection[ T, R ]:
+        """Return items sorted using a custom key."""
+
+        return self._clone( sorted(
+            self._items,
+            key= lambda item: key( self._resolve( item ) ),
+            reverse= reverse
         ) )
