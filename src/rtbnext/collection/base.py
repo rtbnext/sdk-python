@@ -119,7 +119,7 @@ class CollectionBase( Generic[ T, R ] ):
         return self._clone( self._items[ ::-1 ] )
 
 
-class DateCollectionBase( CollectionBase[ str, R ] ):
+class DateCollectionBase( CollectionBase[ str, R ], Generic[ R ] ):
     """
     Provides date-related immutable collection operations.
 
