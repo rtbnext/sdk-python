@@ -1,7 +1,7 @@
 """
 Dateable Resource
 
-Implements the resource wrapper for date-indexed endpoints
+Implements the resource wrapper for date-indexed endpoints.
 """
 
 from typing import Callable, Generic, TypedDict, TypeVar
