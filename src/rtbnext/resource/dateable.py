@@ -43,26 +43,18 @@ class DateableResource( Resource[ D ], Generic[ D, R ] ):
     """
 
     def __init__(
-        self,
-        path: str,
-        loader: ResourceLoader,
-        parser: ParserFn[ D ],
+        self, path: str, loader: ResourceLoader, parser: ParserFn[ D ], *,
         date: DateFn[ R ]
     ):
         super().__init__( path, loader, parser )
         self._factory = date
 
-    def _collect_dates( self, dates: list[ str ], total: int | None = None ) -> DateCollection[ R ]:
+    def _collect_dates( self, dates: list[ str ] ) -> DateCollection[ R ]:
         """Creates a date collection."""
 
-        return DateCollection(
-            dates, factory= self._factory,
-            total= total if total is not None else len( dates )
-        )
+        return DateCollection( dates, factory= self._factory )
 
     async def get( self ) -> DateCollection[ R ]:
         """Returns the indexed date collection."""
 
-        return await self._transform(
-            lambda data: self._collect_dates( list( reversed( data[ "dates" ] ) ) )
-        )
+        return await self._transform( lambda data: self._collect_dates( data[ "dates" ][ ::-1 ] ) )
