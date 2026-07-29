@@ -146,57 +146,69 @@ class DateCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
 
     @property
     def dates( self ) -> list[ str ]:
-        """Returns the underlying date values."""
+        """Return the resolved date values."""
 
-        return self._items.copy()
+        return [ self._date( item ) for item in self._items ]
 
-    def find( self, date: str ) -> str | R | None:
+    def find( self, date: str ) -> T | R | None:
         """Get the item by exact date."""
 
-        return self._resolve( date ) if date in self._items else None
+        target = ymd( date )
+
+        return next( (
+            self._resolve( item ) for item in self._items
+            if self._date( item ) == target
+        ), None )
 
     def year( self, year: int ) -> Self:
-        """Filters resources by year."""
+        """Filter resources by year."""
 
-        return self._clone( [ item for item in self._items if item.startswith( f"{ year }-" ) ] )
-
-    def month( self, year: int, month: int ) -> Self:
-        """Filters resources by month."""
+        prefix = f"{ year }-"
 
         return self._clone( [
             item for item in self._items
-            if item.startswith( f"{ year }-{ month:02d }-" )
+            if self._date( item ).startswith( prefix )
+        ] )
+
+    def month( self, year: int, month: int ) -> Self:
+        """Filter resources by month."""
+
+        prefix = f"{ year }-{ month:02d }-"
+
+        return self._clone( [
+            item for item in self._items
+            if self._date( item ).startswith( prefix )
         ] )
 
     def before( self, date: str ) -> Self:
-        """Returns resources before a date."""
+        """Return resources before a date."""
 
         target = ymd( date )
-        return self._clone( [ item for item in self._items if item < target ] )
+        return self._clone( [ item for item in self._items if self._date( item ) < target ] )
 
     def after( self, date: str ) -> Self:
-        """Returns resources after a date."""
+        """Return resources after a date."""
 
         target = ymd( date )
-        return self._clone( [ item for item in self._items if item > target ] )
+        return self._clone( [ item for item in self._items if self._date( item ) > target ] )
 
     def since( self, date: str ) -> Self:
-        """Returns resources from a date onward."""
+        """Return resources from a date onward."""
 
         target = ymd( date )
-        return self._clone( [ item for item in self._items if item >= target ] )
+        return self._clone( [ item for item in self._items if self._date( item ) >= target ] )
 
     def until( self, date: str ) -> Self:
-        """Returns resources up to a date."""
+        """Return resources up to a date."""
 
         target = ymd( date )
-        return self._clone( [ item for item in self._items if item <= target ] )
+        return self._clone( [ item for item in self._items if self._date( item ) <= target ] )
 
     def between( self, start: str, end: str ) -> Self:
-        """Returns resources inside a date range."""
+        """Return resources inside a date range."""
 
         s, e = ymd( start ), ymd( end )
-        return self._clone( [ item for item in self._items if s <= item <= e ] )
+        return self._clone( [ item for item in self._items if s <= self._date( item ) <= e ] )
 
 
 class IndexCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
