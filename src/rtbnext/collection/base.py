@@ -53,7 +53,7 @@ class CollectionBase( Generic[ T, R ] ):
     def items( self ) -> list[ T ]:
         """Returns the raw items."""
 
-        return self._items
+        return self._items.copy()
 
     @property
     def total( self ) -> int:
@@ -132,7 +132,7 @@ class DateCollectionBase( CollectionBase[ str, R ], Generic[ R ] ):
     def dates( self ) -> list[ str ]:
         """Returns the underlying date values."""
 
-        return self._items
+        return self._items.copy()
 
     def year( self, year: int ) -> Self:
         """Filters resources by year."""
