@@ -45,6 +45,11 @@ Documentation = "https://sdk.rtbnext.de"
 Repository = "https://github.com/rtbnext/sdk-python"
 "Bug Tracker" = "https://github.com/rtbnext/sdk-python/issues"
 
+[project.optional-dependencies]
+dev = [
+    "pylint >= 4.0"
+]
+
 [tool.hatch.build.targets.wheel]
 packages = [ "src/rtbnext" ]
 
