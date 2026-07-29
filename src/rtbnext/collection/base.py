@@ -230,6 +230,12 @@ class IndexCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
 
         return self._cursor > 0
 
+    def reset( self ) -> Self:
+        """Reset the cursor."""
+
+        self._cursor = -1
+        return self
+
     def at( self, index: int ) -> T | R | None:
         """Return the item at the given index."""
 
