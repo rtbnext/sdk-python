@@ -6,31 +6,30 @@ Implements the resource wrapper for collectable endpoints.
 
 from collections import defaultdict
 from typing import Callable, Generic, Self, TypedDict, TypeVar
-
+from rtbnext.resource.base import Resource
 from rtbnext.resource.collection import IndexCollectionBase, ItemFactory
 from rtbnext.utils import sanitize
 
 
 class CollectItem( TypedDict ):
     """Ensure `uri` is included in the dict."""
-
     uri: str
 
 
 class CollectData[ T: CollectItem ]( TypedDict ):
     """Ensure `items` is a list of collect items."""
-
     items: list[ T ]
 
+D = TypeVar( "D", bound= CollectData )
+E = TypeVar( "E" )
+I = TypeVar( "I", bound= CollectItem )
 K = TypeVar( "K" )
-T = TypeVar( "T", bound= CollectItem )
 R = TypeVar( "R" )
-
 type FindFn[ T ] = Callable[ [ list[ T ], str ], T | None ]
 type SearchFn[ T ] = Callable[ [ T, str, list[ str ] ], bool ]
 
 
-class CollectCollection( IndexCollectionBase[ T, R ], Generic[ T, R ] ):
+class CollectCollection( IndexCollectionBase[ I, R ], Generic[ I, R ] ):
     """
     Collection wrapper for entity-based resources.
 
@@ -39,11 +38,11 @@ class CollectCollection( IndexCollectionBase[ T, R ], Generic[ T, R ] ):
     """
 
     def __init__(
-        self, items: list[ T ], *,
-        factory: ItemFactory[ T, R ] = None,
+        self, items: list[ I ], *,
+        factory: ItemFactory[ I, R ] = None,
         total: int | None = None,
-        find: FindFn[ T ] | None = None,
-        search: SearchFn[ T ] | None = None
+        find: FindFn[ I ] | None = None,
+        search: SearchFn[ I ] | None = None
     ) -> None:
         super().__init__( items, factory= factory, total= total )
 
@@ -51,14 +50,14 @@ class CollectCollection( IndexCollectionBase[ T, R ], Generic[ T, R ] ):
         self._search = search or self._default_search
 
     @staticmethod
-    def _default_find( items: list[ T ], uri_like: str ) -> T | None:
+    def _default_find( items: list[ I ], uri_like: str ) -> I | None:
         """Return the first item matching a URI-like string."""
 
         uri = sanitize( uri_like )
         return next( ( item for item in items if item[ "uri" ] == uri ), None )
 
     @staticmethod
-    def _default_search( item: T, query: str, terms: list[ str ] ) -> bool:
+    def _default_search( item: I, query: str, terms: list[ str ] ) -> bool:
         """Return whether an item matches a search query."""
 
         name = item.get( "searchName" ) or sanitize( item.get( "name", "" ) )
@@ -69,7 +68,7 @@ class CollectCollection( IndexCollectionBase[ T, R ], Generic[ T, R ] ):
             or all( term in name or term in text for term in terms )
         )
 
-    def _clone( self, items: list[ T ] ) -> Self:
+    def _clone( self, items: list[ I ] ) -> Self:
         """Create a new collection preserving configuration."""
 
         return self.__class__(
@@ -77,19 +76,19 @@ class CollectCollection( IndexCollectionBase[ T, R ], Generic[ T, R ] ):
             find= self._find, search= self._search
         )
 
-    def get( self, uri: str ) -> T | R | None:
+    def get( self, uri: str ) -> I | R | None:
         """Return an item by its exact URI."""
 
         return next( (
             self._resolve( item ) for item in self._items if item[ "uri" ] == uri
         ), None )
 
-    def filter( self, predicate: Callable[ [ T | R ], bool ] ) -> Self:
+    def filter( self, predicate: Callable[ [ I | R ], bool ] ) -> Self:
         """Return items matching a predicate."""
 
         return self._clone( [ item for item in self._items if predicate( self._resolve( item ) ) ] )
 
-    def find( self, uri_like: str ) -> T | R | None:
+    def find( self, uri_like: str ) -> I | R | None:
         """Return the first matching URI-like item."""
 
         item = self._find( self._items, uri_like )
@@ -117,7 +116,7 @@ class CollectCollection( IndexCollectionBase[ T, R ], Generic[ T, R ] ):
         """Return the union of two collections."""
 
         seen: set[ str ] = set()
-        merged: list[ T ] = []
+        merged: list[ I ] = []
 
         for item in [ *self._items, *other.items ]:
             if item[ "uri" ] not in seen:
@@ -126,10 +125,10 @@ class CollectCollection( IndexCollectionBase[ T, R ], Generic[ T, R ] ):
 
         return self._clone( merged )
 
-    def group_by( self, callback: Callable[ [ T | R ], K ] ) -> dict[ K, Self ]:
+    def group_by( self, callback: Callable[ [ I | R ], K ] ) -> dict[ K, Self ]:
         """Group items using a callback."""
 
-        groups: defaultdict[ K, list[ T ] ] = defaultdict( list )
+        groups: defaultdict[ K, list[ I ] ] = defaultdict( list )
 
         for item in self._items:
             groups[ callback( self._resolve( item ) ) ].append( item )
@@ -150,7 +149,7 @@ class CollectCollection( IndexCollectionBase[ T, R ], Generic[ T, R ] ):
 
     def sort(
         self, *,
-        key: Callable[ [ T | R ], str | int | float | bool ],
+        key: Callable[ [ I | R ], str | int | float | bool ],
         reverse: bool = False
     ) -> Self:
         """Return items sorted using a custom key."""
@@ -160,3 +159,13 @@ class CollectCollection( IndexCollectionBase[ T, R ], Generic[ T, R ] ):
             key= lambda item: key( self._resolve( item ) ),
             reverse= reverse
         ) )
+
+
+class CollectableResource( Resource[ D ], Generic[ D, I, E ] ):
+    """
+    Resource wrapper for collection-oriented endpoints.
+
+    This class converts raw API items into entity objects and exposes them
+    through a lazily created collection supporting filtering, searching,
+    sorting and paging operations.
+    """
