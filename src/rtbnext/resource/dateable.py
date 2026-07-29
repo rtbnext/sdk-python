@@ -22,7 +22,7 @@ R = TypeVar( "R" )
 type DateFn[ R ] = Callable[ [ str ], R ]
 
 
-class DateCollection( DateCollectionBase[ R ], Generic[ R ] ):
+class DateCollection( DateCollectionBase[ str, R ], Generic[ R ] ):
     """
     Collection wrapper for date-indexed resources.
 
