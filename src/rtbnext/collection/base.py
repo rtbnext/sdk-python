@@ -196,6 +196,8 @@ class IndexCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
 
     @property
     def position( self ) -> int:
+        """Return the current cursor position."""
+
         return self._cursor
 
     @property
@@ -219,13 +221,13 @@ class IndexCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
         return self.at( self._cursor )
 
     @property
-    def hasNext( self ) -> bool:
+    def has_next( self ) -> bool:
         """Return whether a next item exists."""
 
         return self._cursor + 1 < self.count
 
     @property
-    def hasPrev( self ) -> bool:
+    def has_prev( self ) -> bool:
         """Return whether a previous item exists."""
 
         return self._cursor > 0
