@@ -1,3 +1,10 @@
+"""
+RTBNext
+
+Implements the main entry point class for the RTBNext Python SDK exposing
+all API endpoints.
+"""
+
 from rtbnext.core.http_client import ClientIdentity, HttpClient
 from rtbnext.core.resource import (CacheMode, CacheType, ResourceLoader,
                                    ResourcePool)
