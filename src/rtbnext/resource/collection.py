@@ -133,6 +133,11 @@ class DateCollectionBase( CollectionBase[ str, R ], Generic[ R ] ):
 
         return self._items.copy()
 
+    def find( self, date: str ) -> str | R | None:
+        """Get the item by exact date."""
+
+        return self._resolve( date ) if date in self._items else None
+
     def year( self, year: int ) -> Self:
         """Filters resources by year."""
 
