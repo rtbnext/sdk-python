@@ -23,14 +23,15 @@ class CollectData[ T: CollectItem ]( TypedDict ):
     """Ensure `items` is a list of collect items."""
     items: list[ T ]
 
+
 D = TypeVar( "D", bound= CollectData )
 I = TypeVar( "I", bound= CollectItem )
 E = TypeVar( "E" )
 K = TypeVar( "K" )
 
 type EntityFn[ I, E ] = Callable[ [ I ], E ]
-type FindFn[ T ] = Callable[ [ list[ T ], str ], T | None ]
-type SearchFn[ T ] = Callable[ [ T, str, list[ str ] ], bool ]
+type FindFn[ I ] = Callable[ [ list[ I ], str ], I | None ]
+type SearchFn[ I ] = Callable[ [ I, str, list[ str ] ], bool ]
 
 
 class CollectCollection( IndexCollectionBase[ I, E ], Generic[ I, E ] ):
