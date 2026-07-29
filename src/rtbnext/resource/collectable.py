@@ -122,3 +122,12 @@ class CollectCollection( IndexCollectionBase[ T, R ], Generic[ T, R ] ):
             key: self._clone( values )
             for key, values in groups.items()
         }
+
+    def order_by( self, key: str, descending: bool = False ) -> CollectCollection[ T, R ]:
+        """Return items ordered by a dictionary key."""
+
+        return self._clone( sorted(
+            self._items,
+            key= lambda item: ( item.get( key ) is None, item.get( key ) ),
+            reverse= descending
+        ) )
