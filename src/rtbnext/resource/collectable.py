@@ -190,3 +190,10 @@ class CollectableResource( Resource[ D ], Generic[ D, I, E ] ):
         """Create a collection from resolved entities."""
 
         return CollectCollection( items, find= self._find, search= self._search )
+
+    async def get( self ) -> CollectCollection[ I, E ]:
+        """Return the resolved item collection."""
+
+        return await self._transform(
+            lambda data: self._collect( data[ "items" ] )
+        )
