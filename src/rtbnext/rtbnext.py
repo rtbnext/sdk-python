@@ -1,6 +1,8 @@
 from rtbnext.core.http_client import ClientIdentity, HttpClient
-from rtbnext.core.resource import CacheMode, CacheType
-from rtbnext.defaults import DEFAULT_API_URL, DEFAULT_TIMEOUT
+from rtbnext.core.resource import (CacheMode, CacheType, ResourceLoader,
+                                   ResourcePool)
+from rtbnext.defaults import (DEFAULT_API_URL, DEFAULT_CACHE_MODE,
+                              DEFAULT_CACHE_TYPE, DEFAULT_TIMEOUT)
 
 
 class RTBNext:
@@ -16,7 +18,9 @@ class RTBNext:
         self, client: ClientIdentity, *,
         base_url: str = DEFAULT_API_URL,
         timeout: float = DEFAULT_TIMEOUT,
-        cache: CacheType | None = None,
-        mode: CacheMode | None = None
+        cache: CacheType = DEFAULT_CACHE_TYPE,
+        mode: CacheMode = DEFAULT_CACHE_MODE
     ) -> None:
-        self._http_client = HttpClient( client= client, base_url= base_url, timeout= timeout )
+        self._client = HttpClient( client= client, base_url= base_url, timeout= timeout )
+        self._loader = ResourceLoader( client= self._client, cache= cache, mode= mode )
+        self._pool = ResourcePool()
