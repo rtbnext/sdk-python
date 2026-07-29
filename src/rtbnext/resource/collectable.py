@@ -61,3 +61,8 @@ class CollectCollection( IndexCollectionBase[ T, R ], Generic[ T, R ] ):
         for item in self._items:
             if item[ "uri" ] == uri:
                 return self._resolve( item )
+
+    def filter( self, predicate: Callable[ [ T | R ], bool ] ) -> CollectCollection[ T, R ]:
+        """Return items matching a predicate."""
+
+        return self._clone( [ item for item in self._items if predicate( self._resolve( item ) ) ] )
