@@ -12,6 +12,7 @@ from rtbnext.utils import ymd
 
 R = TypeVar( "R" )
 T = TypeVar( "T" )
+U = TypeVar( "U" )
 
 
 class CollectionBase( Generic[ T, R ] ):
@@ -90,7 +91,7 @@ class CollectionBase( Generic[ T, R ] ):
 
         return [ self._factory( i ) for i in self._items ]
 
-    def map( self, callback: Callable[ [ T | R, int ], R ] ):
+    def map( self, callback: Callable[ [ T | R, int ], U ] ) -> list[ U ]:
         """Map items."""
 
         if self._factory is None:
