@@ -112,7 +112,7 @@ class CollectionBase( Generic[ T, R ] ):
         return self._clone( self._items[ ::-1 ] )
 
 
-class DateCollectionBase( CollectionBase[ T ] ):
+class DateCollectionBase( CollectionBase[ str, R ] ):
     """
     Provides date-related immutable collection operations.
 
@@ -123,12 +123,12 @@ class DateCollectionBase( CollectionBase[ T ] ):
     def year( self, year: int ) -> Self:
         """Filters resources by year."""
 
-        return self._clone( [ item for item in self._items if str( item ).startswith( f"{ year }-" ) ] )
+        return self._clone( [ item for item in self._items if item.startswith( f"{ year }-" ) ] )
 
     def month( self, year: int, month: int ) -> Self:
         """Filters resources by month."""
 
         return self._clone( [
             item for item in self._items
-            if str( item ).startswith( f"{ year }-{ month:02d }-" )
+            if item.startswith( f"{ year }-{ month:02d }-" )
         ] )
