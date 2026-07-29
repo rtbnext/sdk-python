@@ -44,15 +44,15 @@ class DateableResource( Resource[ D ], Generic[ D, R ] ):
 
     def __init__(
         self, path: str, loader: ResourceLoader, parser: ParserFn[ D ], *,
-        date: DateFn[ R ]
-    ):
+        date_factory: DateFn[ R ]
+    ) -> None:
         super().__init__( path, loader, parser )
-        self._factory = date
+        self._date_factory = date_factory
 
     def _collect_dates( self, dates: list[ str ] ) -> DateCollection[ R ]:
         """Creates a date collection."""
 
-        return DateCollection( dates, factory= self._factory )
+        return DateCollection( dates, factory= self._date_factory )
 
     async def get( self ) -> DateCollection[ R ]:
         """Returns the indexed date collection."""
