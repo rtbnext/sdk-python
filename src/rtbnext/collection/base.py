@@ -1,7 +1,7 @@
 """
 Base Collection
 
-Implements the base collection shared by all resource collections.
+Implements the base collections shared by resource collections.
 """
 
 from __future__ import annotations
@@ -105,3 +105,25 @@ class CollectionBase( Generic[ T ] ):
         """Return a collection containing reversed items."""
 
         return self._clone( self._items[ ::-1 ] )
+
+
+class DateCollectionBase( CollectionBase[ T ] ):
+    """
+    Provides date-related immutable collection operations.
+
+    This class extends the base collection adding special methods dealing with
+    dates, like `year`, `month`, or `between`.
+    """
+
+    def year( self, year: int ) -> Self:
+        """Filters resources by year."""
+
+        return self._clone( [ item for item in self._items if str( item ).startswith( f"{ year }-" ) ] )
+
+    def month( self, year: int, month: int ) -> Self:
+        """Filters resources by month."""
+
+        return self._clone( [
+            item for item in self._items
+            if str( item ).startswith( f"{ year }-{ month:02d }-" )
+        ] )
