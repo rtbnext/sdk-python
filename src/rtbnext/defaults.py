@@ -22,3 +22,5 @@ DEFAULT_TIMEOUT: float = 30.0
 
 DEFAULT_CACHE_TYPE: CacheType = "memory"
 DEFAULT_CACHE_MODE: CacheMode = "ttl"
+
+DEFAULT_PER_PAGE: int = 10
