@@ -4,12 +4,12 @@ Dateable Resource
 Implements the resource wrapper for date-indexed endpoints
 """
 
-from typing import Generic, TypedDict, TypeVar, Callable
+from typing import Callable, Generic, TypedDict, TypeVar
 
-from rtbnext.resource.collection import DateCollectionBase
-from rtbnext.resource.base import Resource
-from rtbnext.core.resource import ResourceLoader
 from rtbnext.core.parser import ParserFn
+from rtbnext.core.resource import ResourceLoader
+from rtbnext.resource.base import Resource
+from rtbnext.resource.collection import DateCollectionBase
 
 
 class DateData( TypedDict ):
@@ -51,3 +51,11 @@ class DateableResource( Resource[ D ], Generic[ D, R ] ):
     ):
         super().__init__( path, loader, parser )
         self._factory = date
+
+    def _collect_dates( self, dates: list[ str ], total: int | None = None ) -> DateCollection[ R ]:
+        """Creates a date collection."""
+
+        return DateCollection(
+            dates, factory= self._factory,
+            total= total if total is not None else len( dates )
+        )
