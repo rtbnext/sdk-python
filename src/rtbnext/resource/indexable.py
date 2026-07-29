@@ -51,13 +51,11 @@ class IndexableResource( Resource[ D ], Generic[ D, R ] ):
     """
 
     def __init__(
-        self, path: str, *,
-        loader: ResourceLoader,
-        parser: ParserFn[ D ],
+        self, path: str, loader: ResourceLoader, parser: ParserFn[ D ], *,
         index: IndexFn[ R ],
         keys: KeysFn | None
     ) -> None:
-        super().__init__( path, loader= loader, parser= parser )
+        super().__init__( path, loader, parser )
 
         self._factory = index
         self._keys = keys or self._default_keys
