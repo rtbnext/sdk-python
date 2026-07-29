@@ -7,8 +7,7 @@ Implements the resource wrapper for collectable endpoints.
 from typing import Callable, TypedDict, TypeVar, Generic
 from rtbnext.resource.collection import IndexCollectionBase, ItemFactory
 from rtbnext.utils import sanitize
-
-
+from collections import defaultdict
 class CollectItem( TypedDict ):
     """Ensure `uri` is included in the dict."""
 
@@ -21,7 +20,7 @@ class CollectData[ T: CollectItem ]( TypedDict ):
     items: list[ T ]
 
 K = TypeVar( "K" )
-T = TypeVar( "T", bound= dict )
+T = TypeVar( "T", bound= CollectItem )
 R = TypeVar( "R" )
 
 type FindFn[ T ] = Callable[ [ list[ T ], str ], T | None ]
@@ -104,3 +103,19 @@ class CollectCollection( IndexCollectionBase[ T, R ], Generic[ T, R ] ):
                 merged.append( item )
 
         return self._clone( merged )
+
+    def group_by(
+        self,
+        callback: Callable[ [ T | R ], K ]
+    ) -> dict[ K, CollectCollection[ T, R ] ]:
+        """Group items using a callback."""
+
+        groups: defaultdict[ K, list[ T ] ] = defaultdict( list )
+
+        for item in self._items:
+            groups[ callback( self._resolve( item ) ) ].append( item )
+
+        return {
+            key: self._clone( values )
+            for key, values in groups.items()
+        }
