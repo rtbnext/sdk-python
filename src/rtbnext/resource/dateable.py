@@ -59,3 +59,10 @@ class DateableResource( Resource[ D ], Generic[ D, R ] ):
             dates, factory= self._factory,
             total= total if total is not None else len( dates )
         )
+
+    async def get( self ) -> DateCollection[ R ]:
+        """Returns the indexed date collection."""
+
+        return await self._transform(
+            lambda data: self._collect_dates( list( reversed( data[ "dates" ] ) ) )
+        )
