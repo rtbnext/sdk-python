@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from typing import Callable, Generic, Iterator, Self, TypeVar
 
+from rtbnext.defaults import DEFAULT_PER_PAGE
 from rtbnext.utils import ymd
 
 R = TypeVar( "R" )
@@ -179,3 +180,54 @@ class DateCollectionBase( CollectionBase[ str, R ], Generic[ R ] ):
 
         s, e = ymd( start ), ymd( end )
         return self._clone( [ item for item in self._items if s <= item <= e ] )
+
+
+class IndexCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
+    """
+    Provides cursor-related immutable collection operations.
+
+    This class extends the base collection adding methods to handle cursor
+    operations for items.
+    """
+
+    def __init__(
+        self,
+        items: list[ T ], *,
+        factory: Callable[ [ T ], R ] | None = None,
+        total: int | None = None
+    ) -> None:
+        super().__init__( items, factory= factory, total= total )
+        self._cursor: int = -1
+
+    @property
+    def position( self ) -> int:
+        return self._cursor
+
+    @property
+    def current( self ) -> T | R | None:
+        ...
+
+    @property
+    def next( self ) -> T | R | None:
+        ...
+
+    @property
+    def prev( self ) -> T | R | None:
+        ...
+
+    @property
+    def hasNext( self ) -> bool:
+        ...
+
+    @property
+    def hasPrev( self ) -> bool:
+        ...
+
+    def at( self, index: int ) -> T | R | None:
+        ...
+
+    def page( self, page: int, per_page: int = DEFAULT_PER_PAGE ) -> Self:
+        ...
+
+    def pages( self, per_page: int = DEFAULT_PER_PAGE ) -> Self:
+        ...
