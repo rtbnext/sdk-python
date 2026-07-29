@@ -19,9 +19,10 @@ from rtbnext.defaults import (DEFAULT_CACHE_MODE, DEFAULT_CACHE_TYPE,
                               DEFAULT_RATE_LIMIT_MODE, DEFAULT_TIMEOUT)
 from rtbnext.resource.base import Resource
 
+R = TypeVar( "R", bound= Resource[ Any ] )
+
 type CacheType = Cache | Literal[ False, "memory" ]
 type CacheMode = Literal[ "ttl", "session", "revalidate" ]
-R = TypeVar( "R", bound= Resource[ Any ] )
 
 
 @dataclass( slots= True )

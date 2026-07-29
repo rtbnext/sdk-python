@@ -13,6 +13,7 @@ from typing import Any, Callable, TypeVar
 from rtbnext.core.http_client import HttpResponse
 
 D = TypeVar( "D" )
+
 type ParserFn[ D ] = Callable[ [ HttpResponse ], D ]
 
 

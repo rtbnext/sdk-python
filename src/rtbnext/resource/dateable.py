@@ -18,6 +18,7 @@ class DateData( TypedDict ):
 
 D = TypeVar( "D", bound= DateData )
 R = TypeVar( "R" )
+
 type DateFn[ R ] = Callable[ [ str ], R ]
 
 

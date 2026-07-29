@@ -14,6 +14,7 @@ from rtbnext.utils import ymd
 R = TypeVar( "R" )
 T = TypeVar( "T" )
 U = TypeVar( "U" )
+
 type ItemFactory[ T, R ] = Callable[ [ T ], R ] | None
 
 

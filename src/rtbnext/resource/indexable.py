@@ -14,6 +14,7 @@ from rtbnext.core.resource import ResourceLoader
 from rtbnext.resource.base import Resource
 
 R = TypeVar( "R" )
+
 type PathParts = tuple[ str, ... ]
 type IndexFn[ R ] = Callable[ [ PathParts ], R ]
 type KeysFn = Callable[ [ object ], PathParts | None ]
