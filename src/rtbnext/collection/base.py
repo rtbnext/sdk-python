@@ -200,15 +200,25 @@ class IndexCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
 
     @property
     def current( self ) -> T | R | None:
-        ...
+        """Return the current item."""
+
+        return self.at( self._cursor )
 
     @property
     def next( self ) -> T | R | None:
-        ...
+        """Advance to the next item."""
+
+        if self.hasNext:
+            self._cursor += 1
+            return self.current
 
     @property
     def prev( self ) -> T | R | None:
-        ...
+        """Move to the previous item."""
+
+        if self.hasPrev:
+            self._cursor -= 1
+            return self.current
 
     @property
     def hasNext( self ) -> bool:
