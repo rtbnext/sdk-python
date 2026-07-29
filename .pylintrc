@@ -1,8 +1,0 @@
-[MESSAGES CONTROL]
-disable=unnecessary-ellipsis
-
-[BASIC]
-min-public-methods=0
-
-[DESIGN]
-max-attributes=12
