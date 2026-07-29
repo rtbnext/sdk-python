@@ -6,6 +6,9 @@ Implements the resource wrapper for collectable endpoints.
 
 from collections import defaultdict
 from typing import Callable, Generic, Self, TypedDict, TypeVar
+
+from rtbnext.core.parser import ParserFn
+from rtbnext.core.resource import ResourceLoader
 from rtbnext.resource.base import Resource
 from rtbnext.resource.collection import IndexCollectionBase, ItemFactory
 from rtbnext.utils import sanitize
