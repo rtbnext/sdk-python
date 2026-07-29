@@ -6,12 +6,14 @@ Implements the base collections shared by resource collections.
 
 from __future__ import annotations
 
-from typing import Any, Callable, Generic, Iterator, Self, TypeVar
+from typing import Callable, Generic, Iterator, Self, TypeVar
+from rtbnext.utils import ymd
 
+R = TypeVar( "R" )
 T = TypeVar( "T" )
 
 
-class CollectionBase( Generic[ T ] ):
+class CollectionBase( Generic[ T, R ] ):
     """
     Provides common immutable collection operations.
 
