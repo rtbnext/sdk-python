@@ -122,13 +122,27 @@ class CollectionBase( Generic[ T, R ] ):
         return self._clone( self._items[ ::-1 ] )
 
 
-class DateCollectionBase( CollectionBase[ str, R ], Generic[ R ] ):
+class DateCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
     """
     Provides date-related immutable collection operations.
 
     This class extends the base collection adding special methods dealing with
     dates, like `year`, `month`, or `between`.
     """
+
+    def __init__(
+        self, items: list[ T ], *,
+        factory: ItemFactory[ T, R ] = None,
+        date: DateResolver[ T ] = None,
+        total: int | None = None
+    ) -> None:
+        super().__init__( items, factory= factory, total= total )
+        self._date = date or ( lambda item: item )
+
+    def _clone( self, items: list[ T ] ) -> Self:
+        """Create a new collection preserving configuration."""
+
+        return self.__class__( items, factory= self._factory, date= self._date, total= self._total )
 
     @property
     def dates( self ) -> list[ str ]:
