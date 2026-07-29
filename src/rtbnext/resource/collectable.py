@@ -80,9 +80,9 @@ class CollectCollection( IndexCollectionBase[ T, R ], Generic[ T, R ] ):
     def get( self, uri: str ) -> T | R | None:
         """Return an item by its exact URI."""
 
-        for item in self._items:
-            if item[ "uri" ] == uri:
-                return self._resolve( item )
+        return next( (
+            self._resolve( item ) for item in self._items if item[ "uri" ] == uri
+        ), None )
 
     def filter( self, predicate: Callable[ [ T | R ], bool ] ) -> CollectCollection[ T, R ]:
         """Return items matching a predicate."""
