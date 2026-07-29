@@ -7,6 +7,7 @@ Implements the base collections shared by resource collections.
 from __future__ import annotations
 
 from typing import Callable, Generic, Iterator, Self, TypeVar
+
 from rtbnext.utils import ymd
 
 R = TypeVar( "R" )
@@ -48,6 +49,12 @@ class CollectionBase( Generic[ T, R ] ):
         return self.__class__( items, factory= self._factory, total= self._total )
 
     @property
+    def items( self ) -> list[ T ]:
+        """Returns the raw items."""
+
+        return self._items
+
+    @property
     def total( self ) -> int:
         """Return the total number of available items."""
 
@@ -80,16 +87,16 @@ class CollectionBase( Generic[ T, R ] ):
 
         if self._factory is None:
             return list( self._items )
-        else:
-            return [ self._factory( i ) for i in self._items ]
+
+        return [ self._factory( i ) for i in self._items ]
 
     def map( self, callback: Callable[ [ T | R, int ], R ] ):
         """Map items."""
 
         if self._factory is None:
             return [ callback( i, idx ) for idx, i in enumerate( self._items ) ]
-        else:
-            return [ callback( self._factory( i ), idx ) for idx, i in enumerate( self._items ) ]
+
+        return [ callback( self._factory( i ), idx ) for idx, i in enumerate( self._items ) ]
 
     def take( self, count: int ) -> Self:
         """Return a collection containing the first items."""
@@ -119,6 +126,12 @@ class DateCollectionBase( CollectionBase[ str, R ] ):
     This class extends the base collection adding special methods dealing with
     dates, like `year`, `month`, or `between`.
     """
+
+    @property
+    def dates( self ) -> list[ str ]:
+        """Returns the underlying date values."""
+
+        return self._items
 
     def year( self, year: int ) -> Self:
         """Filters resources by year."""
