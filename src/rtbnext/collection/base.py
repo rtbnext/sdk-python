@@ -32,26 +32,30 @@ class CollectionBase( Generic[ T, R ] ):
         self._items, self._factory = items, factory
         self._total = len( items ) if total is None else total
 
-    def __getitem__( self, index: int ) -> T | R:
-        if isinstance( index, slice ):
-            return self._clone( self._items[ index ] )
+    def _resolve( self, item: T ) -> T | R:
+        """Resolve an item using the configured factory."""
 
-        item = self._items[ index ]
         return self._factory( item ) if self._factory else item
-
-    def __len__( self ) -> int:
-        return self.count
-
-    def __iter__( self ) -> Iterator[ T | R ]:
-        return iter( self._items ) if self._factory is None else map( self._factory, self._items )
-
-    def __contains__( self, item: object ) -> bool:
-        return item in self._items
 
     def _clone( self, items: list[ T ] ) -> Self:
         """Create a new collection instance with replaced items."""
 
         return self.__class__( items, factory= self._factory, total= self._total )
+
+    def __getitem__( self, index: int ) -> Self | T | R:
+        return (
+            self._clone( self._items[ index ] ) if isinstance( index, slice )
+            else self._resolve( self._items[ index ] )
+        )
+
+    def __len__( self ) -> int:
+        return self.count
+
+    def __iter__( self ) -> Iterator[ T | R ]:
+        return map( self._resolve, self._items )
+
+    def __contains__( self, item: object ) -> bool:
+        return item in self._items
 
     @property
     def items( self ) -> list[ T ]:
@@ -75,33 +79,23 @@ class CollectionBase( Generic[ T, R ] ):
     def first( self ) -> T | R | None:
         """Returns the first item."""
 
-        return None if not self._items else (
-            self._factory( self._items[ 0 ] ) if self._factory else self._items[ 0 ]
-        )
+        return None if not self._items else self._resolve( self._items[ 0 ] )
 
     @property
     def last( self ) -> T | R | None:
         """Returns the last item."""
 
-        return None if not self._items else (
-            self._factory( self._items[ -1 ] ) if self._factory else self._items[ -1 ]
-        )
+        return None if not self._items else self._resolve( self._items[ -1 ] )
 
-    def to_array( self ) -> list[ T ] | list[ R ]:
+    def to_array( self ) -> list[ T | R ]:
         """Returns all items as list."""
 
-        if self._factory is None:
-            return list( self._items )
-
-        return [ self._factory( i ) for i in self._items ]
+        return [ self._resolve( item ) for item in self._items ]
 
     def map( self, callback: Callable[ [ T | R, int ], U ] ) -> list[ U ]:
         """Map items."""
 
-        if self._factory is None:
-            return [ callback( i, idx ) for idx, i in enumerate( self._items ) ]
-
-        return [ callback( self._factory( i ), idx ) for idx, i in enumerate( self._items ) ]
+        return [ callback( item, index ) for index, item in enumerate( self ) ]
 
     def take( self, count: int ) -> Self:
         """Return a collection containing the first items."""
