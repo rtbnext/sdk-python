@@ -6,6 +6,7 @@ Implements the resource wrapper for collectable endpoints.
 
 from typing import Callable, TypedDict, TypeVar, Generic
 from rtbnext.resource.collection import IndexCollectionBase, ItemFactory
+from rtbnext.utils import sanitize
 
 
 class CollectItem( TypedDict ):
@@ -66,3 +67,15 @@ class CollectCollection( IndexCollectionBase[ T, R ], Generic[ T, R ] ):
         """Return items matching a predicate."""
 
         return self._clone( [ item for item in self._items if predicate( self._resolve( item ) ) ] )
+
+    def find( self, uri_like: str ) -> T | R | None:
+        """Return the first matching URI-like item."""
+
+        item = self._find( self._items, uri_like )
+        return None if item is None else self._resolve( item )
+
+    def search( self, query: str ) -> CollectCollection[ T, R ]:
+        """Return items matching a search query."""
+
+        query, terms = sanitize( query ), query.split()
+        return self._clone( [ item for item in self._items if self._search( item, query, terms ) ] )
