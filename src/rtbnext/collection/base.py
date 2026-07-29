@@ -132,3 +132,33 @@ class DateCollectionBase( CollectionBase[ str, R ] ):
             item for item in self._items
             if item.startswith( f"{ year }-{ month:02d }-" )
         ] )
+
+    def before( self, date: str ) -> Self:
+        """Returns resources before a date."""
+
+        target = ymd( date )
+        return self._clone( [ item for item in self._items if item < target ] )
+
+    def after( self, date: str ) -> Self:
+        """Returns resources after a date."""
+
+        target = ymd( date )
+        return self._clone( [ item for item in self._items if item > target ] )
+
+    def since( self, date: str ) -> Self:
+        """Returns resources from a date onward."""
+
+        target = ymd( date )
+        return self._clone( [ item for item in self._items if item >= target ] )
+
+    def until( self, date: str ) -> Self:
+        """Returns resources up to a date."""
+
+        target = ymd( date )
+        return self._clone( [ item for item in self._items if item <= target ] )
+
+    def between( self, start: str, end: str ) -> Self:
+        """Returns resources inside a date range."""
+
+        s, e = ymd( start ), ymd( end )
+        return self._clone( [ item for item in self._items if s <= item <= e ] )
