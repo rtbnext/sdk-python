@@ -4,7 +4,7 @@ Time Series Resource
 Implements the resource wrapper for time-series endpoints.
 """
 
-from typing import TypedDict
+from typing import Callable, Literal, TypedDict, TypeVar
 
 
 class TimePoint( TypedDict ):
@@ -12,19 +12,9 @@ class TimePoint( TypedDict ):
     date: str
 
 
-class AggregateRange( TypedDict ):
-    """The date range covered by this aggregate point."""
+type AggregatePeriod = Literal[ "week", "month", "quarter", "year" ]
 
-    from_: str
-    to: str
+D = TypeVar( "D" )
+R = TypeVar( "R", bound= TimePoint )
 
-
-class AggregateValue( TypedDict ):
-    """Aggregated numeric summary values."""
-
-    first: float
-    last: float
-    min: float
-    max: float
-    avg: float
-    sum: float
+type PointFn[ D, R ] = Callable[ [ D ], R ]
