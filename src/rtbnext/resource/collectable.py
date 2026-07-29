@@ -24,10 +24,12 @@ class CollectData[ T: CollectItem ]( TypedDict ):
     items: list[ T ]
 
 D = TypeVar( "D", bound= CollectData )
-E = TypeVar( "E" )
 I = TypeVar( "I", bound= CollectItem )
+E = TypeVar( "E" )
 K = TypeVar( "K" )
 R = TypeVar( "R" )
+
+type EntityFn[ I, E ] = Callable[ [ I ], E ]
 type FindFn[ T ] = Callable[ [ list[ T ], str ], T | None ]
 type SearchFn[ T ] = Callable[ [ T, str, list[ str ] ], bool ]
 
