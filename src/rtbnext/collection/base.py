@@ -23,20 +23,20 @@ class CollectionBase( Generic[ T, R ] ):
 
     def __init__(
         self, items: list[ T ], *,
-        factory: Callable[ [ T ], Any ] | None = None,
+        factory: Callable[ [ T ], R ] | None = None,
         total: int | None = None
     ) -> None:
         self._items, self._factory = items, factory
         self._total = len( items ) if total is None else total
 
-    def __getitem__( self, index: int ) -> T | Any:
+    def __getitem__( self, index: int ) -> T | R:
         item = self._items[ index ]
         return self._factory( item ) if self._factory else item
 
     def __len__( self ) -> int:
         return self.count
 
-    def __iter__( self ) -> Iterator[ T ] | map[ Any ]:
+    def __iter__( self ) -> Iterator[ T ] | map[ R ]:
         return iter( self._items ) if self._factory is None else map( self._factory, self._items )
 
     def __contains__( self, item: object ) -> bool:
@@ -60,7 +60,7 @@ class CollectionBase( Generic[ T, R ] ):
         return len( self._items )
 
     @property
-    def first( self ) -> T | Any | None:
+    def first( self ) -> T | R | None:
         """Returns the first item."""
 
         return None if not self._items else (
@@ -68,25 +68,28 @@ class CollectionBase( Generic[ T, R ] ):
         )
 
     @property
-    def last( self ) -> T | Any | None:
+    def last( self ) -> T | R | None:
         """Returns the last item."""
 
         return None if not self._items else (
             self._factory( self._items[ -1 ] ) if self._factory else self._items[ -1 ]
         )
 
-    def to_array( self ) -> list[ T ] | list[ Any ]:
+    def to_array( self ) -> list[ T ] | list[ R ]:
         """Returns all items as list."""
 
-        return [ ( self._factory( i ) if self._factory else i ) for i in self._items ]
+        if self._factory is None:
+            return list( self._items )
+        else:
+            return [ self._factory( i ) for i in self._items ]
 
-    def map( self, callback: Callable[ [ T, int ], Any ] ):
+    def map( self, callback: Callable[ [ T | R, int ], R ] ):
         """Map items."""
 
-        return [
-            callback( self._factory( i ) if self._factory else i, idx )
-            for idx, i in enumerate( self._items )
-        ]
+        if self._factory is None:
+            return [ callback( i, idx ) for idx, i in enumerate( self._items ) ]
+        else:
+            return [ callback( self._factory( i ), idx ) for idx, i in enumerate( self._items ) ]
 
     def take( self, count: int ) -> Self:
         """Return a collection containing the first items."""
