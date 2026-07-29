@@ -44,7 +44,8 @@ class CollectionBase( Generic[ T, R ] ):
 
     def __getitem__( self, index: int ) -> Self | T | R:
         return (
-            self._clone( self._items[ index ] ) if isinstance( index, slice )
+            self._clone( self._items[ index ] )
+            if isinstance( index, slice )
             else self._resolve( self._items[ index ] )
         )
 
