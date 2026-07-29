@@ -4,10 +4,13 @@ Collectable Resource
 Implements the resource wrapper for collectable endpoints.
 """
 
-from typing import Callable, TypedDict, TypeVar, Generic
+from collections import defaultdict
+from typing import Callable, Generic, TypedDict, TypeVar
+
 from rtbnext.resource.collection import IndexCollectionBase, ItemFactory
 from rtbnext.utils import sanitize
-from collections import defaultdict
+
+
 class CollectItem( TypedDict ):
     """Ensure `uri` is included in the dict."""
 
