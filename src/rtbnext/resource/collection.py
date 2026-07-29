@@ -14,6 +14,7 @@ from rtbnext.utils import ymd
 R = TypeVar( "R" )
 T = TypeVar( "T" )
 U = TypeVar( "U" )
+type ItemFactory[ T, R ] = Callable[ [ T ], R ] | None
 
 
 class CollectionBase( Generic[ T, R ] ):
@@ -26,7 +27,7 @@ class CollectionBase( Generic[ T, R ] ):
 
     def __init__(
         self, items: list[ T ], *,
-        factory: Callable[ [ T ], R ] | None = None,
+        factory: ItemFactory[ T, R ] = None,
         total: int | None = None
     ) -> None:
         self._items, self._factory = items, factory
@@ -193,7 +194,7 @@ class IndexCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
     def __init__(
         self,
         items: list[ T ], *,
-        factory: Callable[ [ T ], R ] | None = None,
+        factory: ItemFactory[ T, R ] = None,
         total: int | None = None
     ) -> None:
         super().__init__( items, factory= factory, total= total )
