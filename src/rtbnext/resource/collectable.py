@@ -46,3 +46,11 @@ class CollectCollection( IndexCollectionBase[ T, R ], Generic[ T, R ] ):
 
         self._find = find
         self._search = search
+
+    def _clone( self, items: list[ T ] ) -> CollectCollection[ T, R ]:
+        """Create a new collection preserving configuration."""
+
+        return CollectCollection(
+            items, factory= self._factory, total= self._total,
+            find= self._find, search= self._search
+        )
