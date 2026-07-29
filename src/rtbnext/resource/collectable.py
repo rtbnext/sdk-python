@@ -174,3 +174,15 @@ class CollectableResource( Resource[ D ], Generic[ D, I, E ] ):
     through a lazily created collection supporting filtering, searching,
     sorting and paging operations.
     """
+
+    def __init__(
+        self, path: str, loader: ResourceLoader, parser: ParserFn[ D ], *,
+        entity: EntityFn[ I, E ],
+        find: FindFn[ I ] | None = None,
+        search: SearchFn[ I ] | None = None
+    ) -> None:
+        super().__init__( path, loader, parser )
+
+        self._entity = entity
+        self._find = find
+        self._search = search
