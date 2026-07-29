@@ -5,7 +5,7 @@ Implements the resource wrapper for collectable endpoints.
 """
 
 from collections import defaultdict
-from typing import Callable, Generic, TypedDict, TypeVar, Self
+from typing import Callable, Generic, Self, TypedDict, TypeVar
 
 from rtbnext.resource.collection import IndexCollectionBase, ItemFactory
 from rtbnext.utils import sanitize
@@ -149,9 +149,10 @@ class CollectCollection( IndexCollectionBase[ T, R ], Generic[ T, R ] ):
         ) )
 
     def sort(
-        self, key: Callable[ [ T | R ], K ], *,
+        self, *,
+        key: Callable[ [ T | R ], str | int | float | bool ],
         reverse: bool = False
-    ) -> CollectCollection[ T, R ]:
+    ) -> Self:
         """Return items sorted using a custom key."""
 
         return self._clone( sorted(
