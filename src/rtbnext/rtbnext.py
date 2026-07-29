@@ -12,8 +12,7 @@ class RTBNext:
     """
 
     def __init__(
-        self, *,
-        client: ClientIdentity,
+        self, client: ClientIdentity, *,
         base_url: str | None = None,
         timeout: float | None = None,
         cache: CacheType | None = None,
