@@ -27,14 +27,13 @@ D = TypeVar( "D", bound= CollectData )
 I = TypeVar( "I", bound= CollectItem )
 E = TypeVar( "E" )
 K = TypeVar( "K" )
-R = TypeVar( "R" )
 
 type EntityFn[ I, E ] = Callable[ [ I ], E ]
 type FindFn[ T ] = Callable[ [ list[ T ], str ], T | None ]
 type SearchFn[ T ] = Callable[ [ T, str, list[ str ] ], bool ]
 
 
-class CollectCollection( IndexCollectionBase[ I, R ], Generic[ I, R ] ):
+class CollectCollection( IndexCollectionBase[ I, E ], Generic[ I, E ] ):
     """
     Collection wrapper for entity-based resources.
 
@@ -44,7 +43,7 @@ class CollectCollection( IndexCollectionBase[ I, R ], Generic[ I, R ] ):
 
     def __init__(
         self, items: list[ I ], *,
-        factory: ItemFactory[ I, R ] = None,
+        factory: ItemFactory[ I, E ] = None,
         total: int | None = None,
         find: FindFn[ I ] | None = None,
         search: SearchFn[ I ] | None = None
@@ -81,19 +80,19 @@ class CollectCollection( IndexCollectionBase[ I, R ], Generic[ I, R ] ):
             find= self._find, search= self._search
         )
 
-    def get( self, uri: str ) -> I | R | None:
+    def get( self, uri: str ) -> I | E | None:
         """Return an item by its exact URI."""
 
         return next( (
             self._resolve( item ) for item in self._items if item[ "uri" ] == uri
         ), None )
 
-    def filter( self, predicate: Callable[ [ I | R ], bool ] ) -> Self:
+    def filter( self, predicate: Callable[ [ I | E ], bool ] ) -> Self:
         """Return items matching a predicate."""
 
         return self._clone( [ item for item in self._items if predicate( self._resolve( item ) ) ] )
 
-    def find( self, uri_like: str ) -> I | R | None:
+    def find( self, uri_like: str ) -> I | E | None:
         """Return the first matching URI-like item."""
 
         item = self._find( self._items, uri_like )
@@ -130,7 +129,7 @@ class CollectCollection( IndexCollectionBase[ I, R ], Generic[ I, R ] ):
 
         return self._clone( merged )
 
-    def group_by( self, callback: Callable[ [ I | R ], K ] ) -> dict[ K, Self ]:
+    def group_by( self, callback: Callable[ [ I | E ], K ] ) -> dict[ K, Self ]:
         """Group items using a callback."""
 
         groups: defaultdict[ K, list[ I ] ] = defaultdict( list )
@@ -154,7 +153,7 @@ class CollectCollection( IndexCollectionBase[ I, R ], Generic[ I, R ] ):
 
     def sort(
         self, *,
-        key: Callable[ [ I | R ], str | int | float | bool ],
+        key: Callable[ [ I | E ], str | int | float | bool ],
         reverse: bool = False
     ) -> Self:
         """Return items sorted using a custom key."""
@@ -186,3 +185,8 @@ class CollectableResource( Resource[ D ], Generic[ D, I, E ] ):
         self._entity = entity
         self._find = find
         self._search = search
+
+    def _collect( self, items: list[ I ] ) -> CollectCollection[ I, E ]:
+        """Create a collection from resolved entities."""
+
+        return CollectCollection( items, find= self._find, search= self._search )
