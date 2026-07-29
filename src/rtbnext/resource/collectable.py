@@ -54,3 +54,10 @@ class CollectCollection( IndexCollectionBase[ T, R ], Generic[ T, R ] ):
             items, factory= self._factory, total= self._total,
             find= self._find, search= self._search
         )
+
+    def get( self, uri: str ) -> T | R | None:
+        """Return an item by its exact URI."""
+
+        for item in self._items:
+            if item[ "uri" ] == uri:
+                return self._resolve( item )
