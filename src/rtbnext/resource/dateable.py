@@ -4,10 +4,17 @@ Dateable Resource
 Implements the resource wrapper for date-indexed endpoints
 """
 
-from typing import Generic, TypeVar
+from typing import Generic, TypedDict, TypeVar
 
 from rtbnext.resource.collection import DateCollectionBase
 
+
+class DateData( TypedDict ):
+    """Ensure `dates` is included in the dict."""
+
+    dates: list[ str ]
+
+D = TypeVar( "D", bound= DateData )
 R = TypeVar( "R" )
 
 
