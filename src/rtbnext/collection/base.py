@@ -222,11 +222,15 @@ class IndexCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
 
     @property
     def hasNext( self ) -> bool:
-        ...
+        """Return whether a next item exists."""
+
+        return self._cursor + 1 < self.count
 
     @property
     def hasPrev( self ) -> bool:
-        ...
+        """Return whether a previous item exists."""
+
+        return self._cursor > 0
 
     def at( self, index: int ) -> T | R | None:
         ...
