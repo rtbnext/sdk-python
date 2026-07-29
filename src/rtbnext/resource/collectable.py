@@ -5,7 +5,7 @@ Implements the resource wrapper for collectable endpoints.
 """
 
 from collections import defaultdict
-from typing import Callable, Generic, TypedDict, TypeVar
+from typing import Callable, Generic, TypedDict, TypeVar, Self
 
 from rtbnext.resource.collection import IndexCollectionBase, ItemFactory
 from rtbnext.utils import sanitize
@@ -69,10 +69,10 @@ class CollectCollection( IndexCollectionBase[ T, R ], Generic[ T, R ] ):
             or all( term in name or term in text for term in terms )
         )
 
-    def _clone( self, items: list[ T ] ) -> CollectCollection[ T, R ]:
+    def _clone( self, items: list[ T ] ) -> Self:
         """Create a new collection preserving configuration."""
 
-        return CollectCollection(
+        return self.__class__(
             items, factory= self._factory, total= self._total,
             find= self._find, search= self._search
         )
@@ -84,7 +84,7 @@ class CollectCollection( IndexCollectionBase[ T, R ], Generic[ T, R ] ):
             self._resolve( item ) for item in self._items if item[ "uri" ] == uri
         ), None )
 
-    def filter( self, predicate: Callable[ [ T | R ], bool ] ) -> CollectCollection[ T, R ]:
+    def filter( self, predicate: Callable[ [ T | R ], bool ] ) -> Self:
         """Return items matching a predicate."""
 
         return self._clone( [ item for item in self._items if predicate( self._resolve( item ) ) ] )
@@ -95,25 +95,25 @@ class CollectCollection( IndexCollectionBase[ T, R ], Generic[ T, R ] ):
         item = self._find( self._items, uri_like )
         return None if item is None else self._resolve( item )
 
-    def search( self, query: str ) -> CollectCollection[ T, R ]:
+    def search( self, query: str ) -> Self:
         """Return items matching a search query."""
 
         query, terms = sanitize( query ), query.split()
         return self._clone( [ item for item in self._items if self._search( item, query, terms ) ] )
 
-    def intersect( self, other: CollectCollection[ T, R ] ) -> CollectCollection[ T, R ]:
+    def intersect( self, other: Self ) -> Self:
         """Return items also contained in another collection."""
 
         uris = { item[ "uri" ] for item in other.items }
         return self._clone( [ item for item in self._items if item[ "uri" ] in uris ] )
 
-    def exclude( self, other: CollectCollection[ T, R ] ) -> CollectCollection[ T, R ]:
+    def exclude( self, other: Self ) -> Self:
         """Return items not contained in another collection."""
 
         uris = { item[ "uri" ] for item in other.items }
         return self._clone( [ item for item in self._items if item[ "uri" ] not in uris ] )
 
-    def union( self, other: CollectCollection[ T, R ] ) -> CollectCollection[ T, R ]:
+    def union( self, other: Self ) -> Self:
         """Return the union of two collections."""
 
         seen: set[ str ] = set()
@@ -126,10 +126,7 @@ class CollectCollection( IndexCollectionBase[ T, R ], Generic[ T, R ] ):
 
         return self._clone( merged )
 
-    def group_by(
-        self,
-        callback: Callable[ [ T | R ], K ]
-    ) -> dict[ K, CollectCollection[ T, R ] ]:
+    def group_by( self, callback: Callable[ [ T | R ], K ] ) -> dict[ K, Self ]:
         """Group items using a callback."""
 
         groups: defaultdict[ K, list[ T ] ] = defaultdict( list )
@@ -142,7 +139,7 @@ class CollectCollection( IndexCollectionBase[ T, R ], Generic[ T, R ] ):
             for key, values in groups.items()
         }
 
-    def order_by( self, key: str, descending: bool = False ) -> CollectCollection[ T, R ]:
+    def order_by( self, key: str, descending: bool = False ) -> Self:
         """Return items ordered by a dictionary key."""
 
         return self._clone( sorted(
