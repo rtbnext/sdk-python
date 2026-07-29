@@ -235,13 +235,18 @@ class IndexCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
     def at( self, index: int ) -> T | R | None:
         """Return the item at the given index."""
 
-        if not 0 <= index < self.count:
-            return None
-
-        return self._resolve( self._items[ index ] )
+        return self._resolve( self._items[ index ] ) if 0 <= index < self.count else None
 
     def page( self, page: int, per_page: int = DEFAULT_PER_PAGE ) -> Self:
-        ...
+        """Return a collection containing one page."""
 
-    def pages( self, per_page: int = DEFAULT_PER_PAGE ) -> Self:
-        ...
+        start = max( page - 1, 0 ) * per_page
+        return self._clone( self._items[ start : start + per_page ] )
+
+    def pages( self, per_page: int = DEFAULT_PER_PAGE ) -> list[ Self ]:
+        """Return all pages."""
+
+        return [
+            self._clone( self._items[ i : i + per_page ] )
+            for i in range( 0, self.count, per_page )
+        ]
