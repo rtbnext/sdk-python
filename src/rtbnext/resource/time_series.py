@@ -11,6 +11,7 @@ from datetime import date as date_type
 from statistics import mean, median
 from typing import Callable, Generic, Literal, TypedDict, TypeVar, cast
 
+from rtbnext.resource.base import Resource
 from rtbnext.resource.collection import DateCollectionBase
 
 
@@ -19,7 +20,7 @@ class TimePoint( TypedDict ):
     date: str
 
 
-D = TypeVar( "D", bound= list[ TimePoint ] )
+D = TypeVar( "D", bound= list[ list[ object ] ] )
 R = TypeVar( "R", bound= TimePoint )
 
 type AggregatePeriod = Literal[ "week", "month", "quarter", "year" ]
@@ -221,3 +222,12 @@ class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
             result.append( self._aggregate( points[ start : end ], f"{ index + 1}/{ count }" ) )
 
         return TimeSeriesCollection( result )
+
+
+class TimeSeriesResource( Resource[ D ], Generic[ D, R ] ):
+    """
+    Resource wrapper for time-series endpoints.
+
+    This class converts raw CSV rows into typed time-series points and
+    exposes them through a time-series collection.
+    """
