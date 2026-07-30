@@ -93,6 +93,7 @@ WealthStats = TypedDict( "WealthStats", {
 
 Top10Item = TypedDict( "Top10Item", {
     "uri": str,
+    "name": str,
     "rank": int,
     "networth": float,
     "flag": ChangeFlag
