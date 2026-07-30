@@ -51,3 +51,22 @@ Performance = TypedDict( "Performance", {
     "extrema": NotRequired[ Extrema ],
     "returns": NotRequired[ Returns ]
 } )
+
+RankingItem = TypedDict( "RankingItem", {
+    "date": str,
+    "rank": NotRequired[ int ],
+    "networth": NotRequired[ float ],
+    "prev": NotRequired[ str ],
+    "next": NotRequired[ str ]
+} )
+
+Ranking = TypedDict( "Ranking", {
+  "list": str,
+  "name": str,
+  "date": str,
+  "rank": NotRequired[ int ],
+  "networth": NotRequired[ float ],
+  "prev": NotRequired[ str ],
+  "next": NotRequired[ str ],
+  "history": NotRequired[ list[ RankingItem ] ]
+} )
