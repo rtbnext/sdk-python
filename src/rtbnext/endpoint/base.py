@@ -25,26 +25,6 @@ class EndpointBase:
     collection, index, time series, and date resources.
     """
 
-    def _resource(
-        self,
-        path: str,
-        parser: ParserFn,
-        resources: list[ tuple[ str, type[ Resource ] ] ],
-        **options: Any
-    ) -> Resource:
-        """Resolve the resource by its factory method."""
-
-        args = ( path, self._loader, parser )
-
-        if not options:
-            return self._pool.get( path, lambda: Resource( *args ) )
-
-        for key, cls in resources:
-            if key in options:
-                return self._pool.get( path, lambda: cls( *args, **options ) )
-
-        raise ValueError( "Invalid resource options" )
-
     def __init__( self, loader: ResourceLoader, pool: ResourcePool, endpoints: Any ) -> None:
         self._loader, self._pool, self._endpoints = loader, pool, endpoints
 
@@ -52,19 +32,3 @@ class EndpointBase:
         """Creates a text resource."""
 
         return self._pool.get( path, lambda: Resource( path, self._loader, Parser.text ) )
-
-    def json( self, path: str, **options: Any ) -> Resource:
-        """Creates a JSON resource."""
-
-        return self._resource( path, Parser.json, [
-            ( "entity", CollectableResource ),
-            ( "date_factory", DateableResource ),
-            ( "index", IndexableResource )
-        ], **options )
-
-    def csv( self, path: str, **options: Any ) -> Resource:
-        """Creates a CSV resource."""
-
-        return self._resource( path, Parser.csv, [
-            ( "point", TimeSeriesResource )
-        ], **options )
