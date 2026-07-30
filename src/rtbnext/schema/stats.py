@@ -32,3 +32,6 @@ DBStats = TypedDict( "DBStats", {
     "files": int,
     "size": int
 } )
+
+HistoryItem = tuple[ str, int, float, int, float, float, float ]
+History = list[ HistoryItem ]
