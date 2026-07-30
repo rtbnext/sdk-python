@@ -180,3 +180,22 @@ class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
         """Return all values of a column."""
 
         return [ point[ key ] for point in self ]
+
+    def aggregate(
+        self,
+        period: AggregatePeriod | Callable[ [ R ], str ]
+    ) -> TimeSeriesCollection[ AggregatePoint ]:
+        """Aggregate points by period."""
+
+        groups: dict[ str, list[ R ] ] = defaultdict( list )
+
+        for point in self:
+            groups[ (
+                period( point ) if callable( period )
+                else self._period( point[ "date" ], period )
+            ) ].append( point )
+
+        return TimeSeriesCollection( [
+            self._aggregate( group, label )
+            for label, group in groups.items()
+        ] )
