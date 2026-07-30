@@ -25,3 +25,16 @@ MoverBucket = TypedDict( "MoverBucket", {
     "networth": MoverEntry,
     "percent": MoverEntry
 } )
+
+MoverData = TypedDict( "MoverData", {
+    "date": str,
+    "today": MoverBucket,
+    "ytd": MoverBucket
+} )
+
+Mover = TypedDict( "Mover", {
+    "$metadata": MetaData,
+    "date": str,
+    "today": MoverBucket,
+    "ytd": MoverBucket
+} )
