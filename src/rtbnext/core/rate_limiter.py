@@ -53,3 +53,24 @@ class RateLimiter:
 
         if wait > 0:
             await asyncio.sleep( wait )
+
+    async def burst( self ) -> None:
+        """
+        Allow up to max_requests immediately.
+        Further requests wait until the rolling window expires.
+        """
+
+        while True:
+            async with self._lock:
+                now = monotonic()
+
+                while self._burst and now - self._burst[ 0 ] >= self._per_seconds:
+                    self._burst.popleft()
+
+                if len( self._burst ) < self._max_requests:
+                    self._burst.append( now )
+                    return
+
+                wait = self._per_seconds - ( now - self._burst[ 0 ] )
+
+            await asyncio.sleep( wait )
