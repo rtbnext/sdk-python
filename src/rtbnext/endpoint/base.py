@@ -26,3 +26,8 @@ class EndpointBase:
 
     def __init__( self, loader: ResourceLoader, pool: ResourcePool, endpoints: Any ) -> None:
         self._loader, self._pool, self._endpoints = loader, pool, endpoints
+
+    def text( self, path: str ) -> Resource:
+        """Creates a text resource."""
+
+        return self._pool.get( path, lambda: Resource( path, self._loader, Parser.text ) )
