@@ -44,3 +44,8 @@ MetaData = TypedDict( "MetaData", {
     "generator": str,
     "lastModified": str
 } )
+
+ChangeItem = TypedDict( "ChangeItem", {
+    "value": float,
+    "percent": float
+} )
