@@ -39,7 +39,9 @@ ListItem = TypedDict( "ListItem", {
     "flag": NotRequired[ ChangeFlag ],
     "rankDiff": NotRequired[ int ],
     "selfMadeRank": NotRequired[ SelfMadeRank ],
-    "philanthropyScore": NotRequired[ int ]
+    "philanthropyScore": NotRequired[ int ],
+    "today": NotRequired[ ChangeItem ],
+    "ytd": NotRequired[ ChangeItem ]
 } )
 
 ListStats = TypedDict( "ListStats", {
