@@ -68,3 +68,14 @@ class HttpClient:
         self._limiter = RateLimiter( max_requests, per_seconds )
         self._client = httpx.AsyncClient( headers= self._create_headers(), follow_redirects= True )
         self._pending: dict[ str, asyncio.Task[ HttpResponse ] ] = {}
+
+    async def __aenter__( self ) -> HttpClient:
+        return self
+
+    async def __aexit__( self, *_ ):
+        await self.aclose()
+
+    async def aclose( self ) -> None:
+        """Close the underlying HTTP client and release network resources."""
+
+        await self._client.aclose()
