@@ -1,3 +1,9 @@
+"""
+Generic
+
+Declares generic types.
+"""
+
 from typing import Literal, TypedDict
 
 type StatusFlag = Literal[ "healthy", "degraded", "maintenance", "outage", "unknown" ]
