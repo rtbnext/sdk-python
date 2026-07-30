@@ -76,7 +76,7 @@ class EndpointBase:
 
         return self._resource( path, Parser.json, [
             ( "entity", CollectableResource, { "entity": entity, "find": find, "search": search } ),
-            ( "date", DateableResource, { "date_factory": date } ),
+            ( "date", DateableResource, { "date": date } ),
             ( "index", IndexableResource, { "index": index, "keys": keys } )
         ] )
 
