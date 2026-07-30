@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from rtbnext.core.parser import Parser
+from rtbnext.core.parser import Parser, ParserFn
 from rtbnext.core.resource import ResourceLoader, ResourcePool
 from rtbnext.resource.base import Resource
 from rtbnext.resource.collectable import CollectableResource
@@ -25,6 +25,26 @@ class EndpointBase:
     collection, index, time series, and date resources.
     """
 
+    def _resource(
+        self,
+        path: str,
+        parser: ParserFn,
+        resources: tuple[ tuple[ str, type[ Resource ] ], ... ],
+        **options: Any
+    ) -> Resource:
+        """Resolve the resource by its factory method."""
+
+        args = ( path, self._loader, parser )
+
+        if not options:
+            return self._pool.get( path, lambda: Resource( *args ) )
+
+        for key, cls in resources:
+            if key in options:
+                return self._pool.get( path, lambda: cls( *args, **options ) )
+
+        raise ValueError( "Invalid resource options" )
+
     def __init__( self, loader: ResourceLoader, pool: ResourcePool, endpoints: Any ) -> None:
         self._loader, self._pool, self._endpoints = loader, pool, endpoints
 
@@ -36,37 +56,30 @@ class EndpointBase:
     def json( self, path: str, **options: Any ) -> Resource:
         """Creates a JSON resource."""
 
-        def factory() -> Resource:
-            args = ( path, self._loader, Parser.json )
+        args = ( path, self._loader, Parser.json )
 
-            if not options:
-                return Resource( *args )
+        if not options:
+            return self._pool.get( path, lambda: Resource( *args ) )
 
-            if "entity" in options:
-                return CollectableResource( *args, **options )
+        for key, cls in (
+            ( "entity", CollectableResource ),
+            ( "date_factory", DateableResource ),
+            ( "index", IndexableResource )
+        ):
+            if key in options:
+                return self._pool.get( path, lambda: cls( *args, **options ) )
 
-            if "date_factory" in options:
-                return DateableResource( *args, **options )
-
-            if "index" in options:
-                return IndexableResource( *args, **options )
-
-            raise ValueError( "Invalid resource options" )
-
-        return self._pool.get( path, factory )
+        raise ValueError( "Invalid resource options" )
 
     def csv( self, path: str, **options: Any ) -> Resource:
         """Creates a CSV resource."""
 
-        def factory() -> Resource:
-            args = ( path, self._loader, Parser.csv )
+        args = ( path, self._loader, Parser.csv )
 
-            if not options:
-                return Resource( *args )
+        if not options:
+            return self._pool.get( path, lambda: Resource( *args ) )
 
-            if "point" in options:
-                return TimeSeriesResource( *args, **options )
+        if "point" in options:
+            return self._pool.get( path, lambda: TimeSeriesResource( *args, **options ) )
 
-            raise ValueError( "Invalid resource options" )
-
-        return self._pool.get( path, factory )
+        raise ValueError( "Invalid resource options" )
