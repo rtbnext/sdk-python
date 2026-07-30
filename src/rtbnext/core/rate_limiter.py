@@ -79,3 +79,8 @@ class RateLimiter:
         """Distribute requests evenly across the configured time window."""
 
         await self._spread_refill()
+
+    async def acquire( self, mode: RateLimitMode = "burst" ) -> None:
+        """Acquire permission to perform a request."""
+
+        await getattr( self, mode )()
