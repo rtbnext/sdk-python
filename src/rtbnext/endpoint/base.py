@@ -32,3 +32,24 @@ class EndpointBase:
         """Creates a text resource."""
 
         return self._pool.get( path, lambda: Resource( path, self._loader, Parser.text ) )
+
+    def json(
+        self, path: str, *,
+        entity: EntityFn | None = None,
+        find: FindFn | None = None,
+        search: SearchFn | None = None,
+        date: DateFn | None = None,
+        index: IndexFn | None = None,
+        keys: KeysFn | None = None
+    ) -> Resource:
+        """Creates a JSON resource."""
+
+        ...
+
+    def csv(
+        self, path: str, *,
+        point: PointFn | None = None
+    ) -> Resource:
+        """Creates a CSV resource."""
+
+        ...
