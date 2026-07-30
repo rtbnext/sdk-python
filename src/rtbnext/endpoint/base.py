@@ -23,3 +23,6 @@ class EndpointBase:
     Provides shared resource factory helpers for text, JSON, CSV,
     collection, index, time series, and date resources.
     """
+
+    def __init__( self, loader: ResourceLoader, pool: ResourcePool, endpoints: Any ) -> None:
+        self._loader, self._pool, self._endpoints = loader, pool, endpoints
