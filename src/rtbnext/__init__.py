@@ -12,17 +12,13 @@ Author: Paul Köhler (komed3)
 License: MIT
 """
 
-from typing import TYPE_CHECKING
-
 from rtbnext._version import __version__
+from rtbnext.core.http_client import ClientIdentity
+from rtbnext.core.resource import CacheMode, CacheType
 from rtbnext.defaults import (
     DEFAULT_API_URL, DEFAULT_CACHE_MODE, DEFAULT_CACHE_TYPE, DEFAULT_TIMEOUT
 )
 from rtbnext.rtbnext import RTBNext
-
-if TYPE_CHECKING:
-    from rtbnext.core.http_client import ClientIdentity
-    from rtbnext.core.resource import CacheMode, CacheType
 
 
 def rtbnext(
