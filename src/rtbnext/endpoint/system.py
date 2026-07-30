@@ -4,6 +4,8 @@ System Endpoint
 Provides access to system status information.
 """
 
+from __future__ import annotations
+
 from rtbnext.endpoint.base import EndpointBase
 from rtbnext.resource.base import Resource
 

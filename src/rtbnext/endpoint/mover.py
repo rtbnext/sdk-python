@@ -4,6 +4,8 @@ Mover Endpoint
 Provides access to mover snapshots and mover index resources.
 """
 
+from __future__ import annotations
+
 from typing import cast
 
 from rtbnext.endpoint.base import EndpointBase
