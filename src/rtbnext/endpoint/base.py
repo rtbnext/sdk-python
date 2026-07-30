@@ -45,12 +45,12 @@ class EndpointBase:
 
         return self._pool.get( path, lambda: Resource( *args ) )
 
-    def text( self, path: str ) -> Resource:
+    def _text( self, path: str ) -> Resource:
         """Creates a text resource."""
 
         return self._resource( path, Parser.text, [] )
 
-    def json(
+    def _json(
         self, path: str, *,
         entity: EntityFn | None = None,
         find: FindFn | None = None,
@@ -67,7 +67,7 @@ class EndpointBase:
             ( "index", IndexableResource, { "index": index, "keys": keys } )
         ] )
 
-    def csv( self, path: str, *, point: PointFn | None = None ) -> Resource:
+    def _csv( self, path: str, *, point: PointFn | None = None ) -> Resource:
         """Creates a CSV resource."""
 
         return self._resource( path, Parser.csv, [
