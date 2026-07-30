@@ -5,6 +5,7 @@ Implements the resource wrapper for time-series endpoints.
 """
 
 from collections import defaultdict
+from datetime import date as date_type
 from statistics import mean, median
 from typing import Callable, Generic, Literal, TypedDict, TypeVar
 
@@ -43,6 +44,26 @@ class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
                 if key != "date" and isinstance( value, ( int, float ) )
             ]
         )
+
+    def _period( self, date: str, period: AggregatePeriod ) -> str:
+        """Create an aggregation key from a date."""
+
+        year, month, day = map( int, date.split( "-" ) )
+
+        if period == "year":
+            return str( year )
+
+        if period == "quarter":
+            return f"{ year }-Q{ ( month - 1 ) // 3 + 1 }"
+
+        if period == "month":
+            return f"{ year }-{ month:02d }"
+
+        if period == "week":
+            current, first = date_type( year, month, day ), date_type( year, 1, 1 )
+            return f"{ year }-W{ ( ( current - first ).days // 7 + 1 ):02d }"
+
+        raise ValueError( f"Invalid aggregate period: { period }" )
 
     def min( self, callback: NumberCallback | None = None ) -> float:
         """Return minimum value."""
