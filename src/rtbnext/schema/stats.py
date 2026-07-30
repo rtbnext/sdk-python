@@ -26,3 +26,9 @@ GlobalStats = TypedDict( "GlobalStats", {
     "woman": int,
     "quota": float
 } )
+
+DBStats = TypedDict( "DBStats", {
+    "$metadata": MetaData,
+    "files": int,
+    "size": int
+} )
