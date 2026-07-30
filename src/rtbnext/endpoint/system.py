@@ -8,7 +8,7 @@ from rtbnext.endpoint.base import EndpointBase
 from rtbnext.resource.base import Resource
 
 
-class System( EndpointBase ):
+class SystemEndpoint( EndpointBase ):
     """
     Endpoint implementation for system resources.
 
