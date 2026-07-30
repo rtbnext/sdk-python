@@ -5,10 +5,10 @@ Declares statistical data, grouped statistics, historical trends,
 demographic distributions, and wealth analysis.
 """
 
-from typing import TypedDict
+from typing import NotRequired, TypedDict
 
 from rtbnext.schema.generic import (
-    AgeGroup, Change, ChangeFlag, ChildrenGroup, Gender, Industry, MaritalStatus, MetaData,
+    AgeGroup, ChangeFlag, ChangeItem, ChildrenGroup, Gender, Industry, MaritalStatus, MetaData,
     Percentile, SelfMadeRank, WealthSpread
 )
 
@@ -24,7 +24,9 @@ GlobalStats = TypedDict( "GlobalStats", {
     "count": int,
     "total": float,
     "woman": int,
-    "quota": float
+    "quota": float,
+    "today": NotRequired[ ChangeItem ],
+    "ytd": NotRequired[ ChangeItem ]
 } )
 
 DBStats = TypedDict( "DBStats", {
@@ -41,7 +43,7 @@ AgePyramidGroup = TypedDict( "AgePyramidGroup", {
     "decades": dict[ AgeGroup, int ],
     "max": int,
     "min": int,
-    "mean": float
+    "mean": int
 } )
 
 ChildrenStats = TypedDict( "ChildrenStats", {
