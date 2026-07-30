@@ -51,3 +51,12 @@ class Parser:
             return res.body.decode()
         except Exception as exc:
             raise RuntimeError( f"Failed to decode response: { exc }" ) from exc
+
+    @staticmethod
+    def json( res: HttpResponse ) -> Any:
+        """Parse an HTTP response body as JSON."""
+
+        try:
+            return json.loads( Parser.text( res ) )
+        except Exception as exc:
+            raise RuntimeError( f"Failed to parse JSON: { exc }" ) from exc
