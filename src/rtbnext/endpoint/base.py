@@ -31,3 +31,12 @@ class EndpointBase:
         """Creates a text resource."""
 
         return self._pool.get( path, lambda: Resource( path, self._loader, Parser.text ) )
+
+    def json( self, path: str, **options: Any ) -> Resource:
+        """Creates a JSON resource."""
+
+        args = ( path, self._loader, Parser.json )
+        def factory() -> Resource:
+            ...
+
+        return self._pool.get( path, factory )
