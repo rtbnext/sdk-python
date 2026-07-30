@@ -44,4 +44,7 @@ class EndpointBase:
             if "entity" in options:
                 return CollectableResource( *args, **options )
 
+            if "date_factory" in options:
+                return DateableResource( *args, **options )
+
         return self._pool.get( path, factory )
