@@ -22,7 +22,9 @@ class TimePoint( TypedDict ):
     date: str
 
 
-D = TypeVar( "D", bound= list[ list[ object ] ] )
+type TimeSeriesRow = list[ str | int | float ]
+
+D = TypeVar( "D", bound= list[ TimeSeriesRow ] )
 R = TypeVar( "R", bound= TimePoint )
 
 type AggregatePeriod = Literal[ "week", "month", "quarter", "year" ]
