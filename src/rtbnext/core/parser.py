@@ -26,3 +26,14 @@ class Parser:
     The parser validates the response status and ensures that
     the response contains data before decoding it.
     """
+
+    @staticmethod
+    def _number( value: str ) -> str | int | float:
+        """Parses an individual CSV field value, converting numeric strings to numbers."""
+
+        value = value.strip()
+
+        try:
+            return float( value ) if "." in value else int( value ) if value else value
+        except ValueError:
+            return value
