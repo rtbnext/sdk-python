@@ -74,3 +74,18 @@ Scatter = TypedDict( "Scatter", {
     "count": int,
     "items": list[ ScatterItem ]
 } )
+
+WealthStats = TypedDict( "WealthStats", {
+    "$metadata": MetaData,
+    "decades": dict[ AgeGroup, float ],
+    "gender": dict[ Gender, float ],
+    "percentiles": dict[ Percentile, float ],
+    "quartiles": tuple[ float, float, float ],
+    "spread": dict[ WealthSpread, float ],
+    "total": float,
+    "max": float,
+    "min": float,
+    "mean": float,
+    "median": float,
+    "stdDev": float
+} )
