@@ -28,3 +28,16 @@ class RateLimiter:
     - `burst`: allows short bursts of requests
     - `spread`: distributes requests evenly over time
     """
+
+    def __init__(
+        self,
+        max_requests: int = DEFAULT_MAX_REQUESTS,
+        per_seconds: float = DEFAULT_PER_SECONDS
+    ) -> None:
+        self._max_requests, self._per_seconds = max_requests, per_seconds
+        self._interval = self._per_seconds / max_requests
+
+        self._burst = deque[ float ]()
+        self._next_allowed = 0.0
+
+        self._lock = asyncio.Lock()
