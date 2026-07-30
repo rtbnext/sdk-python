@@ -18,8 +18,8 @@ FilterItem = TypedDict( "FilterItem", {
 
 Filter = TypedDict( "Filter", {
     "$metadata": MetaData,
-    "items": list[ FilterItem ],
-    "count": int
+    "count": int,
+    "items": list[ FilterItem ]
 } )
 
 FilterIndex = TypedDict( "FilterIndex", {

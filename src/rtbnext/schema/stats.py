@@ -60,3 +60,17 @@ ProfileStats = TypedDict( "ProfileStats", {
     "selfMade": dict[ SelfMadeRank, int ],
     "philanthropyScore": dict[ str, int ]
 } )
+
+ScatterItem = TypedDict( "ScatterItem", {
+    "uri": str,
+    "name": str,
+    "gender": Gender,
+    "age": int,
+    "networth": float
+} )
+
+Scatter = TypedDict( "Scatter", {
+    "$metadata": MetaData,
+    "count": int,
+    "items": list[ ScatterItem ]
+} )
