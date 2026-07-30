@@ -7,7 +7,8 @@ Implements the base endpoint class.
 from __future__ import annotations
 
 from collections.abc import Sequence
-from typing import Any
+from dataclasses import dataclass
+from typing import TYPE_CHECKING, Any
 
 from rtbnext.core.parser import Parser, ParserFn
 from rtbnext.core.resource import ResourceLoader, ResourcePool
@@ -17,7 +18,19 @@ from rtbnext.resource.dateable import DateableResource, DateFn
 from rtbnext.resource.indexable import IndexableResource, IndexFn, KeysFn
 from rtbnext.resource.time_series import PointFn, TimeSeriesResource
 
+if TYPE_CHECKING:
+    from rtbnext.endpoint.mover import MoverEndpoint
+    from rtbnext.endpoint.system import SystemEndpoint
+
 type Dispatch = Sequence[ tuple[ str, type[ Resource ], dict[ str, Any ] ] ]
+
+
+@dataclass( frozen= True, slots= True, kw_only= True )
+class Endpoints:
+    """Endpoints available in the RTBNext SDK."""
+
+    mover: MoverEndpoint
+    system: SystemEndpoint
 
 
 class EndpointBase:

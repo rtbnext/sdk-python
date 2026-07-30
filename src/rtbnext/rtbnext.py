@@ -7,7 +7,6 @@ all API endpoints.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import Any
 
 from rtbnext.core.http_client import ClientIdentity, HttpClient
@@ -15,16 +14,9 @@ from rtbnext.core.resource import CacheMode, CacheType, ResourceLoader, Resource
 from rtbnext.defaults import (
     DEFAULT_API_URL, DEFAULT_CACHE_MODE, DEFAULT_CACHE_TYPE, DEFAULT_TIMEOUT
 )
+from rtbnext.endpoint.base import Endpoints
 from rtbnext.endpoint.mover import MoverEndpoint
 from rtbnext.endpoint.system import SystemEndpoint
-
-
-@dataclass( frozen= True, slots= True, kw_only= True )
-class Endpoints:
-    """Endpoints available in the RTBNext SDK."""
-
-    mover: MoverEndpoint
-    system: SystemEndpoint
 
 
 class RTBNext:
