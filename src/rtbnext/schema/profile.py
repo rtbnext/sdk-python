@@ -5,10 +5,11 @@ Declares profile records representing individuals, including personal
 information, financial data, relationships, media, and historical statistics.
 """
 
-from typing import NotRequired, TypedDict, Literal
+from typing import Literal, NotRequired, TypedDict
 
 from rtbnext.schema.generic import (
-    Gender, Industry, MaritalStatus, MetaData, ProfileStatusFlag, SelfMadeRank
+    Education, Gender, Industry, Location, MaritalStatus, MetaData, Organization, ProfileStatusFlag,
+    SelfMade, SelfMadeRank
 )
 
 ProfileIndexItem = TypedDict( "ProfileIndexItem", {
@@ -80,3 +81,41 @@ ProfileMeta = TypedDict( "ProfileMeta", {
 
 ProfileHistoryItem = tuple[ str, int, float, float, float ]
 ProfileHistory = list[ ProfileHistoryItem ]
+
+ProfileFlags = TypedDict( "ProfileFlags", {
+    "deceased": NotRequired[ bool ],
+    "family": NotRequired[ bool ],
+    "dropOff": NotRequired[ bool ],
+    "embargo": NotRequired[ bool ]
+} )
+
+ProfileName = TypedDict( "ProfileName", {
+    "fullName": str,
+    "shortName": str,
+    "lastName": str,
+    "firstName": str
+} )
+
+ProfileInfo = TypedDict( "ProfileInfo", {
+    "flags": ProfileFlags,
+    "name": ProfileName,
+    "gender": Gender,
+    "birthDate": NotRequired[ str ],
+    "birthPlace": NotRequired[ Location ],
+    "citizenship": NotRequired[ str ],
+    "residence": NotRequired[ Location ],
+    "maritalStatus": NotRequired[ MaritalStatus ],
+    "children": NotRequired[ int ],
+    "education": NotRequired[ list[ Education ] ],
+    "industry": Industry,
+    "source": list[ str ],
+    "selfMade": NotRequired[ SelfMade ],
+    "philanthropyScore": NotRequired[ int ],
+    "organization": NotRequired[ Organization ]
+} )
+
+ProfileBio = TypedDict( "ProfileBio", {
+    "cv": list[ str ],
+    "quotes": list[ str ],
+    "facts": list[ str ]
+} )
