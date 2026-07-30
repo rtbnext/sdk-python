@@ -101,3 +101,32 @@ Top10 = TypedDict( "Top10", {
     "$metadata": MetaData,
     "entries": dict[ str, list[ Top10Item ] ]
 } )
+
+StatsIndexFirst = TypedDict( "StatsIndexFirst", {
+    "uri": str,
+    "name": str,
+    "rank": int,
+    "networth": float
+} )
+
+StatsIndexItem = TypedDict( "StatsIndexItem", {
+    "stats": StatsData,
+    "date": str,
+    "count": int,
+    "total": float,
+    "woman": int,
+    "quota": float,
+    "today": NotRequired[ ChangeItem ],
+    "ytd": NotRequired[ ChangeItem ],
+    "first": StatsIndexFirst
+} )
+
+IndustryStatsIndex = TypedDict( "IndustryStatsIndex", {
+    "$metadata": MetaData,
+    "items": dict[ Industry, StatsIndexItem ]
+} )
+
+CitizenshipStatsIndex = TypedDict( "CitizenshipStatsIndex", {
+    "$metadata": MetaData,
+    "items": dict[ str, StatsIndexItem ]
+} )
