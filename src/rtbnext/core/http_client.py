@@ -105,7 +105,7 @@ class HttpClient:
         self, url: str, *,
         headers: HttpHeader = None,
         mode: RateLimitMode = DEFAULT_RATE_LIMIT_MODE,
-        timeout: float | None = DEFAULT_TIMEOUT
+        timeout: float = DEFAULT_TIMEOUT
     ) -> HttpResponse:
         """Execute a single HTTP request."""
 
@@ -124,6 +124,28 @@ class HttpClient:
             url= str( res.url ), ok= res.is_success, status= res.status_code, body= res.content,
             headers= res.headers, latency= round( ( perf_counter() - start ) * 1000 )
         )
+
+    async def request(
+        self, path: str, *,
+        headers: HttpHeader = None,
+        mode: RateLimitMode = DEFAULT_RATE_LIMIT_MODE,
+        timeout: float = DEFAULT_TIMEOUT
+    ) -> HttpResponse:
+        """Send a request relative to the configured base URL."""
+
+        url = urljoin( self._base_url, path )
+
+        if task := self._pending.get( url ):
+            return await task
+
+        self._pending[ url ] = task = asyncio.create_task( self._execute(
+            url, headers= headers, mode= mode, timeout= timeout
+        ) )
+
+        try:
+            return await task
+        finally:
+            self._pending.pop( url, None )
 
     async def aclose( self ) -> None:
         """Close the underlying HTTP client and release network resources."""
