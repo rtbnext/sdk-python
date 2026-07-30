@@ -37,3 +37,17 @@ class Parser:
             return float( value ) if "." in value else int( value ) if value else value
         except ValueError:
             return value
+
+    @staticmethod
+    def text( res: HttpResponse ) -> str:
+        """Convert an HTTP response body to UTF-8 text."""
+
+        if not res.ok:
+            raise RuntimeError( f"Request failed with status { res.status }." )
+        if not res.body:
+            raise RuntimeError( "Response contains no data." )
+
+        try:
+            return res.body.decode()
+        except Exception as exc:
+            raise RuntimeError( f"Failed to decode response: { exc }" ) from exc

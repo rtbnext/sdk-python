@@ -36,7 +36,6 @@ class ClientIdentity:
     def __post_init__( self ) -> None:
         if not self.name.strip():
             raise ValueError( "Client name is required." )
-
         if not self.version.strip():
             raise ValueError( "Client version is required." )
 
