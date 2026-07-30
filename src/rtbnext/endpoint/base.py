@@ -48,7 +48,7 @@ class EndpointBase:
     def text( self, path: str ) -> Resource:
         """Creates a text resource."""
 
-        return self._pool.get( path, lambda: Resource( path, self._loader, Parser.text ) )
+        return self._resource( path, Parser.text, [] )
 
     def json(
         self, path: str, *,
