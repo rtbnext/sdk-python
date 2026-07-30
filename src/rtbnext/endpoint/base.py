@@ -16,6 +16,8 @@ from rtbnext.resource.dateable import DateableResource, DateFn
 from rtbnext.resource.indexable import IndexableResource, IndexFn, KeysFn
 from rtbnext.resource.time_series import PointFn, TimeSeriesResource
 
+type Dispatch = list[ tuple[ str, type[ Resource ], dict[ str, Any ] ] ]
+
 
 class EndpointBase:
     """
@@ -28,17 +30,12 @@ class EndpointBase:
     def __init__( self, loader: ResourceLoader, pool: ResourcePool, endpoints: Any ) -> None:
         self._loader, self._pool, self._endpoints = loader, pool, endpoints
 
-    def _resource(
-        self,
-        path: str,
-        parser: ParserFn,
-        resources: list[ tuple[ str, type[ Resource ], dict[ str, Any ] ] ]
-    ) -> Resource:
+    def _resource( self, path: str, parser: ParserFn, dispatch: Dispatch ) -> Resource:
         """Resolve the resource by its factory method."""
 
         args = ( path, self._loader, parser )
 
-        for key, cls, options in resources:
+        for key, cls, options in dispatch:
             if options[ key ] is not None:
                 return self._pool.get( path, lambda: cls( *args, **{
                     k: v for k, v in options.items()
@@ -69,10 +66,7 @@ class EndpointBase:
             ( "index", IndexableResource, { "index": index, "keys": keys } )
         ] )
 
-    def csv(
-        self, path: str, *,
-        point: PointFn | None = None
-    ) -> Resource:
+    def csv( self, path: str, *, point: PointFn | None = None ) -> Resource:
         """Creates a CSV resource."""
 
         return self._resource( path, Parser.csv, [
