@@ -21,3 +21,15 @@ Filter = TypedDict( "Filter", {
     "items": list[ FilterItem ],
     "count": int
 } )
+
+FilterIndex = TypedDict( "FilterIndex", {
+    "$metadata": MetaData,
+    "industry": list[ Industry ],
+    "citizenship": list[ str ],
+    "country": list[ str ],
+    "state": list[ str ],
+    "gender": list[ Gender ],
+    "age": list[ AgeGroup ],
+    "maritalStatus": list[ MaritalStatus ],
+    "special": list[ FilterSpecial ]
+} )
