@@ -4,6 +4,8 @@ Time Series Resource
 Implements the resource wrapper for time-series endpoints.
 """
 
+from __future__ import annotations
+
 from collections import defaultdict
 from datetime import date as date_type
 from statistics import mean, median

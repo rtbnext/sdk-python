@@ -5,6 +5,8 @@ Implements the HTTP response body parser methods for simple text,
 JSON responses and CSV data.
 """
 
+from __future__ import annotations
+
 import csv
 import json
 from io import StringIO

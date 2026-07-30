@@ -4,7 +4,6 @@ Utils
 Implements utility methods.
 """
 
-
 from __future__ import annotations
 
 import re

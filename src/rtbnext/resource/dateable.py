@@ -4,6 +4,8 @@ Dateable Resource
 Implements the resource wrapper for date-indexed endpoints.
 """
 
+from __future__ import annotations
+
 from typing import Callable, Generic, TypedDict, TypeVar
 
 from rtbnext.core.parser import ParserFn

@@ -4,7 +4,6 @@ Indexable Resource
 Implement the resource wrapper for nested indexable endpoints.
 """
 
-
 from __future__ import annotations
 
 from typing import Callable, Generic, TypeVar

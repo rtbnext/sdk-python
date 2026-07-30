@@ -4,6 +4,8 @@ Collectable Resource
 Implements the resource wrapper for collectable endpoints.
 """
 
+from __future__ import annotations
+
 from collections import defaultdict
 from typing import Callable, Generic, Self, TypedDict, TypeVar
 
