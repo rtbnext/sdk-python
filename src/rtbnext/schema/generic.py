@@ -4,7 +4,7 @@ Literals & Generics
 Declares literals and generic types.
 """
 
-from typing import Literal, TypedDict
+from typing import Literal, NotRequired, TypedDict
 
 type Industry = Literal[
     "automotive", "diversified", "energy", "engineering", "finance", "foodstuff",
@@ -48,4 +48,9 @@ MetaData = TypedDict( "MetaData", {
 ChangeItem = TypedDict( "ChangeItem", {
     "value": float,
     "percent": float
+} )
+
+Change = TypedDict( "Change", {
+    "today": NotRequired[ ChangeItem ],
+    "ytd": NotRequired[ ChangeItem ]
 } )
