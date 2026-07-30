@@ -14,7 +14,7 @@ from rtbnext.resource.base import Resource
 from rtbnext.resource.collectable import CollectableResource, EntityFn, FindFn, SearchFn
 from rtbnext.resource.dateable import DateableResource, DateFn
 from rtbnext.resource.indexable import IndexableResource, IndexFn, KeysFn
-from rtbnext.resource.time_series import PointFn, TimeSeriesResource, TimeSeriesRow
+from rtbnext.resource.time_series import PointFn, TimeSeriesResource
 
 
 class EndpointBase:
@@ -63,7 +63,11 @@ class EndpointBase:
     ) -> Resource:
         """Creates a JSON resource."""
 
-        ...
+        return self._resource( path, Parser.json, [
+            ( "entity", CollectableResource, { "entity": entity, "find": find, "search": search } ),
+            ( "date", DateableResource, { "date_factory": date } ),
+            ( "index", IndexableResource, { "index": index, "keys": keys } )
+        ] )
 
     def csv(
         self, path: str, *,
@@ -71,4 +75,6 @@ class EndpointBase:
     ) -> Resource:
         """Creates a CSV resource."""
 
-        ...
+        return self._resource( path, Parser.csv, [
+            ( "point", TimeSeriesResource, { "point": point }
+        ) ] )
