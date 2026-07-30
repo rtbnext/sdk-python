@@ -45,6 +45,12 @@ MetaData = TypedDict( "MetaData", {
     "lastModified": str
 } )
 
+DateIndex = TypedDict( "DateIndex", {
+    "$metadata": MetaData,
+    "dates": list[ str ],
+    "latest": NotRequired[ str ]
+} )
+
 Location = TypedDict( "Location", {
     "country": str,
     "state": NotRequired[ str ],
