@@ -7,7 +7,7 @@ Implements the resource wrapper for time-series endpoints.
 from collections import defaultdict
 from datetime import date as date_type
 from statistics import mean, median
-from typing import Callable, Generic, Literal, TypedDict, TypeVar
+from typing import Callable, Generic, Literal, TypedDict, TypeVar, cast
 
 from rtbnext.resource.collection import DateCollectionBase
 
@@ -22,6 +22,30 @@ R = TypeVar( "R", bound= TimePoint )
 
 type AggregatePeriod = Literal[ "week", "month", "quarter", "year" ]
 type NumberCallback[ R ] = Callable[ [ R ], int | float ]
+
+
+class AggregateValue( TypedDict ):
+    """Numeric aggregate values."""
+    first: float
+    last: float
+    min: float
+    max: float
+    avg: float
+    sum: float
+
+
+class AggregateRange( TypedDict ):
+    """Date range of an aggregate."""
+    from_: str
+    to: str
+
+
+class AggregatePoint( TypedDict, Generic[ R ] ):
+    """Aggregated time-series point."""
+
+    date: str
+    label: str
+    range: AggregateRange
 
 
 class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
