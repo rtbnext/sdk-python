@@ -9,6 +9,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+import httpx
+
 
 @dataclass( slots= True, frozen= True )
 class ClientIdentity:
@@ -25,3 +27,15 @@ class ClientIdentity:
 
         if not self.version.strip():
             raise ValueError( "Client version is required." )
+
+
+@dataclass( slots= True, frozen= True, kw_only= True )
+class HttpResponse:
+    """Represents the response returned by an HTTP request."""
+
+    url: str
+    ok: bool
+    status: int
+    body: bytes
+    headers: httpx.Headers
+    latency: int
