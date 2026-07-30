@@ -6,6 +6,7 @@ Implements the base endpoint class.
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from typing import Any
 
 from rtbnext.core.parser import Parser, ParserFn
@@ -16,7 +17,7 @@ from rtbnext.resource.dateable import DateableResource, DateFn
 from rtbnext.resource.indexable import IndexableResource, IndexFn, KeysFn
 from rtbnext.resource.time_series import PointFn, TimeSeriesResource
 
-type Dispatch = list[ tuple[ str, type[ Resource ], dict[ str, Any ] ] ]
+type Dispatch = Sequence[ tuple[ str, type[ Resource ], dict[ str, Any ] ] ]
 
 
 class EndpointBase:
