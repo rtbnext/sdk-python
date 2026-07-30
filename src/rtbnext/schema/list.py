@@ -50,7 +50,8 @@ ListStats = TypedDict( "ListStats", {
     "total": float,
     "woman": int,
     "quota": float,
-    "today": NotRequired[ ChangeItem ]
+    "today": NotRequired[ ChangeItem ],
+    "ytd": NotRequired[ ChangeItem ]
 } )
 
 List = TypedDict( "List", {
