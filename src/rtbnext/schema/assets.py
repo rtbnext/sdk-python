@@ -52,7 +52,7 @@ Performance = TypedDict( "Performance", {
     "returns": NotRequired[ Returns ]
 } )
 
-RankingItem = TypedDict( "RankingItem", {
+RankingHistoryItem = TypedDict( "RankingHistoryItem", {
     "date": str,
     "rank": NotRequired[ int ],
     "networth": NotRequired[ float ],
@@ -61,12 +61,22 @@ RankingItem = TypedDict( "RankingItem", {
 } )
 
 Ranking = TypedDict( "Ranking", {
-  "list": str,
-  "name": str,
-  "date": str,
-  "rank": NotRequired[ int ],
-  "networth": NotRequired[ float ],
-  "prev": NotRequired[ str ],
-  "next": NotRequired[ str ],
-  "history": NotRequired[ list[ RankingItem ] ]
+    "list": str,
+    "name": str,
+    "date": str,
+    "rank": NotRequired[ int ],
+    "networth": NotRequired[ float ],
+    "prev": NotRequired[ str ],
+    "next": NotRequired[ str ],
+    "history": NotRequired[ list[ RankingHistoryItem ] ]
+} )
+
+Realtime = TypedDict( "Realtime", {
+    "date": str,
+    "rank": NotRequired[ int ],
+    "networth": NotRequired[ float ],
+    "prev": NotRequired[ str ],
+    "next": NotRequired[ str ],
+    "today": NotRequired[ ChangeItem ],
+    "ytd": NotRequired[ ChangeItem ]
 } )
