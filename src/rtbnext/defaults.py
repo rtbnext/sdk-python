@@ -16,3 +16,5 @@ DEFAULT_API_URL: str = "https://api.rtbnext.de"
 DEFAULT_MAX_REQUESTS: int = 60
 DEFAULT_PER_SECONDS: float = 10.0
 DEFAULT_RATE_LIMIT_MODE: RateLimitMode = "burst"
+
+DEFAULT_TIMEOUT: float = 30.0
