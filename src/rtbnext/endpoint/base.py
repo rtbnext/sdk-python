@@ -29,7 +29,7 @@ class EndpointBase:
         self,
         path: str,
         parser: ParserFn,
-        resources: tuple[ tuple[ str, type[ Resource ] ], ... ],
+        resources: list[ tuple[ str, type[ Resource ] ] ],
         **options: Any
     ) -> Resource:
         """Resolve the resource by its factory method."""
@@ -56,13 +56,15 @@ class EndpointBase:
     def json( self, path: str, **options: Any ) -> Resource:
         """Creates a JSON resource."""
 
-        return self._resource( path, Parser.json, (
+        return self._resource( path, Parser.json, [
             ( "entity", CollectableResource ),
             ( "date_factory", DateableResource ),
             ( "index", IndexableResource )
-        ), **options )
+        ], **options )
 
     def csv( self, path: str, **options: Any ) -> Resource:
         """Creates a CSV resource."""
 
-        return self._resource( path, Parser.csv, ( ( "point", TimeSeriesResource ), ), **options )
+        return self._resource( path, Parser.csv, [
+            ( "point", TimeSeriesResource )
+        ], **options )
