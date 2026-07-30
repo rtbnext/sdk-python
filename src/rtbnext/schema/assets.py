@@ -7,7 +7,7 @@ and historical financial data.
 
 from typing import Literal, NotRequired, TypedDict
 
-from rtbnext.schema.generic import AssetType
+from rtbnext.schema.generic import AssetType, ChangeFlag
 
 type ReturnsPeriod = Literal[
     "week", "month", "quarter", "halfYear", "year", "twoYear", "fiveYear"
@@ -79,4 +79,23 @@ Realtime = TypedDict( "Realtime", {
     "next": NotRequired[ str ],
     "today": NotRequired[ ChangeItem ],
     "ytd": NotRequired[ ChangeItem ]
+} )
+
+AnnualRecord = TypedDict( "AnnualRecord", {
+    "first": int | float,
+    "last": int | float,
+    "diff": int | float,
+    "flag": ChangeFlag,
+    "mean": float,
+    "median": float,
+    "max": int | float,
+    "min": int | float,
+    "range": int | float,
+    "stdDev": float
+} )
+
+Annual = TypedDict( "Annual", {
+    "year": int,
+    "rank": NotRequired[ AnnualRecord ],
+    "networth": NotRequired[ AnnualRecord ]
 } )
