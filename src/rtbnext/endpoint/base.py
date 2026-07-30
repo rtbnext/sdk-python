@@ -28,6 +28,25 @@ class EndpointBase:
     def __init__( self, loader: ResourceLoader, pool: ResourcePool, endpoints: Any ) -> None:
         self._loader, self._pool, self._endpoints = loader, pool, endpoints
 
+    def _resource(
+        self,
+        path: str,
+        parser: ParserFn,
+        resources: list[ tuple[ str, type[ Resource ], dict[ str, Any ] ] ]
+    ) -> Resource:
+        """Resolve the resource by its factory method."""
+
+        args = ( path, self._loader, parser )
+
+        for key, cls, options in resources:
+            if options[ key ] is not None:
+                return self._pool.get( path, lambda: cls( *args, **{
+                    k: v for k, v in options.items()
+                    if v is not None
+                } ) )
+
+        return self._pool.get( path, lambda: Resource( *args ) )
+
     def text( self, path: str ) -> Resource:
         """Creates a text resource."""
 
