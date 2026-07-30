@@ -4,7 +4,8 @@ Time Series Resource
 Implements the resource wrapper for time-series endpoints.
 """
 
-from typing import Callable, Literal, TypedDict, TypeVar, Generic
+from typing import Callable, Generic, Literal, TypedDict, TypeVar
+
 from rtbnext.resource.collection import DateCollectionBase
 
 
