@@ -74,3 +74,8 @@ class RateLimiter:
                 wait = self._per_seconds - ( now - self._burst[ 0 ] )
 
             await asyncio.sleep( wait )
+
+    async def spread( self ) -> None:
+        """Distribute requests evenly across the configured time window."""
+
+        await self._spread_refill()
