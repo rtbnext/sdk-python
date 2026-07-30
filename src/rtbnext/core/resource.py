@@ -8,18 +8,23 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from time import time
-from typing import Any, Callable, Generic, Literal, TypeVar
+from typing import TYPE_CHECKING, Callable, Generic, Literal, TypeVar
 
 import httpx
 
 from rtbnext.core.cache import Cache, EmptyCache, MemoryCache
-from rtbnext.core.http_client import HttpClient, HttpHeader, HttpResponse, RateLimitMode
+from rtbnext.core.http_client import HttpResponse
 from rtbnext.defaults import (
     DEFAULT_CACHE_MODE, DEFAULT_CACHE_TYPE, DEFAULT_RATE_LIMIT_MODE, DEFAULT_TIMEOUT
 )
-from rtbnext.resource.base import Resource
 
-R = TypeVar( "R", bound= Resource[ Any ] )
+if TYPE_CHECKING:
+    from typing import Any
+
+    from rtbnext.core.http_client import HttpClient, HttpHeader, RateLimitMode
+    from rtbnext.resource.base import Resource
+
+R = TypeVar( "R", bound= "Resource[ Any ]" )
 
 type CacheType = Cache | Literal[ False, "memory" ]
 type CacheMode = Literal[ "ttl", "session", "revalidate" ]

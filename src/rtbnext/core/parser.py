@@ -10,9 +10,10 @@ from __future__ import annotations
 import csv
 import json
 from io import StringIO
-from typing import Any, Callable, TypeVar
+from typing import TYPE_CHECKING, Any, Callable, TypeVar
 
-from rtbnext.core.http_client import HttpResponse
+if TYPE_CHECKING:
+    from rtbnext.core.http_client import HttpResponse
 
 D = TypeVar( "D" )
 
