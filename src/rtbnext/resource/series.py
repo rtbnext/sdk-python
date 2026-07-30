@@ -26,6 +26,7 @@ type NumberCallback[ R ] = Callable[ [ R ], int | float ]
 
 class AggregateValue( TypedDict ):
     """Numeric aggregate values."""
+
     first: float
     last: float
     min: float
@@ -36,6 +37,7 @@ class AggregateValue( TypedDict ):
 
 class AggregateRange( TypedDict ):
     """Date range of an aggregate."""
+
     from_: str
     to: str
 
