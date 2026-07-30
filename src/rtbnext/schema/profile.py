@@ -7,9 +7,10 @@ information, financial data, relationships, media, and historical statistics.
 
 from typing import Literal, NotRequired, TypedDict
 
+from rtbnext.schema.assets import Annual, Asset, Performance, Ranking, Realtime
 from rtbnext.schema.generic import (
-    Education, Gender, Industry, Location, MaritalStatus, MetaData, Organization, ProfileStatusFlag,
-    SelfMade, SelfMadeRank
+    Education, Gender, Image, Industry, Location, MaritalStatus, MetaData, Organization,
+    ProfileStatusFlag, Relation, SelfMade, SelfMadeRank, Wiki
 )
 
 ProfileIndexItem = TypedDict( "ProfileIndexItem", {
@@ -79,8 +80,8 @@ ProfileMeta = TypedDict( "ProfileMeta", {
     "status": NotRequired[ ProfileStatus ]
 } )
 
-ProfileHistoryItem = tuple[ str, int, float, float, float ]
-ProfileHistory = list[ ProfileHistoryItem ]
+type ProfileHistoryItem = tuple[ str, int, float, float, float ]
+type ProfileHistory = list[ ProfileHistoryItem ]
 
 ProfileFlags = TypedDict( "ProfileFlags", {
     "deceased": NotRequired[ bool ],
@@ -118,4 +119,19 @@ ProfileBio = TypedDict( "ProfileBio", {
     "cv": list[ str ],
     "quotes": list[ str ],
     "facts": list[ str ]
+} )
+
+ProfileData = TypedDict( "ProfileData", {
+    "id": str,
+    "uri": str,
+    "info": ProfileInfo,
+    "bio": ProfileBio,
+    "related": list[ Relation ],
+    "media": list[ Image ],
+    "realtime": NotRequired[ Realtime ],
+    "performance": NotRequired[ Performance ],
+    "ranking": list[ Ranking ],
+    "annual": list[ Annual ],
+    "assets": list[ Asset ],
+    "wiki": NotRequired[ Wiki ]
 } )
