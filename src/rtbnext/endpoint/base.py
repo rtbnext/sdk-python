@@ -35,8 +35,10 @@ class EndpointBase:
     def json( self, path: str, **options: Any ) -> Resource:
         """Creates a JSON resource."""
 
-        args = ( path, self._loader, Parser.json )
         def factory() -> Resource:
-            ...
+            args = ( path, self._loader, Parser.json )
+
+            if not options:
+                return Resource( *args )
 
         return self._pool.get( path, factory )
