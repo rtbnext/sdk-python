@@ -51,4 +51,6 @@ class EndpointBase:
             if "index" in options:
                 return IndexableResource( *args, **options )
 
+            raise ValueError( "Invalid resource options" )
+
         return self._pool.get( path, factory )
