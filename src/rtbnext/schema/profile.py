@@ -77,3 +77,6 @@ ProfileMeta = TypedDict( "ProfileMeta", {
     "lastLookup": NotRequired[ str ],
     "status": NotRequired[ ProfileStatus ]
 } )
+
+ProfileHistoryItem = tuple[ str, int, float, float, float ]
+ProfileHistory = list[ ProfileHistoryItem ]
