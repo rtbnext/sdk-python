@@ -5,9 +5,13 @@ Declares shared types for assets, net worth, rankings, performance metrics,
 and historical financial data.
 """
 
-from typing import NotRequired, TypedDict
+from typing import Literal, NotRequired, TypedDict
 
 from rtbnext.schema.generic import AssetType
+
+type ReturnsPeriod = Literal[
+    "week", "month", "quarter", "halfYear", "year", "twoYear", "fiveYear"
+]
 
 ChangeItem = TypedDict( "ChangeItem", {
     "value": float,
@@ -28,4 +32,22 @@ Asset = TypedDict( "Asset", {
     "label": str,
     "value": NotRequired[ float ],
     "info": NotRequired[ AssetInfo ]
+} )
+
+DataPoint = TypedDict( "DataPoint", {
+    "date": str,
+    "networth": float,
+    "rank": NotRequired[ int ]
+} )
+
+Extrema = TypedDict( "Extrema", {
+    "high": NotRequired[ DataPoint ],
+    "low": NotRequired[ DataPoint ]
+} )
+
+type Returns = dict[ ReturnsPeriod, ChangeItem ]
+
+Performance = TypedDict( "Performance", {
+    "extrema": NotRequired[ Extrema ],
+    "returns": NotRequired[ Returns ]
 } )

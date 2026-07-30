@@ -36,8 +36,8 @@ DBStats = TypedDict( "DBStats", {
     "size": int
 } )
 
-HistoryItem = tuple[ str, int, float, int, float, float, float ]
-History = list[ HistoryItem ]
+type HistoryItem = tuple[ str, int, float, int, float, float, float ]
+type History = list[ HistoryItem ]
 
 AgePyramidGroup = TypedDict( "AgePyramidGroup", {
     "count": int,
