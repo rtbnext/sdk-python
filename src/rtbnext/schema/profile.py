@@ -5,7 +5,7 @@ Declares profile records representing individuals, including personal
 information, financial data, relationships, media, and historical statistics.
 """
 
-from typing import NotRequired, TypedDict
+from typing import NotRequired, TypedDict, Literal
 
 from rtbnext.schema.generic import (
     Gender, Industry, MaritalStatus, MetaData, ProfileStatusFlag, SelfMadeRank
@@ -62,4 +62,18 @@ SearchIndex = TypedDict( "SearchIndex", {
     "$metadata": MetaData,
     "count": int,
     "items": list[ SearchIndexItem ]
+} )
+
+ProfileStatus = TypedDict( "ProfileStatus", {
+    "status": ProfileStatusFlag,
+    "score": float,
+    "flags": NotRequired[ list[ str ] ]
+} )
+
+ProfileMeta = TypedDict( "ProfileMeta", {
+    "schemaVersion": Literal[ "2" ],
+    "generator": str,
+    "lastModified": str,
+    "lastLookup": NotRequired[ str ],
+    "status": NotRequired[ ProfileStatus ]
 } )
