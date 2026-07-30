@@ -77,7 +77,7 @@ class HttpClient:
     async def __aenter__( self ) -> HttpClient:
         return self
 
-    async def __aexit__( self, *_ ):
+    async def __aexit__( self, *_ ) -> None:
         await self.aclose()
 
     def _create_headers( self ) -> httpx.Headers:
