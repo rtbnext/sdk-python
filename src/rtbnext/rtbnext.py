@@ -8,10 +8,10 @@ all API endpoints.
 from __future__ import annotations
 
 from rtbnext.core.http_client import ClientIdentity, HttpClient
-from rtbnext.core.resource import (CacheMode, CacheType, ResourceLoader,
-                                   ResourcePool)
-from rtbnext.defaults import (DEFAULT_API_URL, DEFAULT_CACHE_MODE,
-                              DEFAULT_CACHE_TYPE, DEFAULT_TIMEOUT)
+from rtbnext.core.resource import CacheMode, CacheType, ResourceLoader, ResourcePool
+from rtbnext.defaults import (
+    DEFAULT_API_URL, DEFAULT_CACHE_MODE, DEFAULT_CACHE_TYPE, DEFAULT_TIMEOUT
+)
 
 
 class RTBNext:

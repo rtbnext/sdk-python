@@ -16,9 +16,10 @@ import httpx
 
 from rtbnext import __version__
 from rtbnext.core.rate_limiter import RateLimiter, RateLimitMode
-from rtbnext.defaults import (DEFAULT_API_URL, DEFAULT_MAX_REQUESTS,
-                              DEFAULT_PER_SECONDS, DEFAULT_RATE_LIMIT_MODE,
-                              DEFAULT_TIMEOUT)
+from rtbnext.defaults import (
+    DEFAULT_API_URL, DEFAULT_MAX_REQUESTS, DEFAULT_PER_SECONDS, DEFAULT_RATE_LIMIT_MODE,
+    DEFAULT_TIMEOUT
+)
 
 type HttpHeader = httpx.Headers | dict[ str, str ] | None
 

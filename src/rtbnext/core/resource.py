@@ -13,10 +13,10 @@ from typing import Any, Callable, Generic, Literal, TypeVar
 import httpx
 
 from rtbnext.core.cache import Cache, EmptyCache, MemoryCache
-from rtbnext.core.http_client import (HttpClient, HttpHeader, HttpResponse,
-                                      RateLimitMode)
-from rtbnext.defaults import (DEFAULT_CACHE_MODE, DEFAULT_CACHE_TYPE,
-                              DEFAULT_RATE_LIMIT_MODE, DEFAULT_TIMEOUT)
+from rtbnext.core.http_client import HttpClient, HttpHeader, HttpResponse, RateLimitMode
+from rtbnext.defaults import (
+    DEFAULT_CACHE_MODE, DEFAULT_CACHE_TYPE, DEFAULT_RATE_LIMIT_MODE, DEFAULT_TIMEOUT
+)
 from rtbnext.resource.base import Resource
 
 R = TypeVar( "R", bound= Resource[ Any ] )
