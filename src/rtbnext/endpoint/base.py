@@ -54,3 +54,22 @@ class EndpointBase:
             raise ValueError( "Invalid resource options" )
 
         return self._pool.get( path, factory )
+
+    def csv( self, path: str, **options: Any ) -> Resource:
+        """Creates a CSV resource."""
+
+        def factory() -> Resource:
+            if not options:
+                return Resource(path, self._loader, CsvParser.parse)
+
+            if "point" in options:
+                return TimeSeriesResource(
+                    path,
+                    self._loader,
+                    CsvParser.parse,
+                    **options
+                )
+
+            raise ValueError("Invalid resource options")
+
+        return self._pool.get(path, factory)
