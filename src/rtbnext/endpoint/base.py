@@ -13,6 +13,7 @@ from rtbnext.core.resource import ResourceLoader, ResourcePool
 from rtbnext.resource.base import Resource
 from rtbnext.resource.collectable import CollectableResource
 from rtbnext.resource.dateable import DateableResource
+from rtbnext.resource.indexable import IndexableResource
 from rtbnext.resource.time_series import TimeSeriesResource
 
 
@@ -46,5 +47,8 @@ class EndpointBase:
 
             if "date_factory" in options:
                 return DateableResource( *args, **options )
+
+            if "index" in options:
+                return IndexableResource( *args, **options )
 
         return self._pool.get( path, factory )
