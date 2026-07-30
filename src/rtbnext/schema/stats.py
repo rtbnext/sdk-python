@@ -89,3 +89,15 @@ WealthStats = TypedDict( "WealthStats", {
     "median": float,
     "stdDev": float
 } )
+
+Top10Item = TypedDict( "Top10Item", {
+    "uri": str,
+    "rank": int,
+    "networth": float,
+    "flag": ChangeFlag
+} )
+
+Top10 = TypedDict( "Top10", {
+    "$metadata": MetaData,
+    "entries": dict[ str, list[ Top10Item ] ]
+} )
