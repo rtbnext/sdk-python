@@ -241,3 +241,8 @@ class TimeSeriesResource( Resource[ D ], Generic[ D, R ] ):
     ) -> None:
         super().__init__( path, loader, parser )
         self._point = point
+
+    def _collect( self, rows: list[ D ] ) -> TimeSeriesCollection[ R ]:
+        """Create a time-series collection from raw rows."""
+
+        return TimeSeriesCollection( [ self._point( row ) for row in reversed( rows ) ] )
