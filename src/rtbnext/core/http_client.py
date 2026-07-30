@@ -12,6 +12,7 @@ from dataclasses import dataclass
 
 import httpx
 
+from rtbnext._version import __version__
 from rtbnext.core.rate_limiter import RateLimiter, RateLimitMode
 from rtbnext.defaults import (
     DEFAULT_API_URL, DEFAULT_MAX_REQUESTS, DEFAULT_PER_SECONDS, DEFAULT_RATE_LIMIT_MODE,
