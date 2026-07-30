@@ -41,4 +41,7 @@ class EndpointBase:
             if not options:
                 return Resource( *args )
 
+            if "entity" in options:
+                return CollectableResource( *args, **options )
+
         return self._pool.get( path, factory )
