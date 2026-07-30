@@ -71,3 +71,34 @@ SelfMade = TypedDict( "SelfMade", {
     "is": bool,
     "rank": NotRequired[ SelfMadeRank ]
 } )
+
+Relation = TypedDict( "Relation", {
+    "type": RelationType,
+    "name": str,
+    "relation": NotRequired[ str ],
+    "uri": NotRequired[ str ]
+} )
+
+Image = TypedDict( "Image", {
+    "url": str,
+    "credits": str,
+    "file": str,
+    "thumb": NotRequired[ str ],
+    "caption": NotRequired[ str ],
+    "desc": NotRequired[ str ],
+    "date": NotRequired[ str ]
+} )
+
+Wiki = TypedDict( "Wiki", {
+    "uri": str,
+    "pageId": int,
+    "refId": int,
+    "confidence": float,
+    "name": str,
+    "lastModified": str,
+    "summary": list[ str ],
+    "sortKey": NotRequired[ str ],
+    "wikidata": NotRequired[ str ],
+    "desc": NotRequired[ str ],
+    "image": NotRequired[ Image ]
+} )
