@@ -239,12 +239,20 @@ class TimeSeriesResource( Resource[ D ], Generic[ D, R ] ):
 
     def __init__(
         self, path: str, loader: ResourceLoader, parser: ParserFn[ D ], *,
-        point: PointFn[ D, R ]
+        point: PointFn[ TimeSeriesRow, R ]
     ) -> None:
         super().__init__( path, loader, parser )
         self._point = point
 
-    def _collect( self, rows: list[ D ] ) -> TimeSeriesCollection[ R ]:
+    def _collect_points( self, rows: D ) -> TimeSeriesCollection[ R ]:
         """Create a time-series collection from raw rows."""
 
-        return TimeSeriesCollection( [ self._point( row ) for row in reversed( rows ) ] )
+        return TimeSeriesCollection(
+            [ self._point( row ) for row in reversed( rows ) ],
+            date= lambda point: point[ "date" ]
+        )
+
+    async def series( self ) -> TimeSeriesCollection[ R ]:
+        """Returns the parsed time-series data as a typed collection."""
+
+        return await self._transform( self._collect_points )
