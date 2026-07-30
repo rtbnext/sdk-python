@@ -9,6 +9,8 @@ from __future__ import annotations
 
 import asyncio
 from dataclasses import dataclass
+from time import perf_counter
+from urllib.parse import urljoin
 
 import httpx
 
@@ -18,6 +20,8 @@ from rtbnext.defaults import (
     DEFAULT_API_URL, DEFAULT_MAX_REQUESTS, DEFAULT_PER_SECONDS, DEFAULT_RATE_LIMIT_MODE,
     DEFAULT_TIMEOUT
 )
+
+type HttpHeader = httpx.Headers | dict[ str, str ] | None
 
 
 @dataclass( slots= True, frozen= True )
@@ -96,6 +100,30 @@ class HttpClient:
             headers[ "X-Client-Contact" ] = client.contact
 
         return headers
+
+    async def _execute(
+        self, url: str, *,
+        headers: HttpHeader = None,
+        mode: RateLimitMode = DEFAULT_RATE_LIMIT_MODE,
+        timeout: float | None = DEFAULT_TIMEOUT
+    ) -> HttpResponse:
+        """Execute a single HTTP request."""
+
+        await self._limiter.acquire( mode )
+
+        try:
+            start = perf_counter()
+            res = await self._client.get(
+                url, headers= headers, timeout= self._timeout if timeout is None else timeout
+            )
+
+        except httpx.HTTPError as exc:
+            raise RuntimeError( f"Fetch failed: { exc }" ) from exc
+
+        return HttpResponse(
+            url= str( res.url ), ok= res.is_success, status= res.status_code, body= res.content,
+            headers= res.headers, latency= round( ( perf_counter() - start ) * 1000 )
+        )
 
     async def aclose( self ) -> None:
         """Close the underlying HTTP client and release network resources."""
