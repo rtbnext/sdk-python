@@ -110,7 +110,6 @@ StatsIndexFirst = TypedDict( "StatsIndexFirst", {
 } )
 
 StatsIndexItem = TypedDict( "StatsIndexItem", {
-    "stats": StatsData,
     "date": str,
     "count": int,
     "total": float,
