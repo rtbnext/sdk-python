@@ -58,6 +58,7 @@ max-args = 12
 
 [tool.pylint.messages_control]
 disable = [
+    "duplicate-code",
     "unnecessary-ellipsis"
 ]
 
