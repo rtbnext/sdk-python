@@ -4,6 +4,7 @@ Time Series Resource
 Implements the resource wrapper for time-series endpoints.
 """
 
+from statistics import median
 from typing import Callable, Generic, Literal, TypedDict, TypeVar
 
 from rtbnext.resource.collection import DateCollectionBase
@@ -62,3 +63,8 @@ class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
 
         values = self._numbers( callback )
         return sum( values ) / len( values )
+
+    def median( self, callback: NumberCallback = None ) -> float:
+        """Return median value."""
+
+        return float( median( self._numbers( callback ) ) )
