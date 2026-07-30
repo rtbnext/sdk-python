@@ -75,6 +75,27 @@ class HttpClient:
     async def __aexit__( self, *_ ):
         await self.aclose()
 
+    def _create_headers( self ) -> httpx.Headers:
+        """Create the default headers sent with every request."""
+
+        client = self._client_info
+        info = "; ".join( value for value in ( client.contact, client.email ) if value )
+
+        headers = httpx.Headers( {
+            "User-Agent": (
+                f"{ client.name }/{ client.version }"
+                f"{ f' ({ info })' if info else '' }"
+                f" @rtbnext/sdk/{ __version__ }"
+            ),
+            "X-Client-Name": client.name,
+            "X-Client-Version": client.version
+        } )
+
+        if client.contact:
+            headers[ "X-Client-Contact" ] = client.contact
+
+        return headers
+
     async def aclose( self ) -> None:
         """Close the underlying HTTP client and release network resources."""
 
