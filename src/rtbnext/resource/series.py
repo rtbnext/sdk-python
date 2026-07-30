@@ -199,3 +199,21 @@ class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
             self._aggregate( group, label )
             for label, group in groups.items()
         ] )
+
+    def buckets( self, count: int ) -> TimeSeriesCollection[ AggregatePoint ]:
+        """Split points into equally sized buckets."""
+
+        if count >= self.count:
+            return TimeSeriesCollection( [
+                self._aggregate( [ point ], f"{ index + 1}/{ self.count }" )
+                for index, point in enumerate( self )
+            ] )
+
+        size, points = self.count / count, self.items
+        result: list[ AggregatePoint ] = []
+
+        for index in range( count ):
+            start, end = int( index * size ), int( ( index + 1 ) * size )
+            result.append( self._aggregate( points[ start : end ], f"{ index + 1}/{ count }" ) )
+
+        return TimeSeriesCollection( result )
