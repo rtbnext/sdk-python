@@ -6,7 +6,7 @@ Provides access to mover snapshots and mover index resources.
 
 from __future__ import annotations
 
-from typing import cast
+from typing import Any, cast
 
 from rtbnext.endpoint.base import EndpointBase
 from rtbnext.resource.base import Resource
@@ -21,13 +21,19 @@ class MoverEndpoint( EndpointBase ):
     Provides access to mover snapshots and mover index resources.
     """
 
-    def snapshot( self, date: object ) -> Resource:
+    def snapshot( self, date: object ):
         """Returns a mover snapshot for a given date."""
 
-        return self._json( f"v2/mover/{ ymd( date ) }.json" )
+        return cast(
+            Resource,
+            self._json( f"v2/mover/{ ymd( date ) }.json" )
+        )
 
     @property
-    def index( self ) -> DateableResource:
+    def index( self ):
         """Returns the root mover index resource."""
 
-        return cast( DateableResource, self._json( "v2/mover/index.json", date= self.snapshot ) )
+        return cast(
+            DateableResource[ Any, Resource ],
+            self._json( "v2/mover/index.json", date= self.snapshot )
+        )
