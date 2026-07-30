@@ -105,7 +105,7 @@ class HttpClient:
         self, url: str, *,
         headers: HttpHeader = None,
         mode: RateLimitMode = DEFAULT_RATE_LIMIT_MODE,
-        timeout: float = DEFAULT_TIMEOUT
+        timeout: float | None = None
     ) -> HttpResponse:
         """Execute a single HTTP request."""
 
@@ -129,7 +129,7 @@ class HttpClient:
         self, path: str, *,
         headers: HttpHeader = None,
         mode: RateLimitMode = DEFAULT_RATE_LIMIT_MODE,
-        timeout: float = DEFAULT_TIMEOUT
+        timeout: float | None = None
     ) -> HttpResponse:
         """Send a request relative to the configured base URL."""
 
