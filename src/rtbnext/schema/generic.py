@@ -45,11 +45,6 @@ MetaData = TypedDict( "MetaData", {
     "lastModified": str
 } )
 
-ChangeItem = TypedDict( "ChangeItem", {
-    "value": float,
-    "percent": float
-} )
-
 Location = TypedDict( "Location", {
     "country": str,
     "state": NotRequired[ str ],

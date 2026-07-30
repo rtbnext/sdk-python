@@ -6,7 +6,8 @@ Declares movers as the largest gains and losses over predefined time periods.
 
 from typing import TypedDict
 
-from rtbnext.schema.generic import ChangeItem, MetaData
+from rtbnext.schema.assets import ChangeItem
+from rtbnext.schema.generic import MetaData
 
 MoverItem = TypedDict( "MoverItem", {
     "uri": str,

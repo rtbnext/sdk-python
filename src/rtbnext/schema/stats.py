@@ -7,9 +7,10 @@ demographic distributions, and wealth analysis.
 
 from typing import NotRequired, TypedDict
 
+from rtbnext.schema.assets import ChangeItem
 from rtbnext.schema.generic import (
-    AgeGroup, ChangeFlag, ChangeItem, ChildrenGroup, Gender, Industry, MaritalStatus, MetaData,
-    Percentile, SelfMadeRank, WealthSpread
+    AgeGroup, ChangeFlag, ChildrenGroup, Gender, Industry, MaritalStatus, MetaData, Percentile,
+    SelfMadeRank, WealthSpread
 )
 
 StatsData = TypedDict( "StatsData", {
