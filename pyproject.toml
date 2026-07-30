@@ -60,3 +60,9 @@ max-args = 12
 disable = [
     "unnecessary-ellipsis"
 ]
+
+[tool.isort]
+profile = "black"
+multi_line_output = 5
+include_trailing_comma = false
+line_length = 100
