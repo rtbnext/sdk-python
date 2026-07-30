@@ -56,30 +56,13 @@ class EndpointBase:
     def json( self, path: str, **options: Any ) -> Resource:
         """Creates a JSON resource."""
 
-        args = ( path, self._loader, Parser.json )
-
-        if not options:
-            return self._pool.get( path, lambda: Resource( *args ) )
-
-        for key, cls in (
+        return self._resource( path, Parser.json, (
             ( "entity", CollectableResource ),
             ( "date_factory", DateableResource ),
             ( "index", IndexableResource )
-        ):
-            if key in options:
-                return self._pool.get( path, lambda: cls( *args, **options ) )
-
-        raise ValueError( "Invalid resource options" )
+        ), **options )
 
     def csv( self, path: str, **options: Any ) -> Resource:
         """Creates a CSV resource."""
 
-        args = ( path, self._loader, Parser.csv )
-
-        if not options:
-            return self._pool.get( path, lambda: Resource( *args ) )
-
-        if "point" in options:
-            return self._pool.get( path, lambda: TimeSeriesResource( *args, **options ) )
-
-        raise ValueError( "Invalid resource options" )
+        return self._resource( path, Parser.csv, ( ( "point", TimeSeriesResource ), ), **options )
