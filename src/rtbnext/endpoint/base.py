@@ -11,10 +11,10 @@ from typing import Any
 from rtbnext.core.parser import Parser, ParserFn
 from rtbnext.core.resource import ResourceLoader, ResourcePool
 from rtbnext.resource.base import Resource
-from rtbnext.resource.collectable import CollectableResource
-from rtbnext.resource.dateable import DateableResource
-from rtbnext.resource.indexable import IndexableResource
-from rtbnext.resource.time_series import TimeSeriesResource
+from rtbnext.resource.collectable import CollectableResource, EntityFn, FindFn, SearchFn
+from rtbnext.resource.dateable import DateableResource, DateFn
+from rtbnext.resource.indexable import IndexableResource, IndexFn, KeysFn
+from rtbnext.resource.time_series import PointFn, TimeSeriesResource, TimeSeriesRow
 
 
 class EndpointBase:
