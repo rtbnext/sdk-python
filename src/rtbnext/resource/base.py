@@ -11,7 +11,7 @@ import asyncio
 from typing import Any, Awaitable, Callable, Generic, Self, TypeVar
 
 from rtbnext.core.http_client import HttpHeader
-from rtbnext.core.loader import ResourceLoader, ResourceState
+from rtbnext.core.loader import ResourceState, ResourceStateLoader
 from rtbnext.core.parser import ParserFn
 from rtbnext.core.rate_limiter import RateLimitMode
 from rtbnext.defaults import DEFAULT_RATE_LIMIT_MODE
@@ -32,7 +32,7 @@ class Resource( Generic[ D ] ):
     as resource state while parsed values are cached separately.
     """
 
-    def __init__( self, path: str, loader: ResourceLoader, parser: ParserFn[ D ] ) -> None:
+    def __init__( self, path: str, loader: ResourceStateLoader, parser: ParserFn[ D ] ) -> None:
         self._path, self._loader, self._parser = path, loader, parser
 
         self._hooks: dict[ str, set[ Callable[ [ Self ], None ] ] ] = {}

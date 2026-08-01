@@ -1,7 +1,7 @@
 """
-Resource
+Resource State Loader
 
-Implements the resource loader with build-in caching and HTTP revalidation.
+Implements the resource state loader with build-in caching and HTTP revalidation.
 """
 
 from __future__ import annotations
@@ -31,9 +31,9 @@ class ResourceState:
     last_modified: str | None = None
 
 
-class ResourceLoader:
+class ResourceStateLoader:
     """
-    Loads resources with optional caching and HTTP revalidation.
+    Loads resource states with optional caching and HTTP revalidation.
 
     The loader supports session, TTL and revalidation cache modes while
     transparently handling conditional HTTP requests.
