@@ -5,7 +5,7 @@ Declares statistical data, grouped statistics, historical trends,
 demographic distributions, and wealth analysis.
 """
 
-from typing import Optional, TypedDict
+from typing import NotRequired, TypedDict
 
 from rtbnext.schema.assets import ChangeItem
 from rtbnext.schema.generic import (
@@ -26,8 +26,8 @@ GlobalStats = TypedDict( "GlobalStats", {
     "total": float,
     "woman": int,
     "quota": float,
-    "today": Optional[ ChangeItem ],
-    "ytd": Optional[ ChangeItem ]
+    "today": NotRequired[ ChangeItem ],
+    "ytd": NotRequired[ ChangeItem ]
 } )
 
 DBStats = TypedDict( "DBStats", {
@@ -117,8 +117,8 @@ StatsIndexItem = TypedDict( "StatsIndexItem", {
     "total": float,
     "woman": int,
     "quota": float,
-    "today": Optional[ ChangeItem ],
-    "ytd": Optional[ ChangeItem ],
+    "today": NotRequired[ ChangeItem ],
+    "ytd": NotRequired[ ChangeItem ],
     "first": StatsIndexFirst
 } )
 
