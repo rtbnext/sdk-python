@@ -5,7 +5,7 @@ Declares profile records representing individuals, including personal
 information, financial data, relationships, media, and historical statistics.
 """
 
-from typing import Literal, NotRequired, TypedDict
+from typing import Literal, Optional, TypedDict
 
 from rtbnext.schema.assets import Annual, Asset, Performance, Ranking, Realtime
 from rtbnext.schema.generic import (
@@ -18,8 +18,8 @@ ProfileIndexItem = TypedDict( "ProfileIndexItem", {
     "name": str,
     "text": str,
     "aliases": list[ str ],
-    "desc": NotRequired[ str ],
-    "image": NotRequired[ str ]
+    "desc": Optional[ str ],
+    "image": Optional[ str ]
 } )
 
 ProfileIndex = TypedDict( "ProfileIndex", {
@@ -38,25 +38,25 @@ SearchIndexItem = TypedDict( "SearchIndexItem", {
     "searchName": str,
     "fullName": str,
     "lastName": str,
-    "gender": NotRequired[ Gender ],
-    "birthDate": NotRequired[ str ],
-    "age": NotRequired[ int ],
-    "birthCountry": NotRequired[ str ],
-    "residenceCountry": NotRequired[ str ],
-    "citizenship": NotRequired[ str ],
-    "industry": NotRequired[ Industry ],
-    "source": NotRequired[ list[ str ] ],
-    "networth": NotRequired[ float ],
-    "rank": NotRequired[ int ],
-    "organization": NotRequired[ str ],
-    "maritalStatus": NotRequired[ MaritalStatus ],
-    "children": NotRequired[ int ],
-    "philanthropyScore": NotRequired[ int ],
-    "selfMade": NotRequired[ bool ],
-    "selfMadeRank": NotRequired[ SelfMadeRank ],
-    "wikidata": NotRequired[ str ],
-    "status": NotRequired[ ProfileStatusFlag ],
-    "score": NotRequired[ float ],
+    "gender": Optional[ Gender ],
+    "birthDate": Optional[ str ],
+    "age": Optional[ int ],
+    "birthCountry": Optional[ str ],
+    "residenceCountry": Optional[ str ],
+    "citizenship": Optional[ str ],
+    "industry": Optional[ Industry ],
+    "source": Optional[ list[ str ] ],
+    "networth": Optional[ float ],
+    "rank": Optional[ int ],
+    "organization": Optional[ str ],
+    "maritalStatus": Optional[ MaritalStatus ],
+    "children": Optional[ int ],
+    "philanthropyScore": Optional[ int ],
+    "selfMade": Optional[ bool ],
+    "selfMadeRank": Optional[ SelfMadeRank ],
+    "wikidata": Optional[ str ],
+    "status": Optional[ ProfileStatusFlag ],
+    "score": Optional[ float ],
     "timestamp": str
 } )
 
@@ -69,25 +69,25 @@ SearchIndex = TypedDict( "SearchIndex", {
 ProfileStatus = TypedDict( "ProfileStatus", {
     "status": ProfileStatusFlag,
     "score": float,
-    "flags": NotRequired[ list[ str ] ]
+    "flags": Optional[ list[ str ] ]
 } )
 
 ProfileMeta = TypedDict( "ProfileMeta", {
     "schemaVersion": Literal[ "2" ],
     "generator": str,
     "lastModified": str,
-    "lastLookup": NotRequired[ str ],
-    "status": NotRequired[ ProfileStatus ]
+    "lastLookup": Optional[ str ],
+    "status": Optional[ ProfileStatus ]
 } )
 
 type ProfileHistoryItem = tuple[ str, int, float, float, float ]
 type ProfileHistory = list[ ProfileHistoryItem ]
 
 ProfileFlags = TypedDict( "ProfileFlags", {
-    "deceased": NotRequired[ bool ],
-    "family": NotRequired[ bool ],
-    "dropOff": NotRequired[ bool ],
-    "embargo": NotRequired[ bool ]
+    "deceased": Optional[ bool ],
+    "family": Optional[ bool ],
+    "dropOff": Optional[ bool ],
+    "embargo": Optional[ bool ]
 } )
 
 ProfileName = TypedDict( "ProfileName", {
@@ -101,18 +101,18 @@ ProfileInfo = TypedDict( "ProfileInfo", {
     "flags": ProfileFlags,
     "name": ProfileName,
     "gender": Gender,
-    "birthDate": NotRequired[ str ],
-    "birthPlace": NotRequired[ Location ],
-    "citizenship": NotRequired[ str ],
-    "residence": NotRequired[ Location ],
-    "maritalStatus": NotRequired[ MaritalStatus ],
-    "children": NotRequired[ int ],
-    "education": NotRequired[ list[ Education ] ],
+    "birthDate": Optional[ str ],
+    "birthPlace": Optional[ Location ],
+    "citizenship": Optional[ str ],
+    "residence": Optional[ Location ],
+    "maritalStatus": Optional[ MaritalStatus ],
+    "children": Optional[ int ],
+    "education": Optional[ list[ Education ] ],
     "industry": Industry,
     "source": list[ str ],
-    "selfMade": NotRequired[ SelfMade ],
-    "philanthropyScore": NotRequired[ int ],
-    "organization": NotRequired[ Organization ]
+    "selfMade": Optional[ SelfMade ],
+    "philanthropyScore": Optional[ int ],
+    "organization": Optional[ Organization ]
 } )
 
 ProfileBio = TypedDict( "ProfileBio", {
@@ -128,10 +128,10 @@ ProfileData = TypedDict( "ProfileData", {
     "bio": ProfileBio,
     "related": list[ Relation ],
     "media": list[ Image ],
-    "realtime": NotRequired[ Realtime ],
-    "performance": NotRequired[ Performance ],
+    "realtime": Optional[ Realtime ],
+    "performance": Optional[ Performance ],
     "ranking": list[ Ranking ],
     "annual": list[ Annual ],
     "assets": list[ Asset ],
-    "wiki": NotRequired[ Wiki ]
+    "wiki": Optional[ Wiki ]
 } )

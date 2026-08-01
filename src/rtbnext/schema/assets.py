@@ -5,7 +5,7 @@ Declares shared types for assets, net worth, rankings, performance metrics,
 and historical financial data.
 """
 
-from typing import Literal, NotRequired, TypedDict
+from typing import Literal, Optional, TypedDict
 
 from rtbnext.schema.generic import AssetType, ChangeFlag
 
@@ -21,7 +21,7 @@ ChangeItem = TypedDict( "ChangeItem", {
 AssetInfo = TypedDict( "AssetInfo", {
     "exchange": str,
     "ticker": str,
-    "shares": NotRequired[ float ],
+    "shares": Optional[ float ],
     "price": float,
     "currency": str,
     "exRate": float
@@ -30,55 +30,55 @@ AssetInfo = TypedDict( "AssetInfo", {
 Asset = TypedDict( "Asset", {
     "type": AssetType,
     "label": str,
-    "value": NotRequired[ float ],
-    "info": NotRequired[ AssetInfo ]
+    "value": Optional[ float ],
+    "info": Optional[ AssetInfo ]
 } )
 
 DataPoint = TypedDict( "DataPoint", {
     "date": str,
     "networth": float,
-    "rank": NotRequired[ int ]
+    "rank": Optional[ int ]
 } )
 
 Extrema = TypedDict( "Extrema", {
-    "high": NotRequired[ DataPoint ],
-    "low": NotRequired[ DataPoint ]
+    "high": Optional[ DataPoint ],
+    "low": Optional[ DataPoint ]
 } )
 
 type Returns = dict[ ReturnsPeriod, ChangeItem ]
 
 Performance = TypedDict( "Performance", {
-    "extrema": NotRequired[ Extrema ],
-    "returns": NotRequired[ Returns ]
+    "extrema": Optional[ Extrema ],
+    "returns": Optional[ Returns ]
 } )
 
 RankingHistoryItem = TypedDict( "RankingHistoryItem", {
     "date": str,
-    "rank": NotRequired[ int ],
-    "networth": NotRequired[ float ],
-    "prev": NotRequired[ str ],
-    "next": NotRequired[ str ]
+    "rank": Optional[ int ],
+    "networth": Optional[ float ],
+    "prev": Optional[ str ],
+    "next": Optional[ str ]
 } )
 
 Ranking = TypedDict( "Ranking", {
     "list": str,
     "name": str,
     "date": str,
-    "rank": NotRequired[ int ],
-    "networth": NotRequired[ float ],
-    "prev": NotRequired[ str ],
-    "next": NotRequired[ str ],
-    "history": NotRequired[ list[ RankingHistoryItem ] ]
+    "rank": Optional[ int ],
+    "networth": Optional[ float ],
+    "prev": Optional[ str ],
+    "next": Optional[ str ],
+    "history": Optional[ list[ RankingHistoryItem ] ]
 } )
 
 Realtime = TypedDict( "Realtime", {
     "date": str,
-    "rank": NotRequired[ int ],
-    "networth": NotRequired[ float ],
-    "prev": NotRequired[ str ],
-    "next": NotRequired[ str ],
-    "today": NotRequired[ ChangeItem ],
-    "ytd": NotRequired[ ChangeItem ]
+    "rank": Optional[ int ],
+    "networth": Optional[ float ],
+    "prev": Optional[ str ],
+    "next": Optional[ str ],
+    "today": Optional[ ChangeItem ],
+    "ytd": Optional[ ChangeItem ]
 } )
 
 AnnualRecord = TypedDict( "AnnualRecord", {
@@ -96,6 +96,6 @@ AnnualRecord = TypedDict( "AnnualRecord", {
 
 Annual = TypedDict( "Annual", {
     "year": int,
-    "rank": NotRequired[ AnnualRecord ],
-    "networth": NotRequired[ AnnualRecord ]
+    "rank": Optional[ AnnualRecord ],
+    "networth": Optional[ AnnualRecord ]
 } )

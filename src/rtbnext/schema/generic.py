@@ -4,7 +4,7 @@ Literals & Generics
 Declares literals and generic types.
 """
 
-from typing import Literal, NotRequired, TypedDict
+from typing import Literal, Optional, TypedDict
 
 type Industry = Literal[
     "automotive", "diversified", "energy", "engineering", "finance", "foodstuff",
@@ -48,46 +48,46 @@ MetaData = TypedDict( "MetaData", {
 DateIndex = TypedDict( "DateIndex", {
     "$metadata": MetaData,
     "dates": list[ str ],
-    "latest": NotRequired[ str ]
+    "latest": Optional[ str ]
 } )
 
 Location = TypedDict( "Location", {
     "country": str,
-    "state": NotRequired[ str ],
-    "city": NotRequired[ str ]
+    "state": Optional[ str ],
+    "city": Optional[ str ]
 } )
 
 Education = TypedDict( "Education", {
     "school": str,
-    "degree": NotRequired[ str ]
+    "degree": Optional[ str ]
 } )
 
 Organization = TypedDict( "Organization", {
     "name": str,
-    "title": NotRequired[ str ]
+    "title": Optional[ str ]
 } )
 
 SelfMade = TypedDict( "SelfMade", {
-    "type": NotRequired[ str ],
+    "type": Optional[ str ],
     "is": bool,
-    "rank": NotRequired[ SelfMadeRank ]
+    "rank": Optional[ SelfMadeRank ]
 } )
 
 Relation = TypedDict( "Relation", {
     "type": RelationType,
     "name": str,
-    "relation": NotRequired[ str ],
-    "uri": NotRequired[ str ]
+    "relation": Optional[ str ],
+    "uri": Optional[ str ]
 } )
 
 Image = TypedDict( "Image", {
     "url": str,
     "credits": str,
     "file": str,
-    "thumb": NotRequired[ str ],
-    "caption": NotRequired[ str ],
-    "desc": NotRequired[ str ],
-    "date": NotRequired[ str ]
+    "thumb": Optional[ str ],
+    "caption": Optional[ str ],
+    "desc": Optional[ str ],
+    "date": Optional[ str ]
 } )
 
 Wiki = TypedDict( "Wiki", {
@@ -98,8 +98,8 @@ Wiki = TypedDict( "Wiki", {
     "name": str,
     "lastModified": str,
     "summary": list[ str ],
-    "sortKey": NotRequired[ str ],
-    "wikidata": NotRequired[ str ],
-    "desc": NotRequired[ str ],
-    "image": NotRequired[ Image ]
+    "sortKey": Optional[ str ],
+    "wikidata": Optional[ str ],
+    "desc": Optional[ str ],
+    "image": Optional[ Image ]
 } )

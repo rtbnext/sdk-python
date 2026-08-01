@@ -4,7 +4,7 @@ List
 Declares types for ranking lists and snapshots.
 """
 
-from typing import NotRequired, TypedDict
+from typing import Optional, TypedDict
 
 from rtbnext.schema.assets import ChangeItem
 from rtbnext.schema.generic import ChangeFlag, Gender, Industry, MetaData, SelfMadeRank
@@ -26,22 +26,22 @@ ListIndex = TypedDict( "ListIndex", {
 } )
 
 ListItem = TypedDict( "ListItem", {
-    "uri": NotRequired[ str ],
+    "uri": Optional[ str ],
     "sourceUri": str,
     "name": str,
     "rank": int,
-    "networth": NotRequired[ float ],
-    "industry": NotRequired[ Industry ],
-    "source": NotRequired[ list[ str ] ],
-    "gender": NotRequired[ Gender ],
-    "age": NotRequired[ int ],
-    "citizenship": NotRequired[ str ],
-    "flag": NotRequired[ ChangeFlag ],
-    "rankDiff": NotRequired[ int ],
-    "selfMadeRank": NotRequired[ SelfMadeRank ],
-    "philanthropyScore": NotRequired[ int ],
-    "today": NotRequired[ ChangeItem ],
-    "ytd": NotRequired[ ChangeItem ]
+    "networth": Optional[ float ],
+    "industry": Optional[ Industry ],
+    "source": Optional[ list[ str ] ],
+    "gender": Optional[ Gender ],
+    "age": Optional[ int ],
+    "citizenship": Optional[ str ],
+    "flag": Optional[ ChangeFlag ],
+    "rankDiff": Optional[ int ],
+    "selfMadeRank": Optional[ SelfMadeRank ],
+    "philanthropyScore": Optional[ int ],
+    "today": Optional[ ChangeItem ],
+    "ytd": Optional[ ChangeItem ]
 } )
 
 ListStats = TypedDict( "ListStats", {
@@ -50,8 +50,8 @@ ListStats = TypedDict( "ListStats", {
     "total": float,
     "woman": int,
     "quota": float,
-    "today": NotRequired[ ChangeItem ],
-    "ytd": NotRequired[ ChangeItem ]
+    "today": Optional[ ChangeItem ],
+    "ytd": Optional[ ChangeItem ]
 } )
 
 List = TypedDict( "List", {
