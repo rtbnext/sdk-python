@@ -8,33 +8,55 @@ and search index.
 from __future__ import annotations
 
 from functools import cached_property
-from typing import Generic
+from typing import Any, Generic
 
 from rtbnext.endpoint.base import EndpointBase
 from rtbnext.resource.base import Resource
-from rtbnext.resource.collectable import CollectableResource, CollectItem, I
+from rtbnext.resource.collectable import CollectableResource, CollectItem, FindFn, I, SearchFn
 from rtbnext.schema.profile import ProfileData, ProfileHistory, ProfileMeta
 from rtbnext.utils import sanitize
 
 
 class _ProfileEntity( Generic[ I ] ):
+    """
+    Lazy profile entity exposing related profile resources.
+
+    Wraps a raw profile item and provides lazy access to its
+    associated metadata, profile data, and history resources.
+    """
+
     def __init__( self, endpoint: ProfileEndpoint, item: I ) -> None:
         self._endpoint, self._item = endpoint, item
 
+    def __getattr__( self, name: str ) -> object:
+        """Forward unknown attributes to the underlying profile item."""
+
+        try:
+            return self._item[ name ]
+        except KeyError:
+            raise AttributeError( name ) from None
+
     @property
     def uri( self ) -> str:
+        """Return the profile URI."""
+
         return self._item[ "uri" ]
 
     @cached_property
     def meta( self ) -> Resource[ ProfileMeta ]:
+        """Return the lazily loaded profile metadata resource."""
+
         return self._endpoint.meta( self.uri )
 
     @cached_property
     def data( self ) -> Resource[ ProfileData ]:
+        """Return the lazily loaded profile data resource."""
+
         return self._endpoint.data( self.uri )
 
     @cached_property
     def history( self ):
+        """Return the lazily loaded profile history resource."""
         ...
 
 
@@ -51,8 +73,14 @@ class ProfileEndpoint( EndpointBase ):
 
         return _ProfileEntity( self, item )
 
-    def _collect( self ):
-        ...
+    def _collect(
+        self, path: str, *,
+        find: FindFn[ I ] | None = None,
+        search: SearchFn[ I ] | None = None
+    ) -> CollectableResource[ Any, I, _ProfileEntity[ I ] ]:
+        """Returns a profile collection resource from a JSON endpoint."""
+
+        return self._collectable( path, entity= self._entity, find= find, search= search )
 
     def meta( self, uri: str ) -> Resource[ ProfileMeta ]:
         """Returns profile metadata for the given URI."""
