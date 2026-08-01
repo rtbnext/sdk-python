@@ -16,6 +16,8 @@ from rtbnext.core.parser import ParserFn
 D = TypeVar( "D" )
 R = TypeVar( "R", bound= "Resource[ Any ]" )
 
+_EMPTY_HOOKS: frozenset = frozenset()
+
 
 class Resource( Generic[ D ] ):
     """
@@ -38,6 +40,32 @@ class Resource( Generic[ D ] ):
         self._value: D | None = None
 
         self._transformed: Any | Awaitable[ Any ] | None = None
+
+    def _emit( self, *events: str ) -> None:
+        """Emit lifecycle events."""
+
+        for event in events:
+            for handler in self._hooks.get( event, _EMPTY_HOOKS ):
+                handler( self )
+
+    def _reset( self ) -> None:
+        """Reset parsed values after loading or refreshing."""
+
+        self._parsed = False
+        self._value = None
+        self._transformed = None
+
+    def _parse( self ) -> D:
+        """Parse the loaded HTTP response."""
+
+        if self._state is None:
+            raise RuntimeError( "Resource has not been loaded." )
+
+        self._value = self._parser( self._state.response )
+        self._parsed = True
+        self._emit( "parse" )
+
+        return self._value
 
 
 class ResourcePool( Generic[ R ] ):
