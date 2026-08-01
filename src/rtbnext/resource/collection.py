@@ -150,20 +150,20 @@ class IndexCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
 
     @property
     def current( self ) -> R | None:
-        """Return the current item."""
+        """Return the current resolved item."""
 
         return self.at( self._cursor )
 
     @property
     def next( self ) -> R | None:
-        """Return the next item."""
+        """Return the next resolved item."""
 
         self._cursor += 1
         return self.at( self._cursor )
 
     @property
     def prev( self ) -> R | None:
-        """Return the previous item."""
+        """Return the previous resolved item."""
 
         self._cursor -= 1
         return self.at( self._cursor )
@@ -185,3 +185,8 @@ class IndexCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
 
         self._cursor = -1
         return self
+
+    def at( self, index: int ) -> R | None:
+        """Return the resolved item at the given index."""
+
+        return self._factory( self._items[ index ] ) if 0 <= index < self.count else None
