@@ -7,6 +7,7 @@ and search index.
 
 from __future__ import annotations
 
+from functools import cached_property
 from typing import Generic
 
 from rtbnext.endpoint.base import EndpointBase
@@ -19,6 +20,22 @@ from rtbnext.utils import sanitize
 class _ProfileEntity( Generic[ I ] ):
     def __init__( self, endpoint: ProfileEndpoint, item: I ) -> None:
         self._endpoint, self._item = endpoint, item
+
+    @property
+    def uri( self ) -> str:
+        return self._item[ "uri" ]
+
+    @cached_property
+    def meta( self ) -> Resource[ ProfileMeta ]:
+        return self._endpoint.meta( self.uri )
+
+    @cached_property
+    def data( self ) -> Resource[ ProfileData ]:
+        return self._endpoint.data( self.uri )
+
+    @cached_property
+    def history( self ):
+        ...
 
 
 class ProfileEndpoint( EndpointBase ):
