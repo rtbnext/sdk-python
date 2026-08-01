@@ -58,6 +58,18 @@ class CollectCollection( IndexCollectionBase[ I, E ], Generic[ I, E ] ):
         uri = sanitize( uri_like )
         return next( ( item for item in items if item[ "uri" ] == uri ), None )
 
+    @staticmethod
+    def _default_search( item: I, query: str, terms: list[ str ] ) -> bool:
+        """Return whether an item matches a search query."""
+
+        name = item.get( "searchName" ) or sanitize( item.get( "name", "" ) )
+        text = item.get( "text", "" )
+
+        return (
+            query in name or query in text
+            or all( term in name or term in text for term in terms )
+        )
+
 
 class CollectableResource( Resource[ D ], Generic[ D, I, E ] ):
     ...
