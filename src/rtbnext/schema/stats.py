@@ -101,7 +101,7 @@ Top10Item = TypedDict( "Top10Item", {
 
 Top10 = TypedDict( "Top10", {
     "$metadata": MetaData,
-    "entries": dict[ str, list[ Top10Item ] ]
+    "data": dict[ str, list[ Top10Item ] ]
 } )
 
 StatsIndexFirst = TypedDict( "StatsIndexFirst", {
