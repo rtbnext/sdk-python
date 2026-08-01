@@ -141,3 +141,29 @@ class IndexCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
     ) -> None:
         super().__init__( items, factory= factory, total= total )
         self._cursor: int = -1
+
+    @property
+    def position( self ) -> int:
+        """Return the current cursor position."""
+
+        return self._cursor
+
+    @property
+    def current( self ) -> R | None:
+        """Return the current item."""
+
+        return self.at( self._cursor )
+
+    @property
+    def next( self ) -> R | None:
+        """Return the next item."""
+
+        self._cursor += 1
+        return self.at( self._cursor )
+
+    @property
+    def prev( self ) -> R | None:
+        """Return the previous item."""
+
+        self._cursor -= 1
+        return self.at( self._cursor )
