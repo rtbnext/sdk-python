@@ -54,3 +54,29 @@ class ResourceLoader:
             case False: self._cache = EmptyCache()
             case _ if isinstance( cache, Cache ): self._cache = cache
             case _: raise ValueError( f"Invalid cache type: { cache }" )
+
+    def _state( self, res: HttpResponse, prev: ResourceState | None = None ) -> ResourceState:
+        """Create a cached resource state from an HTTP response."""
+
+        created = time()
+
+        max_age = next( (
+            int( p.split( "=" )[ 1 ] )
+            for p in res.headers.get( "Cache-Control", "" ).split( "," )
+            if p.strip().startswith( "max-age=" )
+        ), None )
+
+        expires = created + max_age if max_age is not None else getattr( prev, "expires", None )
+        etag = res.headers.get( "ETag" ) or getattr( prev, "etag", None )
+        last_modified = res.headers.get( "Last-Modified" ) or getattr( prev, "last_modified", None )
+
+        if res.status == 304 and prev:
+            res = HttpResponse(
+                url= prev.response.url, ok= prev.response.ok, status= prev.response.status,
+                body= prev.response.body, headers= res.headers, latency= res.latency
+            )
+
+        return ResourceState(
+            response= res, created= created, expires= expires,
+            etag= etag, last_modified= last_modified
+        )
