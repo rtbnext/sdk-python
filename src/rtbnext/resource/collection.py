@@ -92,6 +92,21 @@ class CollectionBase( Generic[ T, R ] ):
 
         return [ callback( item, index ) for index, item in enumerate( self ) ]
 
+    def take( self, count: int ) -> Self:
+        """Return a collection containing the first items."""
+
+        return self._clone( self._items[ : count ] )
+
+    def skip( self, count: int ) -> Self:
+        """Return a collection without the first items."""
+
+        return self._clone( self._items[ count : ] )
+
+    def slice( self, start: int | None = None, end: int | None = None ) -> Self:
+        """Return a collection containing a sliced range of items."""
+
+        return self._clone( self._items[ start : end ] )
+
 
 class DateCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
     ...
