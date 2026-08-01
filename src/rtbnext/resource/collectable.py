@@ -6,11 +6,11 @@ Implements the resource wrapper for collectable endpoints.
 
 from __future__ import annotations
 
-from typing import Callable, Generic, TypedDict, TypeVar
+from typing import Callable, Generic, Self, TypedDict, TypeVar
 
 from rtbnext.resource.base import Resource
-from rtbnext.utils import sanitize
 from rtbnext.resource.collection import IndexCollectionBase, ItemFactory
+from rtbnext.utils import sanitize
 
 
 class CollectItem( TypedDict ):
@@ -71,6 +71,14 @@ class CollectCollection( IndexCollectionBase[ I, E ], Generic[ I, E ] ):
         return (
             query in name or query in text
             or all( term in name or term in text for term in terms )
+        )
+
+    def _clone( self, items: list[ I ] ) -> Self:
+        """Create a new collection preserving configuration."""
+
+        return self.__class__(
+            items, factory= self._factory, total= self._total,
+            find= self._find, search= self._search
         )
 
 
