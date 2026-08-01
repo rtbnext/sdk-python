@@ -49,7 +49,7 @@ class RTBNext:
         endpoint_map: dict[ str, Any ] = {}
         args = ( self._loader, self._pool, endpoint_map )
 
-        self.system = SystemEndpoint( *args )
+        self.system = endpoint_map[ "system" ] = SystemEndpoint( *args )
 
         self.endpoints = Endpoints(
             system= self.system
