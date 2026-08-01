@@ -14,9 +14,7 @@ import httpx
 
 from rtbnext.core.cache import Cache, EmptyCache, MemoryCache
 from rtbnext.core.http_client import HttpClient, HttpHeader, HttpResponse, RateLimitMode
-from rtbnext.defaults import (
-    DEFAULT_CACHE_MODE, DEFAULT_CACHE_TYPE, DEFAULT_RATE_LIMIT_MODE, DEFAULT_TIMEOUT
-)
+from rtbnext.defaults import DEFAULT_CACHE_MODE, DEFAULT_CACHE_TYPE, DEFAULT_RATE_LIMIT_MODE
 
 type CacheType = Cache | Literal[ "memory", False ]
 type CacheMode = Literal[ "ttl", "session", "revalidate" ]
@@ -80,3 +78,21 @@ class ResourceLoader:
             response= res, created= created, expires= expires,
             etag= etag, last_modified= last_modified
         )
+
+    async def _fetch(
+        self, path: str, prev: ResourceState | None = None, *,
+        headers: HttpHeader = None,
+        mode: RateLimitMode = DEFAULT_RATE_LIMIT_MODE,
+        timeout: float | None = None
+    ) -> ResourceState:
+        """Fetch a resource from the network."""
+
+        headers = httpx.Headers( headers or {} )
+
+        if prev and prev.etag:
+            headers[ "If-None-Match" ] = prev.etag
+        if prev and prev.last_modified:
+            headers[ "If-Modified-Since" ] = prev.last_modified
+
+        res = await self._client.request( path, headers= headers, mode= mode, timeout= timeout )
+        return self._state( res, prev )
