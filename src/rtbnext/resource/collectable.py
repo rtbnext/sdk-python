@@ -6,6 +6,7 @@ Implements the resource wrapper for collectable endpoints.
 
 from __future__ import annotations
 
+from collections import defaultdict
 from typing import Callable, Generic, Self, TypedDict, TypeVar
 
 from rtbnext.resource.base import Resource
@@ -28,6 +29,7 @@ class CollectData[ T: CollectItem ]( TypedDict ):
 D = TypeVar( "D", bound= CollectData )
 I = TypeVar( "I", bound= CollectItem )
 E = TypeVar( "E" )
+K = TypeVar( "K" )
 
 type EntityFn[ I, E ] = Callable[ [ I ], E ]
 type FindFn[ I ] = Callable[ [ list[ I ], str ], I | None ]
@@ -129,6 +131,19 @@ class CollectCollection( IndexCollectionBase[ I, E ], Generic[ I, E ] ):
                 merged.append( item )
 
         return self._clone( merged )
+
+    def group_by( self, callback: Callable[ [ I ], K ] ) -> dict[ K, Self ]:
+        """Group items using a callback."""
+
+        groups: defaultdict[ K, list[ I ] ] = defaultdict( list )
+
+        for item in self._items:
+            groups[ callback( item ) ].append( item )
+
+        return {
+            key: self._clone( values )
+            for key, values in groups.items()
+        }
 
 
 class CollectableResource( Resource[ D ], Generic[ D, I, E ] ):
