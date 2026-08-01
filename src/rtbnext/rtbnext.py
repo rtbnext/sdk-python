@@ -37,3 +37,8 @@ class RTBNext:
         self._client = HttpClient( client= client, base_url= base_url, timeout= timeout )
         self._loader = ResourceStateLoader( client= self._client, cache= cache, mode= mode )
         self._pool = ResourcePool()
+
+        endpoint_map: dict[ str, Any ] = {}
+        args = ( self._loader, self._pool, endpoint_map )
+
+        self.system = SystemEndpoint( *args )
