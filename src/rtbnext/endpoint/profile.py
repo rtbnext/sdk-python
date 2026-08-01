@@ -12,7 +12,9 @@ from typing import Any, Generic
 
 from rtbnext.endpoint.base import EndpointBase
 from rtbnext.resource.base import Resource
-from rtbnext.resource.collectable import CollectableResource, CollectItem, FindFn, I, SearchFn
+from rtbnext.resource.collectable import (
+    CollectableResource, CollectData, CollectItem, FindFn, I, SearchFn
+)
 from rtbnext.schema.profile import ProfileData, ProfileHistory, ProfileMeta
 from rtbnext.utils import sanitize
 
@@ -77,7 +79,7 @@ class ProfileEndpoint( EndpointBase ):
         self, path: str, *,
         find: FindFn[ I ] | None = None,
         search: SearchFn[ I ] | None = None
-    ) -> CollectableResource[ Any, I, _ProfileEntity[ I ] ]:
+    ) -> CollectableResource[ CollectData[ I ], I, _ProfileEntity[ I ] ]:
         """Returns a profile collection resource from a JSON endpoint."""
 
         return self._collectable( path, entity= self._entity, find= find, search= search )
