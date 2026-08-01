@@ -60,3 +60,15 @@ class IndexableResource( Resource[ D ], Generic[ D, R ] ):
 
         self._factory = index
         self._keys = keys or self._default_keys
+
+    @staticmethod
+    def _default_keys( value: object ) -> Path | None:
+        """Extract index keys from common API structures."""
+
+        if isinstance( value, list ):
+            return tuple( map( str, value ) )
+
+        if isinstance( value, dict ) and isinstance( value.get( "items" ), dict ):
+            return tuple( map( str, value[ "items" ] ) )
+
+        return None
