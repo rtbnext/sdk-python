@@ -128,7 +128,7 @@ class DateCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
     ...
 
 
-class IndexCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
+class CursorCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
     """
     Provides cursor-related immutable collection operations.
 

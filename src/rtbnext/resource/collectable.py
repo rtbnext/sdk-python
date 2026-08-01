@@ -12,7 +12,7 @@ from typing import Callable, Generic, Self, TypedDict, TypeVar
 from rtbnext.core.loader import ResourceStateLoader
 from rtbnext.core.parser import ParserFn
 from rtbnext.resource.base import Resource
-from rtbnext.resource.collection import IndexCollectionBase, ItemFactory
+from rtbnext.resource.collection import CursorCollectionBase, ItemFactory
 from rtbnext.utils import sanitize
 
 
@@ -38,12 +38,12 @@ type FindFn[ I ] = Callable[ [ list[ I ], str ], I | None ]
 type SearchFn[ I ] = Callable[ [ I, str, list[ str ] ], bool ]
 
 
-class CollectCollection( IndexCollectionBase[ I, E ], Generic[ I, E ] ):
+class CollectCollection( CursorCollectionBase[ I, E ], Generic[ I, E ] ):
     """
     Collection wrapper for entity-based resources.
 
-    This class extends the indexed collection with searching, filtering,
-    grouping, sorting and set operations.
+    This class extends the cursor-based collection with searching,
+    filtering, grouping, sorting and set operations.
     """
 
     def __init__(
