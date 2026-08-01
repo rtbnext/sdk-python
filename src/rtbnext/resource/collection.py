@@ -52,6 +52,24 @@ class CollectionBase( Generic[ T, R ] ):
     def __iter__( self ) -> Iterator[ R ]:
         return map( self._factory, self._items )
 
+    @property
+    def items( self ) -> list[ T ]:
+        """Returns the raw items."""
+
+        return self._items.copy()
+
+    @property
+    def total( self ) -> int:
+        """Return the total number of available items."""
+
+        return self._total
+
+    @property
+    def count( self ) -> int:
+        """Return the number of items currently contained."""
+
+        return len( self._items )
+
 
 class DateCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
     ...
