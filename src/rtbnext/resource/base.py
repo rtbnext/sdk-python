@@ -36,3 +36,19 @@ class ResourcePool( Generic[ R ] ):
 
         self._resources[ path ] = res = factory()
         return res
+
+    @property
+    def size( self ) -> int:
+        """Return the number of pooled resources."""
+
+        return len( self._resources )
+
+    def delete( self, path: str ) -> None:
+        """Delete a resource from the cache by path."""
+
+        self._resources.pop( path, None )
+
+    def clear( self ) -> None:
+        """Remove all pooled resources."""
+
+        self._resources.clear()
