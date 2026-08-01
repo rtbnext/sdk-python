@@ -9,6 +9,7 @@ from __future__ import annotations
 from typing import Callable, Generic, TypedDict, TypeVar
 
 from rtbnext.resource.base import Resource
+from rtbnext.utils import sanitize
 from rtbnext.resource.collection import IndexCollectionBase, ItemFactory
 
 
@@ -49,6 +50,13 @@ class CollectCollection( IndexCollectionBase[ I, E ], Generic[ I, E ] ):
         search: SearchFn[ I ] | None = None
     ) -> None:
         super().__init__( items, factory= factory, total= total )
+
+    @staticmethod
+    def _default_find( items: list[ I ], uri_like: str ) -> I | None:
+        """Return the first item matching a URI-like string."""
+
+        uri = sanitize( uri_like )
+        return next( ( item for item in items if item[ "uri" ] == uri ), None )
 
 
 class CollectableResource( Resource[ D ], Generic[ D, I, E ] ):
