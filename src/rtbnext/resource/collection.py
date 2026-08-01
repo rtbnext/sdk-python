@@ -117,8 +117,20 @@ class CollectionBase( Generic[ T, R ] ):
 
 
 class DateCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
+    """
+    Provides date-related immutable collection operations.
+
+    This class extends the base collection adding special methods dealing with
+    dates, like `year`, `month`, or `between`.
+    """
     ...
 
 
 class IndexCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
+    """
+    Provides cursor-related immutable collection operations.
+
+    This class extends the base collection adding methods to handle cursor
+    operations for items.
+    """
     ...
