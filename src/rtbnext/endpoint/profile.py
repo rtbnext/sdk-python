@@ -8,7 +8,7 @@ and search index.
 from __future__ import annotations
 
 from functools import cached_property
-from typing import Any, Generic
+from typing import Generic
 
 from rtbnext.endpoint.base import EndpointBase
 from rtbnext.resource.base import Resource
@@ -19,7 +19,7 @@ from rtbnext.schema.profile import ProfileData, ProfileHistory, ProfileMeta
 from rtbnext.utils import sanitize
 
 
-class _ProfileEntity( Generic[ I ] ):
+class ProfileEntity( Generic[ I ] ):
     """
     Lazy profile entity exposing related profile resources.
 
@@ -70,16 +70,16 @@ class ProfileEndpoint( EndpointBase ):
     index, and search index.
     """
 
-    def _entity( self, item: I ) -> _ProfileEntity[ I ]:
+    def _entity( self, item: I ) -> ProfileEntity[ I ]:
         """Creates a profile entity with lazy-loaded related resources."""
 
-        return _ProfileEntity( self, item )
+        return ProfileEntity( self, item )
 
     def _collect(
         self, path: str, *,
         find: FindFn[ I ] | None = None,
         search: SearchFn[ I ] | None = None
-    ) -> CollectableResource[ CollectData[ I ], I, _ProfileEntity[ I ] ]:
+    ) -> CollectableResource[ CollectData[ I ], I, ProfileEntity[ I ] ]:
         """Returns a profile collection resource from a JSON endpoint."""
 
         return self._collectable( path, entity= self._entity, find= find, search= search )
@@ -98,7 +98,7 @@ class ProfileEndpoint( EndpointBase ):
         """Returns profile history time-series data for the given URI."""
         ...
 
-    def get( self, uri: str ):
+    def get( self, uri: str ) -> ProfileEntity[ CollectItem ]:
         """Returns the profile entity for a URI."""
 
         return self._entity( CollectItem( uri= uri ) )
