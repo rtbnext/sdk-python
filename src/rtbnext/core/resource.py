@@ -125,6 +125,26 @@ class ResourceLoader:
             self._mode == "ttl" and not self._is_expired( state )
         ) ) )
 
+    async def load(
+        self, path: str, *,
+        headers: HttpHeader = None,
+        mode: RateLimitMode = DEFAULT_RATE_LIMIT_MODE,
+        timeout: float | None = None
+    ) -> ResourceState:
+        """Load a resource using the configured cache policy."""
+
+        if self._mode == "revalidate":
+            return await self.refresh( path, headers= headers, mode= mode, timeout= timeout )
+
+        if ( cached := await self._cache.get( path ) ) and self.valid( cached ):
+            return cached
+
+        state = await self._fetch( path, None, headers= headers, mode= mode, timeout= timeout )
+        if self._mode == "session" or state.expires:
+            await self._cache.set( path, state )
+
+        return state
+
     @property
     def size( self ) -> int:
         """Return the number of cached resource states."""
