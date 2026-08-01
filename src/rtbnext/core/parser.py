@@ -10,13 +10,14 @@ from __future__ import annotations
 import csv
 import json
 from io import StringIO
-from typing import Any, Callable, TypeVar
+from typing import Any, Callable, Literal, TypeVar
 
 from rtbnext.core.http_client import HttpResponse
 
 D = TypeVar( "D" )
 
 type ParserFn[ D ] = Callable[ [ HttpResponse ], D ]
+type ParserMode = Literal[ "text", "json", "csv" ]
 
 
 class Parser:
@@ -69,3 +70,14 @@ class Parser:
             [ Parser._number( value ) for value in row ]
             for row in csv.reader( StringIO( Parser.text( res ) ), delimiter= delimiter )
         ]
+
+def parser( mode: ParserMode ) -> ParserFn:
+    """
+    Return the parser function based on the given mode.
+    Raises if the parser for the given mode is not implemented.
+    """
+
+    if not hasattr( Parser, mode ):
+        raise ValueError( f"Unsupported parser mode: { mode }" )
+
+    return getattr( Parser, mode )
