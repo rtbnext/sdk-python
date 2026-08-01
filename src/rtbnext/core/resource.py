@@ -14,8 +14,9 @@ import httpx
 
 from rtbnext.core.http_client import HttpClient, HttpHeader, HttpResponse, RateLimitMode
 from rtbnext.defaults import DEFAULT_RATE_LIMIT_MODE, DEFAULT_TIMEOUT
+from rtbnext.core.cache import Cache
 
-type CacheType = Literal[ False, "memory" ]
+type CacheType = Cache | Literal[ False, "memory" ]
 type CacheMode = Literal[ "ttl", "session", "revalidate" ]
 
 
