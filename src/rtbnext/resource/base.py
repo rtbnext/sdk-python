@@ -96,6 +96,18 @@ class Resource( Generic[ D ] ):
 
         return self._value
 
+    def on( self, event: str, handler: Callable[ [ Self ], None ] ) -> Self:
+        """Register an event handler."""
+
+        self._hooks.setdefault( event, set() ).add( handler )
+        return self
+
+    def off( self, event: str, handler: Callable[ [ Self ], None ] ) -> Self:
+        """Remove an event handler."""
+
+        self._hooks.get( event, set() ).discard( handler )
+        return self
+
 
 class ResourcePool( Generic[ R ] ):
     """
