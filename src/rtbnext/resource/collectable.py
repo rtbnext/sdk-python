@@ -51,6 +51,9 @@ class CollectCollection( IndexCollectionBase[ I, E ], Generic[ I, E ] ):
     ) -> None:
         super().__init__( items, factory= factory, total= total )
 
+        self._find = find or self._default_find
+        self._search = search or self._default_search
+
     @staticmethod
     def _default_find( items: list[ I ], uri_like: str ) -> I | None:
         """Return the first item matching a URI-like string."""
