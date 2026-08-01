@@ -133,4 +133,11 @@ class IndexCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
     This class extends the base collection adding methods to handle cursor
     operations for items.
     """
-    ...
+
+    def __init__(
+        self, items: list[ T ], *,
+        factory: ItemFactory[ T, R ] = lambda item: cast( R, item ),
+        total: int | None = None
+    ) -> None:
+        super().__init__( items, factory= factory, total= total )
+        self._cursor: int = -1
