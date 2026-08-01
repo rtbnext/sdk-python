@@ -18,3 +18,14 @@ from rtbnext.core.http_client import HttpClient, HttpHeader, RateLimitMode
 
 type CacheType = Literal[ False, "memory" ]
 type CacheMode = Literal[ "ttl", "session", "revalidate" ]
+
+
+@dataclass( slots= True, kw_only= True )
+class ResourceState:
+    """Represents the state of a cached resource."""
+
+    response: HttpResponse
+    created: float
+    expires: float | None = None
+    etag: str | None = None
+    last_modified: str | None = None
