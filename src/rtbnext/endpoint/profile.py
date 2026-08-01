@@ -46,8 +46,10 @@ class ProfileEndpoint( EndpointBase ):
     index, and search index.
     """
 
-    def _entity( self, item: CollectItem ):
-        ...
+    def _entity( self, item: I ) -> _ProfileEntity[ I ]:
+        """Creates a profile entity with lazy-loaded related resources."""
+
+        return _ProfileEntity( self, item )
 
     def _collect( self ):
         ...
