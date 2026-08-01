@@ -34,10 +34,25 @@ class ProfileEndpoint( EndpointBase ):
         return self._resource( f"v2/profile/{ sanitize( uri ) }/meta.json" )
 
     def data( self, uri: str ) -> Resource[ ProfileData ]:
-        """Returns profile metadata for the given URI."""
+        """Returns profile data for the given URI."""
 
         return self._resource( f"v2/profile/{ sanitize( uri ) }/profile.json" )
 
     def history( self, uri: str ):
-        """Returns profile metadata for the given URI."""
+        """Returns profile history time-series data for the given URI."""
+        ...
+
+    def get( self, uri: str ):
+        """Returns the profile entity for a URI."""
+
+        return self._entity( CollectItem( uri= uri ) )
+
+    @property
+    def index( self ):
+        """Returns the profile index collection."""
+        ...
+
+    @property
+    def search_index( self ):
+        """Returns the profile search index collection."""
         ...
