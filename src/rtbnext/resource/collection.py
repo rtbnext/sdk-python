@@ -52,6 +52,9 @@ class CollectionBase( Generic[ T, R ] ):
     def __iter__( self ) -> Iterator[ R ]:
         return map( self._factory, self._items )
 
+    def __reversed__( self ) -> Iterator[ R ]:
+        return map( self._factory, self._items[ ::-1 ] )
+
     @property
     def items( self ) -> list[ T ]:
         """Returns the raw items."""
@@ -91,6 +94,11 @@ class CollectionBase( Generic[ T, R ] ):
         """Map resolved items."""
 
         return [ callback( item, index ) for index, item in enumerate( self ) ]
+
+    def reversed( self ) -> Self:
+        """Return a collection containing reversed items."""
+
+        return self._clone( self._items[ ::-1 ] )
 
     def take( self, count: int ) -> Self:
         """Return a collection containing the first items."""
