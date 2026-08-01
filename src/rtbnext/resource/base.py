@@ -183,7 +183,7 @@ class ResourcePool( Generic[ R ] ):
     def get( self, path: str, factory: Callable[ [], R ] ) -> R:
         """Return an existing valid resource or create a new one."""
 
-        if ( res := self._resources.get( path ) ) and getattr( res, "valid", False ):
+        if ( res := self._resources.get( path ) ) and res.valid:
             return res
 
         self._resources[ path ] = res = factory()
