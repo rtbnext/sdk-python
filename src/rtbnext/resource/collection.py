@@ -8,6 +8,8 @@ from __future__ import annotations
 
 from typing import Callable, Generic, Iterator, Self, TypeVar, cast
 
+from rtbnext.defaults import DEFAULT_PER_PAGE
+
 R = TypeVar( "R" )
 T = TypeVar( "T" )
 U = TypeVar( "U" )
@@ -190,3 +192,17 @@ class IndexCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
         """Return the resolved item at the given index."""
 
         return self._factory( self._items[ index ] ) if 0 <= index < self.count else None
+
+    def page( self, page: int, per_page: int = DEFAULT_PER_PAGE ) -> Self:
+        """Return a collection containing one page."""
+
+        start = max( page - 1, 0 ) * per_page
+        return self._clone( self._items[ start : start + per_page ] )
+
+    def pages( self, per_page: int = DEFAULT_PER_PAGE ) -> list[ Self ]:
+        """Return all pages."""
+
+        return [
+            self._clone( self._items[ i : i + per_page ] )
+            for i in range( 0, self.count, per_page )
+        ]
