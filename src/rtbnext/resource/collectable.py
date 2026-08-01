@@ -145,6 +145,24 @@ class CollectCollection( IndexCollectionBase[ I, E ], Generic[ I, E ] ):
             for key, values in groups.items()
         }
 
+    def order_by( self, key: str, descending: bool = False ) -> Self:
+        """Return items ordered by a dictionary key."""
+
+        return self._clone( sorted(
+            self._items,
+            key= lambda item: ( item.get( key ) is None, item.get( key ) ),
+            reverse= descending
+        ) )
+
+    def sort(
+        self, *,
+        key: Callable[ [ I ], str | int | float | bool ],
+        reverse: bool = False
+    ) -> Self:
+        """Return items sorted using a custom key."""
+
+        return self._clone( sorted( self._items, key= lambda item: key( item ), reverse= reverse ) )
+
 
 class CollectableResource( Resource[ D ], Generic[ D, I, E ] ):
     ...
