@@ -54,3 +54,30 @@ class RTBNext:
         self.endpoints = Endpoints(
             system= self.system
         )
+
+
+def rtbnext(
+    client: ClientIdentity, *,
+    base_url: str = DEFAULT_API_URL,
+    timeout: float = DEFAULT_TIMEOUT,
+    cache: CacheType = DEFAULT_CACHE_TYPE,
+    mode: CacheMode = DEFAULT_CACHE_MODE
+) -> RTBNext:
+    """
+    Creates a new RTBNext SDK instance.
+
+    Args:
+        client: Client identity information.
+        base_url: RTBNext API base URL.
+        timeout: HTTP request timeout.
+        cache: Cache implementation.
+        mode: Cache mode.
+
+    Returns:
+        A configured RTBNext SDK instance.
+    """
+
+    return RTBNext(
+        client, base_url= base_url, timeout= timeout,
+        cache= cache, mode= mode
+    )
