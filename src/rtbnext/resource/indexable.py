@@ -54,7 +54,7 @@ class IndexableResource( Resource[ D ], Generic[ D, R ] ):
     def __init__(
         self, path: str, loader: ResourceStateLoader, parser: ParserFn[ D ], *,
         index: IndexFn[ R ],
-        keys: KeysFn | None
+        keys: KeysFn | None = None
     ) -> None:
         super().__init__( path, loader, parser )
 

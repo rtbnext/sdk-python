@@ -10,7 +10,7 @@ from __future__ import annotations
 import csv
 import json
 from io import StringIO
-from typing import Callable, Literal, TypeVar
+from typing import Any, Callable, Literal, TypeVar
 
 from rtbnext.core.http_client import HttpResponse
 
@@ -54,7 +54,7 @@ class Parser:
             raise RuntimeError( f"Failed to decode response: { exc }" ) from exc
 
     @staticmethod
-    def json( res: HttpResponse ) -> dict:
+    def json( res: HttpResponse ) -> Any:
         """Parse an HTTP response body as JSON."""
 
         try:
