@@ -1,7 +1,7 @@
 """
 Resource
 
-Implements the resource loader and pooling of resource states.
+Implements the resource loader with build-in caching and HTTP revalidation.
 """
 
 from __future__ import annotations
