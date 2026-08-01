@@ -9,6 +9,8 @@ from __future__ import annotations
 from collections import defaultdict
 from typing import Callable, Generic, Self, TypedDict, TypeVar
 
+from rtbnext.core.loader import ResourceStateLoader
+from rtbnext.core.parser import ParserFn
 from rtbnext.resource.base import Resource
 from rtbnext.resource.collection import IndexCollectionBase, ItemFactory
 from rtbnext.utils import sanitize
@@ -174,4 +176,22 @@ class CollectCollection( IndexCollectionBase[ I, E ], Generic[ I, E ] ):
 
 
 class CollectableResource( Resource[ D ], Generic[ D, I, E ] ):
-    ...
+    """
+    Resource wrapper for collection-oriented endpoints.
+
+    This class converts raw API items into entity objects and exposes them
+    through a lazily created collection supporting filtering, searching,
+    sorting and paging operations.
+    """
+
+    def __init__(
+        self, path: str, loader: ResourceStateLoader, parser: ParserFn[ D ], *,
+        entity: EntityFn[ I, E ],
+        find: FindFn[ I ] | None = None,
+        search: SearchFn[ I ] | None = None
+    ) -> None:
+        super().__init__( path, loader, parser )
+
+        self._entity = entity
+        self._find = find
+        self._search = search
