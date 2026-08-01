@@ -16,6 +16,8 @@ from rtbnext.core.parser import ParserFn
 D = TypeVar( "D" )
 R = TypeVar( "R", bound= "Resource[ Any ]" )
 
+type TransformFn[ D ] = Callable[ [ D ], Awaitable[ Any ] | Any ]
+
 _EMPTY_HOOKS: frozenset = frozenset()
 
 
@@ -66,6 +68,25 @@ class Resource( Generic[ D ] ):
         self._emit( "parse" )
 
         return self._value
+
+    async def _transform( self, fn: TransformFn[ D ] ) -> Any:
+        """Transform parsed resource data and cache the result."""
+
+        if self._transformed is None:
+            async def execute () -> Any:
+                value = fn( await self.data() )
+
+                if asyncio.iscoroutine( value ):
+                    value = await value
+
+                self._transformed = value
+                self._emit( "transform" )
+
+                return value
+
+            self._transformed = asyncio.create_task( execute() )
+
+        return await self._transformed
 
 
 class ResourcePool( Generic[ R ] ):
