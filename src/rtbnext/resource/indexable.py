@@ -92,3 +92,8 @@ class IndexableResource( Resource[ D ], Generic[ D, R ] ):
             }
 
         return None
+
+    async def get( self ) -> object:
+        """Return the lazily generated index tree."""
+
+        return await self._transform( self._traverse )
