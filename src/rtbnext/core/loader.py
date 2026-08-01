@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from time import time
-from typing import Any, Callable, Generic, Literal, TypeVar
+from typing import Literal
 
 import httpx
 
