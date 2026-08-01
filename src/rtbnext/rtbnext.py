@@ -11,7 +11,9 @@ from typing import Any
 
 from rtbnext.core.http_client import ClientIdentity, HttpClient
 from rtbnext.core.loader import CacheMode, CacheType, ResourceStateLoader
-from rtbnext.defaults import DEFAULT_API_URL, DEFAULT_CACHE_MODE, DEFAULT_CACHE_TYPE
+from rtbnext.defaults import (
+    DEFAULT_API_URL, DEFAULT_CACHE_MODE, DEFAULT_CACHE_TYPE, DEFAULT_TIMEOUT
+)
 from rtbnext.endpoint.system import SystemEndpoint
 from rtbnext.resource.base import ResourcePool
 
@@ -28,8 +30,10 @@ class RTBNext:
     def __init__(
         self, client: ClientIdentity, *,
         base_url: str = DEFAULT_API_URL,
+        timeout: float = DEFAULT_TIMEOUT,
         cache: CacheType = DEFAULT_CACHE_TYPE,
-        mode: CacheMode = DEFAULT_CACHE_MODE,
-        timeout: float | None = None
+        mode: CacheMode = DEFAULT_CACHE_MODE
     ) -> None:
-        ...
+        self._client = HttpClient( client= client, base_url= base_url, timeout= timeout )
+        self._loader = ResourceStateLoader( client= self._client, cache= cache, mode= mode )
+        self._pool = ResourcePool()
