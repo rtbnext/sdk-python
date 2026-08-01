@@ -2,7 +2,7 @@
 Base Resource
 
 Implements the base resource wrapper for HTTP responses.
-Resource pooling is intended to optimize memory allocation.
+Resource instance pooling is intended to optimize memory allocation.
 """
 
 from __future__ import annotations
@@ -18,4 +18,12 @@ class Resource( Generic[ D ] ):
 
 
 class ResourcePool( Generic[ R ] ):
-    ...
+    """
+    Stores and reuses resource instances by their resource path.
+
+    Valid resources are reused, while invalid resources are replaced with
+    newly created instances.
+    """
+
+    def __init__( self ) -> None:
+        self._resources: dict[ str, R ] = {}
