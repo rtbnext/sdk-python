@@ -6,7 +6,7 @@ Implements the base collections shared by resource collections.
 
 from __future__ import annotations
 
-from typing import Callable, Generic, TypeVar, cast
+from typing import Callable, Generic, Self, TypeVar, cast
 
 R = TypeVar( "R" )
 T = TypeVar( "T" )
@@ -31,8 +31,15 @@ class CollectionBase( Generic[ T, R ] ):
         self._items, self._factory = items, factory
         self._total = len( items ) if total is None else total
 
+    def _clone( self, items: list[ T ] ) -> Self:
+        """Create a new collection instance with replaced items."""
+
+        return self.__class__( items, factory= self._factory, total= self._total )
+
+
 class DateCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
     ...
+
 
 class IndexCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
     ...
