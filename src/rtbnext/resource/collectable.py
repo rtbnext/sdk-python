@@ -48,7 +48,7 @@ class CollectCollection( IndexCollectionBase[ I, E ], Generic[ I, E ] ):
 
     def __init__(
         self, items: list[ I ], *,
-        factory: ItemFactory[ I, E ],
+        factory: EntityFn[ I, E ],
         total: int | None = None,
         find: FindFn[ I ] | None = None,
         search: SearchFn[ I ] | None = None
@@ -195,3 +195,10 @@ class CollectableResource( Resource[ D ], Generic[ D, I, E ] ):
         self._entity = entity
         self._find = find
         self._search = search
+
+    def _collect( self, items: list[ I ] ) -> CollectCollection[ I, E ]:
+        """Create a collection from collectable items."""
+
+        return CollectCollection(
+            items, factory= self._entity, find= self._find, search= self._search
+        )
