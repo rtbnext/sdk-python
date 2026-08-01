@@ -88,6 +88,14 @@ class Resource( Generic[ D ] ):
 
         return await self._transformed
 
+    def _value_or_raise( self ) -> D:
+        """Return the parsed resource value or raise an error if unavailable."""
+
+        if self._value is None:
+            raise RuntimeError( "Resource value unavailable." )
+
+        return self._value
+
 
 class ResourcePool( Generic[ R ] ):
     """
