@@ -33,7 +33,7 @@ I = TypeVar( "I", bound= CollectItem )
 E = TypeVar( "E" )
 K = TypeVar( "K" )
 
-type EntityFn[ I, E ] = Callable[ [ I ], E ]
+type EntityFn[ I, E ] = ItemFactory[ I, E ]
 type FindFn[ I ] = Callable[ [ list[ I ], str ], I | None ]
 type SearchFn[ I ] = Callable[ [ I, str, list[ str ] ], bool ]
 
@@ -103,6 +103,8 @@ class CollectCollection( IndexCollectionBase[ I, E ], Generic[ I, E ] ):
         if item := self._find( self._items, uri_like ):
             return self._factory( item )
 
+        return None
+
 
     def search( self, query: str ) -> Self:
         """Return items matching a search query."""
@@ -168,11 +170,7 @@ class CollectCollection( IndexCollectionBase[ I, E ], Generic[ I, E ] ):
     ) -> Self:
         """Return items sorted using a custom key."""
 
-        return self._clone( sorted(
-            self._items,
-            key= lambda item: key( item ),
-            reverse= reverse
-        ) )
+        return self._clone( sorted( self._items, key= key, reverse= reverse ) )
 
 
 class CollectableResource( Resource[ D ], Generic[ D, I, E ] ):
@@ -202,3 +200,8 @@ class CollectableResource( Resource[ D ], Generic[ D, I, E ] ):
         return CollectCollection(
             items, factory= self._entity, find= self._find, search= self._search
         )
+
+    async def collection( self ) -> CollectCollection[ I, E ]:
+        """Return the collection."""
+
+        return await self._transform( lambda data: self._collect( data[ "items" ] ) )
