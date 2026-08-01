@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from rtbnext.endpoint.base import EndpointBase
 from rtbnext.resource.base import Resource
-from rtbnext.schema.stats import DBStats, GlobalStats, ProfileStats, WealthStats
+from rtbnext.schema.stats import DBStats, GlobalStats, ProfileStats, Top10, WealthStats
 
 
 class StatsEndpoint( EndpointBase ):
@@ -43,3 +43,9 @@ class StatsEndpoint( EndpointBase ):
         """Returns the wealth statistics resource."""
 
         return self._resource( "v2/stats/wealth.json" )
+
+    @property
+    def top10( self ) -> Resource[ Top10 ]:
+        """Returns the top 10 billionaires list resource."""
+
+        return self._resource( "v2/stats/top10.json" )
