@@ -38,3 +38,25 @@ class _IndexAccessor( Generic[ R ] ):
         """Return the list of available index keys."""
 
         return sorted( ( *super().__dir__(), *self._keys ) )
+
+
+class IndexableResource( Resource[ D ], Generic[ D, R ] ):
+    """
+    Resource wrapper for nested indexable endpoints.
+
+    This class provides lazy traversal over API indexes by exposing generated
+    accessors for nested keys.
+
+    The underlying resource data is loaded only once and transformed into a
+    reusable accessor tree.
+    """
+
+    def __init__(
+        self, path: str, loader: ResourceStateLoader, parser: ParserFn[ D ], *,
+        index: IndexFn[ R ],
+        keys: KeysFn | None
+    ) -> None:
+        super().__init__( path, loader, parser )
+
+        self._factory = index
+        self._keys = keys or self._default_keys
