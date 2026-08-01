@@ -146,6 +146,22 @@ class Resource( Generic[ D ] ):
 
         await self._loading
 
+    async def refresh(
+        self, *,
+        headers: HttpHeader = None,
+        mode: RateLimitMode = DEFAULT_RATE_LIMIT_MODE,
+        timeout: float | None = None
+    ) -> None:
+        """Refresh the resource from the network."""
+
+        self._state = await self._loader.refresh(
+            self._path, headers= headers, mode= mode, timeout= timeout
+        )
+
+        self._loaded = True
+        self._reset()
+        self._emit( "refresh", "update" )
+
 
 class ResourcePool( Generic[ R ] ):
     """
