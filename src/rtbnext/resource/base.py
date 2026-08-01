@@ -162,6 +162,12 @@ class Resource( Generic[ D ] ):
         self._reset()
         self._emit( "refresh", "update" )
 
+    async def data( self ) -> D:
+        """Return parsed resource data."""
+
+        await self.load()
+        return self._parse() if not self._parsed else self._value_or_raise()
+
 
 class ResourcePool( Generic[ R ] ):
     """
