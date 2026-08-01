@@ -105,6 +105,31 @@ class CollectCollection( IndexCollectionBase[ I, E ], Generic[ I, E ] ):
         query, terms = sanitize( query ), query.split()
         return self._clone( [ item for item in self._items if self._search( item, query, terms ) ] )
 
+    def intersect( self, other: Self ) -> Self:
+        """Return items also contained in another collection."""
+
+        uris = { item[ "uri" ] for item in other.items }
+        return self._clone( [ item for item in self._items if item[ "uri" ] in uris ] )
+
+    def exclude( self, other: Self ) -> Self:
+        """Return items not contained in another collection."""
+
+        uris = { item[ "uri" ] for item in other.items }
+        return self._clone( [ item for item in self._items if item[ "uri" ] not in uris ] )
+
+    def union( self, other: Self ) -> Self:
+        """Return the union of two collections."""
+
+        seen: set[ str ] = set()
+        merged: list[ I ] = []
+
+        for item in [ *self._items, *other.items ]:
+            if item[ "uri" ] not in seen:
+                seen.add( item[ "uri" ] )
+                merged.append( item )
+
+        return self._clone( merged )
+
 
 class CollectableResource( Resource[ D ], Generic[ D, I, E ] ):
     ...
