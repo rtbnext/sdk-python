@@ -7,14 +7,37 @@ Resource instance pooling is intended to optimize memory allocation.
 
 from __future__ import annotations
 
-from typing import Any, Generic, TypeVar, Callable
+import asyncio
+from typing import Any, Awaitable, Callable, Generic, Self, TypeVar
+
+from rtbnext.core.loader import ResourceLoader, ResourceState
+from rtbnext.core.parser import ParserFn
 
 D = TypeVar( "D" )
 R = TypeVar( "R", bound= "Resource[ Any ]" )
 
 
 class Resource( Generic[ D ] ):
-    ...
+    """
+    Base resource wrapper for lazy loading, parsing and cache state management.
+
+    Resources are loaded only when data is requested. Loaded responses are kept
+    as resource state while parsed values are cached separately.
+    """
+
+    def __init__( self, path: str, loader: ResourceLoader, parser: ParserFn[ D ] ) -> None:
+        self._path, self._loader, self._parser = path, loader, parser
+
+        self._hooks: dict[ str, set[ Callable[ [ Self ], None ] ] ] = {}
+
+        self._state: ResourceState | None = None
+        self._loading: asyncio.Task[ None ] | None = None
+        self._loaded = False
+
+        self._parsed = False
+        self._value: D | None = None
+
+        self._transformed: Any | Awaitable[ Any ] | None = None
 
 
 class ResourcePool( Generic[ R ] ):
