@@ -98,14 +98,19 @@ class CollectCollection( IndexCollectionBase[ I, E ], Generic[ I, E ] ):
     def find( self, uri_like: str ) -> E | None:
         """Return the first matching URI-like item."""
 
-        return ( item := self._find( self._items, uri_like ) ) and self._factory( item ) or None
+        if item := self._find( self._items, uri_like ):
+            return self._factory( item )
 
 
     def search( self, query: str ) -> Self:
         """Return items matching a search query."""
 
         query, terms = sanitize( query ), query.split()
-        return self._clone( [ item for item in self._items if self._search( item, query, terms ) ] )
+
+        return self._clone( [
+            item for item in self._items
+            if self._search( item, query, terms )
+        ] )
 
     def intersect( self, other: Self ) -> Self:
         """Return items also contained in another collection."""
@@ -161,7 +166,11 @@ class CollectCollection( IndexCollectionBase[ I, E ], Generic[ I, E ] ):
     ) -> Self:
         """Return items sorted using a custom key."""
 
-        return self._clone( sorted( self._items, key= lambda item: key( item ), reverse= reverse ) )
+        return self._clone( sorted(
+            self._items,
+            key= lambda item: key( item ),
+            reverse= reverse
+        ) )
 
 
 class CollectableResource( Resource[ D ], Generic[ D, I, E ] ):
