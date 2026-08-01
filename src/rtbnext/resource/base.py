@@ -10,8 +10,11 @@ from __future__ import annotations
 import asyncio
 from typing import Any, Awaitable, Callable, Generic, Self, TypeVar
 
+from rtbnext.core.http_client import HttpHeader
 from rtbnext.core.loader import ResourceLoader, ResourceState
 from rtbnext.core.parser import ParserFn
+from rtbnext.core.rate_limiter import RateLimitMode
+from rtbnext.defaults import DEFAULT_RATE_LIMIT_MODE
 
 D = TypeVar( "D" )
 R = TypeVar( "R", bound= "Resource[ Any ]" )
@@ -113,6 +116,35 @@ class Resource( Generic[ D ] ):
         """Return whether the current resource state is still valid."""
 
         return not self._loaded or self._state is None or self._loader.valid( self._state )
+
+    async def load(
+        self, *,
+        headers: HttpHeader = None,
+        mode: RateLimitMode = DEFAULT_RATE_LIMIT_MODE,
+        timeout: float | None = None
+    ) -> None:
+        """Load the resource if it has not already been loaded."""
+
+        if self._loaded:
+            return
+
+        if self._loading is None:
+            async def execute() -> None:
+                try:
+                    self._state = await self._loader.load(
+                        self._path, headers= headers, mode= mode, timeout= timeout
+                    )
+
+                    self._loaded = True
+                    self._reset()
+                    self._emit( "load", "update" )
+
+                finally:
+                    self._loading = None
+
+            self._loading = asyncio.create_task( execute() )
+
+        await self._loading
 
 
 class ResourcePool( Generic[ R ] ):
