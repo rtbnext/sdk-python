@@ -81,6 +81,13 @@ class CollectCollection( IndexCollectionBase[ I, E ], Generic[ I, E ] ):
             find= self._find, search= self._search
         )
 
+    def get( self, uri: str ) -> I | E | None:
+        """Return an item by its exact URI."""
+
+        return next( (
+            self._factory( item ) for item in self._items if item[ "uri" ] == uri
+        ), None )
+
 
 class CollectableResource( Resource[ D ], Generic[ D, I, E ] ):
     ...
