@@ -179,3 +179,9 @@ class IndexCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
         """Return whether a previous item exists."""
 
         return self._cursor > 0
+
+    def reset( self ) -> Self:
+        """Reset the cursor."""
+
+        self._cursor = -1
+        return self
