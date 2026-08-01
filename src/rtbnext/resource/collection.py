@@ -82,6 +82,16 @@ class CollectionBase( Generic[ T, R ] ):
 
         return None if not self._items else self._factory( self._items[ -1 ] )
 
+    def to_array( self ) -> list[ R ]:
+        """Returns all resolved items as list."""
+
+        return [ self._factory( item ) for item in self._items ]
+
+    def map( self, callback: Callable[ [ R, int ], U ] ) -> list[ U ]:
+        """Map resolved items."""
+
+        return [ callback( item, index ) for index, item in enumerate( self ) ]
+
 
 class DateCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
     ...
