@@ -7,7 +7,7 @@ Resource instance pooling is intended to optimize memory allocation.
 
 from __future__ import annotations
 
-from typing import Any, Generic, TypeVar
+from typing import Any, Generic, TypeVar, Callable
 
 D = TypeVar( "D" )
 R = TypeVar( "R", bound= "Resource[ Any ]" )
@@ -27,3 +27,12 @@ class ResourcePool( Generic[ R ] ):
 
     def __init__( self ) -> None:
         self._resources: dict[ str, R ] = {}
+
+    def get( self, path: str, factory: Callable[ [], R ] ) -> R:
+        """Return an existing valid resource or create a new one."""
+
+        if ( res := self._resources.get( path ) ) and getattr( res, "valid", False ):
+            return res
+
+        self._resources[ path ] = res = factory()
+        return res
