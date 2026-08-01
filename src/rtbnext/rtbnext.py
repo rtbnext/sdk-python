@@ -15,6 +15,7 @@ from rtbnext.core.loader import CacheMode, CacheType, ResourceStateLoader
 from rtbnext.defaults import (
     DEFAULT_API_URL, DEFAULT_CACHE_MODE, DEFAULT_CACHE_TYPE, DEFAULT_TIMEOUT
 )
+from rtbnext.endpoint.stats import StatsEndpoint
 from rtbnext.endpoint.system import SystemEndpoint
 from rtbnext.resource.base import ResourcePool
 
@@ -23,6 +24,7 @@ from rtbnext.resource.base import ResourcePool
 class Endpoints:
     """Endpoints available in the RTBNext SDK."""
 
+    stats: StatsEndpoint
     system: SystemEndpoint
 
 
@@ -49,10 +51,11 @@ class RTBNext:
         endpoint_map: dict[ str, Any ] = {}
         args = ( self._loader, self._pool, endpoint_map )
 
+        self.stats = endpoint_map[ "stats" ] = StatsEndpoint( *args )
         self.system = endpoint_map[ "system" ] = SystemEndpoint( *args )
 
         self.endpoints = Endpoints(
-            system= self.system
+            stats= self.stats, system= self.system
         )
 
 
