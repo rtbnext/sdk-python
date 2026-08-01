@@ -96,3 +96,19 @@ class ResourceLoader:
 
         res = await self._client.request( path, headers= headers, mode= mode, timeout= timeout )
         return self._state( res, prev )
+
+    async def refresh(
+        self, path: str, *,
+        headers: HttpHeader = None,
+        mode: RateLimitMode = DEFAULT_RATE_LIMIT_MODE,
+        timeout: float | None = None
+    ) -> ResourceState:
+        """Refresh a cached resource."""
+
+        state = await self._fetch(
+            path, await self._cache.get( path ),
+            headers= headers, mode= mode, timeout= timeout
+        )
+
+        await self._cache.set( path, state )
+        return state
