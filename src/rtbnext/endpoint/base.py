@@ -9,9 +9,10 @@ from __future__ import annotations
 from typing import Any
 
 from rtbnext.core.loader import ResourceStateLoader
+from rtbnext.core.parser import Parser, ParserMode, parser
 from rtbnext.resource.base import Resource, ResourcePool
-from rtbnext.resource.collectable import CollectableResource
-from rtbnext.resource.indexable import IndexableResource
+from rtbnext.resource.collectable import CollectableResource, EntityFn, FindFn, SearchFn
+from rtbnext.resource.indexable import IndexableResource, IndexFn, KeysFn
 
 
 class EndpointBase:
@@ -25,17 +26,38 @@ class EndpointBase:
     def __init__( self, loader: ResourceStateLoader, pool: ResourcePool, endpoints: Any ) -> None:
         self._loader, self._pool, self._endpoints = loader, pool, endpoints
 
-    def _resource( self ) -> Resource:
-        ...
+    def _resource( self, path: str, mode: ParserMode = "json" ) -> Resource:
+        """Returns a basic resource."""
 
-    def _collectable( self ) -> CollectableResource:
-        ...
+        return self._pool.get( path, lambda: Resource( path, self._loader, parser( mode ) ) )
+
+    def _collectable(
+        self, path: str, *,
+        entity: EntityFn,
+        find: FindFn | None = None,
+        search: SearchFn | None = None
+    ) -> CollectableResource:
+        """Returns a collectable resource."""
+
+        return self._pool.get( path, lambda: CollectableResource(
+            path, self._loader, Parser.json, entity= entity, find= find, search= search
+        ) )
 
     def _dateable( self ) -> Resource:
+        """Returns a dateable resource."""
         ...
 
-    def _indexable( self ) -> IndexableResource:
-        ...
+    def _indexable(
+        self, path: str, *,
+        index: IndexFn,
+        keys: KeysFn | None
+    ) -> IndexableResource:
+        """Returns a indexable resource."""
+
+        return self._pool.get( path, lambda: IndexableResource(
+            path, self._loader, Parser.json, index= index, keys= keys
+        ) )
 
     def _series( self ) -> Resource:
+        """Returns a time series resource."""
         ...
