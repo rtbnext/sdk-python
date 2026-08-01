@@ -81,12 +81,29 @@ class CollectCollection( IndexCollectionBase[ I, E ], Generic[ I, E ] ):
             find= self._find, search= self._search
         )
 
-    def get( self, uri: str ) -> I | E | None:
+    def get( self, uri: str ) -> E | None:
         """Return an item by its exact URI."""
 
         return next( (
             self._factory( item ) for item in self._items if item[ "uri" ] == uri
         ), None )
+
+    def filter( self, predicate: Callable[ [ I ], bool ] ) -> Self:
+        """Return items matching a predicate."""
+
+        return self._clone( [ item for item in self._items if predicate( item ) ] )
+
+    def find( self, uri_like: str ) -> E | None:
+        """Return the first matching URI-like item."""
+
+        return ( item := self._find( self._items, uri_like ) ) and self._factory( item ) or None
+
+
+    def search( self, query: str ) -> Self:
+        """Return items matching a search query."""
+
+        query, terms = sanitize( query ), query.split()
+        return self._clone( [ item for item in self._items if self._search( item, query, terms ) ] )
 
 
 class CollectableResource( Resource[ D ], Generic[ D, I, E ] ):
