@@ -10,7 +10,7 @@ from __future__ import annotations
 import csv
 import json
 from io import StringIO
-from typing import Any, Callable, Literal, TypeVar
+from typing import Callable, Literal, TypeVar
 
 from rtbnext.core.http_client import HttpResponse
 
@@ -54,7 +54,7 @@ class Parser:
             raise RuntimeError( f"Failed to decode response: { exc }" ) from exc
 
     @staticmethod
-    def json( res: HttpResponse ) -> Any:
+    def json( res: HttpResponse ) -> dict:
         """Parse an HTTP response body as JSON."""
 
         try:
@@ -71,7 +71,8 @@ class Parser:
             for row in csv.reader( StringIO( Parser.text( res ) ), delimiter= delimiter )
         ]
 
-def parser( mode: ParserMode ) -> ParserFn:
+
+def parser( mode: ParserMode ) -> ParserFn[ D ]:
     """
     Return the parser function based on the given mode.
     Raises if the parser for the given mode is not implemented.
