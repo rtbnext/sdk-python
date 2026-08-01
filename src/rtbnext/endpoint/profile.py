@@ -7,11 +7,18 @@ and search index.
 
 from __future__ import annotations
 
+from typing import Generic
+
 from rtbnext.endpoint.base import EndpointBase
 from rtbnext.resource.base import Resource
-from rtbnext.resource.collectable import CollectableResource, CollectItem
+from rtbnext.resource.collectable import CollectableResource, CollectItem, I
 from rtbnext.schema.profile import ProfileData, ProfileHistory, ProfileMeta
 from rtbnext.utils import sanitize
+
+
+class _ProfileEntity( Generic[ I ] ):
+    def __init__( self, endpoint: ProfileEndpoint, item: I ) -> None:
+        self._endpoint, self._item = endpoint, item
 
 
 class ProfileEndpoint( EndpointBase ):
