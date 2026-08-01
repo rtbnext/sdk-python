@@ -70,6 +70,18 @@ class CollectionBase( Generic[ T, R ] ):
 
         return len( self._items )
 
+    @property
+    def first( self ) -> R | None:
+        """Returns the first item."""
+
+        return None if not self._items else self._factory( self._items[ 0 ] )
+
+    @property
+    def last( self ) -> R | None:
+        """Returns the last item."""
+
+        return None if not self._items else self._factory( self._items[ -1 ] )
+
 
 class DateCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
     ...
