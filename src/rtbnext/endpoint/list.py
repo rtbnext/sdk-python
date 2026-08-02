@@ -19,10 +19,9 @@ from rtbnext.utils import sanitize, ymd
 
 type ListSnapshot = CollectableResource[ List, ListItem, ProfileEntity[ ListItem ] ]
 type ListDateIndex = DateableResource[ DateIndex, ListSnapshot ]
-type ListEntity = _ListEntity
 
 
-class _ListEntity:
+class ListEntity:
     """Lazy entity for list index items."""
 
     def __init__( self, endpoint: ListEndpoint, item: ListIndexItem ) -> None:
@@ -76,5 +75,5 @@ class ListEndpoint( EndpointBase ):
         """Returns the root list index resource."""
 
         return self._collectable( "v2/list/index.json",
-            entity= lambda item: _ListEntity( self, item )
+            entity= lambda item: ListEntity( self, item )
         )

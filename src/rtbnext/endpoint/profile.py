@@ -59,7 +59,8 @@ class ProfileEntity( Generic[ I ] ):
     @cached_property
     def history( self ):
         """Return the lazily loaded profile history resource."""
-        ...
+
+        return self._endpoint.history( self.uri )
 
 
 class ProfileEndpoint( EndpointBase ):
@@ -94,9 +95,9 @@ class ProfileEndpoint( EndpointBase ):
 
         return self._resource( f"v2/profile/{ sanitize( uri ) }/profile.json" )
 
-    def history( self ):
+    def history( self, uri: str ):
         """Returns profile history time-series data for the given URI."""
-        ...
+        del( uri )
 
     def get( self, uri: str ) -> ProfileEntity[ CollectItem ]:
         """Returns the profile entity for a URI."""
