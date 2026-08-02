@@ -7,6 +7,8 @@ data, and grouped indices.
 
 from __future__ import annotations
 
+from typing import TypedDict
+
 from rtbnext.endpoint.base import EndpointBase
 from rtbnext.endpoint.profile import ProfileEntity
 from rtbnext.resource.base import Resource
@@ -14,6 +16,16 @@ from rtbnext.resource.collectable import CollectableResource
 from rtbnext.schema.stats import (
     DBStats, GlobalStats, ProfileStats, Scatter, ScatterItem, Top10, WealthStats
 )
+
+HistoryPoint = TypedDict( "HistoryPoint", {
+    "date": str,
+    "count": int,
+    "total": float,
+    "woman": int,
+    "quota": float,
+    "change": float,
+    "percent": float
+} )
 
 
 class StatsEndpoint( EndpointBase ):
