@@ -12,6 +12,8 @@ from rtbnext.resource.indexable import IndexableResource
 from rtbnext.schema.filter import Filter, FilterItem
 from rtbnext.schema.generic import AgeGroup, Gender, Industry, MaritalStatus
 
+# Filter endpoints
+
 type FilterCollection = CollectableResource[ Filter, FilterItem, ProfileEntity[ FilterItem ] ]
 
 FilterIndexTree = TypedDict( "FilterIndexTree", {
