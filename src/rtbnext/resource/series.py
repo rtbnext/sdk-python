@@ -28,6 +28,27 @@ type AggregatePeriod = Literal[ "week", "month", "quarter", "year" ]
 type NumberCallback[ R ] = Callable[ [ R ], int | float ]
 
 
+AggregateValue = TypedDict( "AggregateValue", {
+    "first": float,
+    "last": float,
+    "min": float,
+    "max": float,
+    "avg": float,
+    "sum": float
+} )
+
+AggregateRange = TypedDict( "AggregateRange", {
+    "from": str,
+    "to": str
+} )
+
+AggregatePoint = TypedDict( "AggregatePoint", {
+    "date": str,
+    "label": str,
+    "range": AggregateRange
+} )
+
+
 class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
     """
     Collection wrapper for time-series resources.
