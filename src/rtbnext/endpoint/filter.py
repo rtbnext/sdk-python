@@ -10,6 +10,7 @@ from __future__ import annotations
 from rtbnext.endpoint.base import EndpointBase
 from rtbnext.endpoint.profile import ProfileEntity
 from rtbnext.resource.collectable import CollectableResource
+from rtbnext.resource.indexable import IndexableResource
 from rtbnext.schema.filter import Filter, FilterIndex, FilterItem
 from rtbnext.schema.generic import AgeGroup, Gender, Industry, MaritalStatus
 from rtbnext.utils import sanitize
@@ -88,3 +89,11 @@ class FilterEndpoint( EndpointBase ):
         """Returns the filter collection by U.S. state, indexed by USPS code."""
 
         return self._filter( f"v2/filter/state/{ key.upper() }.json" )
+
+    @property
+    def index( self ) -> IndexableResource[ FilterIndex, FilterCollection ]:
+        """Provides the root filter index resource."""
+
+        return self._indexable( "v2/filter/index.json",
+            index= lambda path: self._filter( f"v2/filter/{ "/".join( path ) }.json" )
+        )
