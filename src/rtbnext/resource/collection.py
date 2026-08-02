@@ -7,7 +7,7 @@ Implements the base collections shared by resource collections.
 from __future__ import annotations
 
 from typing import Callable, Generic, Iterator, Self, TypeVar, cast
-
+from rtbnext.utils import ymd
 from rtbnext.defaults import DEFAULT_PER_PAGE
 
 R = TypeVar( "R" )
@@ -141,6 +141,16 @@ class DateCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
         """Return the resolved date values."""
 
         return [ self._date( item ) for item in self._items ]
+
+    def find( self, date: str ) -> R | None:
+        """Get the item by exact date."""
+
+        target = ymd( date )
+
+        return next( (
+            self._factory( item ) for item in self._items
+            if self._date( item ) == target
+        ), None )
 
 
 class CursorCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
