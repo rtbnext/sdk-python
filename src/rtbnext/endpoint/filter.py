@@ -7,28 +7,10 @@ demographics, and indices.
 
 from __future__ import annotations
 
-from typing import TypedDict
-
 from rtbnext.endpoint.base import EndpointBase
-from rtbnext.endpoint.profile import ProfileEntity
-from rtbnext.resource.collectable import CollectableResource
-from rtbnext.resource.indexable import IndexableResource
-from rtbnext.schema.filter import Filter, FilterIndex, FilterItem
+from rtbnext.schema.endpoint import FilterCollection, FilterIndex
 from rtbnext.schema.generic import AgeGroup, Gender, Industry, MaritalStatus
 from rtbnext.utils import sanitize
-
-type FilterCollection = CollectableResource[ Filter, FilterItem, ProfileEntity[ FilterItem ] ]
-
-FilterIndexTree = TypedDict( "FilterIndexTree", {
-    "industry": dict[ Industry, FilterCollection ],
-    "citizenship": dict[ str, FilterCollection ],
-    "country": dict[ str, FilterCollection ],
-    "state": dict[ str, FilterCollection ],
-    "gender": dict[ Gender, FilterCollection ],
-    "age": dict[ AgeGroup, FilterCollection ],
-    "maritalStatus": dict[ MaritalStatus, FilterCollection ],
-    "special": dict[ str, FilterCollection ]
-} )
 
 
 class FilterEndpoint( EndpointBase ):
@@ -104,7 +86,7 @@ class FilterEndpoint( EndpointBase ):
         return self._filter( f"v2/filter/state/{ key.upper() }.json" )
 
     @property
-    def index( self ) -> IndexableResource[ FilterIndex, FilterIndexTree ]:
+    def index( self ) -> FilterIndex:
         """Provides the root filter index resource."""
 
         return self._indexable( "v2/filter/index.json",
