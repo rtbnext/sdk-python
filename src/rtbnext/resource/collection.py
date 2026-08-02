@@ -15,6 +15,7 @@ T = TypeVar( "T" )
 U = TypeVar( "U" )
 
 type ItemFactory[ T, R ] = Callable[ [ T ], R ]
+type DateResolver[ T ] = Callable[ [ T ], str ]
 
 
 class CollectionBase( Generic[ T, R ] ):
@@ -125,7 +126,15 @@ class DateCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
     This class extends the base collection adding special methods dealing with
     dates, like `year`, `month`, or `between`.
     """
-    ...
+
+    def __init__(
+        self, items: list[ T ], *,
+        factory: ItemFactory[ T, R ] = lambda item: cast( R, item ),
+        date: DateResolver[ T ] = lambda item: cast( str, item ),
+        total: int | None = None
+    ) -> None:
+        super().__init__( items, factory= factory, total= total )
+        self._date = date or ( lambda item: item )
 
 
 class CursorCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
