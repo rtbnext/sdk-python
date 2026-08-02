@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from typing import Callable, Generic, TypedDict, TypeVar
 
+from rtbnext.resource.base import Resource
 from rtbnext.resource.collection import DateCollectionBase
 
 
@@ -30,4 +31,14 @@ class DateCollection( DateCollectionBase[ str, R ], Generic[ R ] ):
     that are indexed by date values. It allows for lazy resolution of resources
     based on their date keys, while maintaining the underlying collection of date
     strings.
+    """
+
+
+class DateableResource( Resource[ D ], Generic[ D, R ] ):
+    """
+    Resource wrapper for date-indexed endpoints.
+
+    This class provides lazy traversal over API endpoints that are indexed by
+    date values. It allows for convenient access to resources based on their
+    date keys, while maintaining the underlying resource data.
     """
