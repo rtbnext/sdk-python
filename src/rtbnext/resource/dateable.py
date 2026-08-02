@@ -51,3 +51,8 @@ class DateableResource( Resource[ D ], Generic[ D, R ] ):
     ) -> None:
         super().__init__( path, loader, parser )
         self._date = date
+
+    def _collect_dates( self, dates: list[ str ] ) -> DateCollection[ R ]:
+        """Creates a date collection."""
+
+        return DateCollection( dates, factory= self._date )
