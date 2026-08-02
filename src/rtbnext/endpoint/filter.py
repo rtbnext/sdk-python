@@ -33,3 +33,21 @@ class FilterEndpoint( EndpointBase ):
         """Returns the deceased profiles filter collection."""
 
         return self._filter( "v2/filter/special/deceased.json" )
+
+    @property
+    def drop_off( self ) -> FilterCollection:
+        """Returns the drop-off profiles filter collection."""
+
+        return self._filter( "v2/filter/special/dropOff.json" )
+
+    @property
+    def family( self ) -> FilterCollection:
+        """Returns the family profiles filter collection."""
+
+        return self._filter( "v2/filter/special/family.json" )
+
+    @property
+    def self_made( self ) -> FilterCollection:
+        """Returns the self-made profiles filter collection."""
+
+        return self._filter( "v2/filter/special/selfMade.json" )
