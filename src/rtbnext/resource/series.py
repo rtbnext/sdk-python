@@ -27,7 +27,6 @@ R = TypeVar( "R", bound= TimePoint )
 type AggregatePeriod = Literal[ "week", "month", "quarter", "year" ]
 type NumberCallback[ R ] = Callable[ [ R ], int | float ]
 
-
 AggregateValue = TypedDict( "AggregateValue", {
     "first": float,
     "last": float,
@@ -87,6 +86,8 @@ class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
         if period == "week":
             current, first = date_type( year, month, day ), date_type( year, 1, 1 )
             return f"{ year }-W{ ( ( current - first ).days // 7 + 1 ):02d }"
+
+        raise ValueError( f"Invalid aggregate period: { period }" )
 
     def _aggregate( self, points: list[ R ], label: str | None = None ) -> AggregatePoint:
         """Aggregate a group of points."""
