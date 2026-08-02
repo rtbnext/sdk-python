@@ -79,7 +79,7 @@ class ProfileEndpoint( EndpointBase ):
         self, path: str, *,
         find: FindFn[ I ] | None = None,
         search: SearchFn[ I ] | None = None
-    ) -> CollectableResource[ CollectData[ I ], I, ProfileEntity[ I ] ]:
+    ) -> CollectableResource:
         """Returns a profile collection resource from a JSON endpoint."""
 
         return self._collectable( path, entity= self._entity, find= find, search= search )
