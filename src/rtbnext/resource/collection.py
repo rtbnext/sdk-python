@@ -152,6 +152,16 @@ class DateCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
             if self._date( item ) == target
         ), None )
 
+    def year( self, year: int ) -> Self:
+        """Filter resources by year."""
+
+        prefix = f"{ year }-"
+
+        return self._clone( [
+            item for item in self._items
+            if self._date( item ).startswith( prefix )
+        ] )
+
 
 class CursorCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
     """
