@@ -15,7 +15,10 @@ from rtbnext.resource.base import Resource
 from rtbnext.resource.collectable import (
     CollectableResource, CollectData, CollectItem, FindFn, I, SearchFn
 )
-from rtbnext.schema.profile import ProfileData, ProfileHistory, ProfileMeta
+from rtbnext.schema.profile import (
+    ProfileData, ProfileHistory, ProfileIndex, ProfileIndexItem, ProfileMeta, SearchIndex,
+    SearchIndexItem
+)
 from rtbnext.utils import sanitize
 
 
@@ -104,11 +107,17 @@ class ProfileEndpoint( EndpointBase ):
         return self._entity( CollectItem( uri= uri ) )
 
     @property
-    def index( self ):
+    def index( self ) -> CollectableResource[
+        ProfileIndex, ProfileIndexItem, ProfileEntity[ ProfileIndexItem ]
+    ]:
         """Returns the profile index collection."""
-        ...
+
+        return self._collect( "v2/profile/index.json" )
 
     @property
-    def search_index( self ):
+    def search_index( self ) -> CollectableResource[
+        SearchIndex, SearchIndexItem, ProfileEntity[ SearchIndexItem ]
+    ]:
         """Returns the profile search index collection."""
-        ...
+
+        return self._collect( "v2/profile/search.json" )
