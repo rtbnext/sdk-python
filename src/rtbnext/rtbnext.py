@@ -49,16 +49,14 @@ class RTBNext:
         self._loader = ResourceStateLoader( client= self._client, cache= cache, mode= mode )
         self._pool = ResourcePool()
 
-        endpoint_map: dict[ str, Any ] = {}
-        args = ( self._loader, self._pool, endpoint_map )
+        endpoints = Endpoints.__new__( Endpoints )
+        args = ( self._loader, self._pool, endpoints )
 
-        self.profile = endpoint_map[ "profile" ] = ProfileEndpoint( *args )
-        self.stats = endpoint_map[ "stats" ] = StatsEndpoint( *args )
-        self.system = endpoint_map[ "system" ] = SystemEndpoint( *args )
+        self.profile = endpoints.profile = ProfileEndpoint( *args )
+        self.stats = endpoints.stats = StatsEndpoint( *args )
+        self.system = endpoints.system = SystemEndpoint( *args )
 
-        self.endpoints = Endpoints(
-            profile= self.profile, stats= self.stats, system= self.system
-        )
+        self.endpoints = endpoints
 
 
 def rtbnext(
