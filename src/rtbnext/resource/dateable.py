@@ -8,6 +8,8 @@ from __future__ import annotations
 
 from typing import Callable, Generic, TypedDict, TypeVar
 
+from rtbnext.core.loader import ResourceStateLoader
+from rtbnext.core.parser import ParserFn
 from rtbnext.resource.base import Resource
 from rtbnext.resource.collection import DateCollectionBase
 
@@ -42,3 +44,10 @@ class DateableResource( Resource[ D ], Generic[ D, R ] ):
     date values. It allows for convenient access to resources based on their
     date keys, while maintaining the underlying resource data.
     """
+
+    def __init__(
+        self, path: str, loader: ResourceStateLoader, parser: ParserFn[ D ], *,
+        date: DateFn[ R ]
+    ) -> None:
+        super().__init__( path, loader, parser )
+        self._date = date
