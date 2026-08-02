@@ -137,6 +137,12 @@ class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
             date= lambda item: item[ "date" ]
         )
 
+    @property
+    def points( self ) -> list[ R ]:
+        """Returns all time series points."""
+
+        return self._items
+
     def min( self, callback: NumberCallback | None = None ) -> float:
         """Returns the minimum value."""
 
