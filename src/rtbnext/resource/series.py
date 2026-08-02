@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from datetime import date as date_type
 from statistics import mean, median
-from typing import Callable, Generic, Literal, TypedDict, TypeVar
+from typing import Callable, Generic, Literal, TypedDict, TypeVar, cast
 
 from rtbnext.resource.collection import DateCollectionBase
 
@@ -87,6 +87,45 @@ class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
         if period == "week":
             current, first = date_type( year, month, day ), date_type( year, 1, 1 )
             return f"{ year }-W{ ( ( current - first ).days // 7 + 1 ):02d }"
+
+    def _aggregate( self, points: list[ R ], label: str | None = None ) -> AggregatePoint:
+        """Aggregate a group of points."""
+
+        sorted_points = sorted( points, key= lambda point: point[ "date" ] )
+
+        result: dict[ str, object ] = {
+            "date": sorted_points[ -1 ][ "date" ],
+            "label": label or sorted_points[ -1 ][ "date" ],
+            "range": {
+                "from": sorted_points[ 0 ][ "date" ],
+                "to": sorted_points[ -1 ][ "date" ]
+            }
+        }
+
+        keys = sorted_points[ 0 ].keys()
+
+        for key in keys:
+            if key == "date":
+                continue
+
+            values = [
+                float( point[ key ] ) for point in sorted_points
+                if isinstance( point.get( key ), ( int, float ) )
+            ]
+
+            if not values:
+                continue
+
+            result[ key ] = {
+                "first": values[ 0 ],
+                "last": values[ -1 ],
+                "min": min( values ),
+                "max": max( values ),
+                "avg": float( mean( values ) ),
+                "sum": sum( values )
+            }
+
+        return cast( AggregatePoint, result )
 
     def min( self, callback: NumberCallback | None = None ) -> float:
         """Return minimum value."""
