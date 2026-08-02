@@ -14,6 +14,7 @@ from rtbnext.resource.base import Resource, ResourcePool
 from rtbnext.resource.collectable import CollectableResource, EntityFn, FindFn, SearchFn
 from rtbnext.resource.dateable import DateableResource, DateFn
 from rtbnext.resource.indexable import IndexableResource, IndexFn, KeysFn
+from rtbnext.resource.series import PointFn, TimeSeriesResource
 
 if TYPE_CHECKING:
     from rtbnext.rtbnext import Endpoints
@@ -70,6 +71,9 @@ class EndpointBase:
             path, self._loader, Parser.json, index= index, keys= keys
         ) )
 
-    def _series( self ) -> Resource:
+    def _series( self, path: str, *, point: PointFn ) -> TimeSeriesResource:
         """Returns a time series resource."""
-        ...
+
+        return self._pool.get( path, lambda: TimeSeriesResource(
+            path, self._loader, Parser.csv, point= point
+        ) )
