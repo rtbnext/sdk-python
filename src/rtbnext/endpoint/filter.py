@@ -73,3 +73,18 @@ class FilterEndpoint( EndpointBase ):
         """Returns the filter collection by marital status."""
 
         return self._filter( f"v2/filter/maritalStatus/{ sanitize( key ) }.json" )
+
+    def citizenship( self, key: str ) -> FilterCollection:
+        """Returns the filter collection by citizenship, indexed by ISO code."""
+
+        return self._filter( f"v2/filter/citizenship/{ key.upper() }.json" )
+
+    def country( self, key: str ) -> FilterCollection:
+        """Returns the filter collection by country, indexed by ISO code."""
+
+        return self._filter( f"v2/filter/country/{ key.upper() }.json" )
+
+    def state( self, key: str ) -> FilterCollection:
+        """Returns the filter collection by U.S. state, indexed by USPS code."""
+
+        return self._filter( f"v2/filter/state/{ key.upper() }.json" )
