@@ -6,7 +6,7 @@ Implement the resource wrapper for nested indexable endpoints.
 
 from __future__ import annotations
 
-from typing import Callable, Generic, TypeVar
+from typing import Any, Callable, Generic, TypeVar
 
 from rtbnext.core.loader import ResourceStateLoader
 from rtbnext.core.parser import ParserFn
@@ -17,27 +17,37 @@ R = TypeVar( "R" )
 
 type Path = tuple[ str, ... ]
 type IndexFn[ R ] = Callable[ [ Path ], R ]
-type KeysFn = Callable[ [ object ], Path | None ]
+type KeysFn = Callable[ [ object ], list[ str ] | None ]
 
 
 class _IndexAccessor( Generic[ R ] ):
     """Lazy accessor object for index traversal."""
 
-    def __init__( self, factory: IndexFn[ R ], path: Path, keys: Path ) -> None:
-        self._factory, self._path, self._keys = factory, path, keys
+    def __init__( self, factory: IndexFn[ R ], keys: KeysFn, path: Path, value: object ) -> None:
+        self._factory, self._keys, self._path, self._value = factory, keys, path, value
 
-    def __getattr__( self, key: str ) -> R:
-        """Resolve a nested resource."""
+    def __getattr__( self, key: str ) -> Any:
+        """Resolve a nested index key."""
 
-        if key not in self._keys:
+        available = self._keys( self._value )
+
+        if available is None or key not in available:
             raise AttributeError( f"Unknown index key: { key }" )
 
-        return self._factory( ( *self._path, key ) )
+        path = ( *self._path, key )
+
+        if isinstance( self._value, dict ):
+            child = self._value[ key ]
+
+            if isinstance( child, ( dict, list ) ):
+                return _IndexAccessor( self._factory, self._keys, path, child )
+
+        return self._factory( path )
 
     def __dir__( self ) -> list[ str ]:
-        """Return the list of available index keys."""
+        """Return available index keys."""
 
-        return sorted( ( *super().__dir__(), *self._keys ) )
+        return sorted( [ *super().__dir__(), *( self._keys( self._value ) or [] ) ] )
 
 
 class IndexableResource( Resource[ D ], Generic[ D, R ] ):
@@ -62,38 +72,23 @@ class IndexableResource( Resource[ D ], Generic[ D, R ] ):
         self._keys = keys or self._default_keys
 
     @staticmethod
-    def _default_keys( value: object ) -> Path | None:
-        """Extract index keys from common API structures."""
-
-        if isinstance( value, list ):
-            return tuple( map( str, value ) )
-
-        if isinstance( value, dict ) and isinstance( value.get( "items" ), dict ):
-            return tuple( map( str, value[ "items" ] ) )
-
-        return None
-
-    def _create_index( self, keys: Path, path: Path ) -> _IndexAccessor[ R ]:
-        """Create a lazy accessor node."""
-
-        return _IndexAccessor( self._factory, path, keys )
-
-    def _traverse( self, value: object, path: Path = () ) -> object:
-        """Convert parsed index data into an accessor tree."""
-
-        if ( keys := self._keys( value ) ) is not None:
-            return self._create_index( keys, path )
+    def _default_keys( value: object ) -> list[ str ] | None:
+        """Extract keys from common index structures."""
 
         if isinstance( value, dict ):
-            return {
-                key: self._traverse( val, ( *path, key ) )
-                for key, val in value.items()
-                if key != "$metadata"
-            }
+            return list( value.keys() )
+
+        if isinstance( value, list ):
+            return [ str( item ) for item in value ]
 
         return None
 
-    async def get( self ) -> object:
+    def _traverse( self, value: object, path: Path = () ) -> _IndexAccessor[ R ]:
+        """Create the lazy accessor tree."""
+
+        return _IndexAccessor( self._factory, self._keys, path, value )
+
+    async def get( self ) -> _IndexAccessor[ R ]:
         """Return the lazily generated index tree."""
 
         return await self._transform( self._traverse )
