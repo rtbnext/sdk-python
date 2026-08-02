@@ -130,6 +130,15 @@ class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
 
         return cast( AggregatePoint, result )
 
+    def _aggregated_series( self, points: list[ AggregatePoint ] ) -> AggregatedTimeSeries:
+        """Returns a time series collection of aggregated points."""
+
+        return TimeSeriesCollection(
+            points,
+            factory= lambda item: item,
+            date= lambda item: item[ "date" ]
+        )
+
     def min( self, callback: NumberCallback | None = None ) -> float:
         """Return minimum value."""
 
