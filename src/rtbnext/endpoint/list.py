@@ -26,9 +26,11 @@ class _ListEntity:
     """Lazy entity for list index items."""
 
     def __init__( self, list: ListEndpoint, item: ListIndexItem ) -> None:
-        self._endpoint, self._item = list, item
+        self._list, self._item = list, item
 
-    def __getattr__( self, name: str ):
+    def __getattr__( self, name: str ) -> object:
+        """Forward unknown attributes to the underlying profile item."""
+
         try:
             return self._item[ name ]
         except KeyError:
@@ -36,11 +38,15 @@ class _ListEntity:
 
     @property
     def uri( self ) -> str:
+        """Returns the list URI."""
+
         return self._item[ "uri" ]
 
     @cached_property
     def dates( self ) -> ListDateIndex:
-        return self._endpoint.get( self.uri )
+        """Returns the lazily loaded list date index resource."""
+
+        return self._list.get( self.uri )
 
 
 class ListEndpoint( EndpointBase ):
