@@ -140,39 +140,39 @@ class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
         )
 
     def min( self, callback: NumberCallback | None = None ) -> float:
-        """Return minimum value."""
+        """Returns the minimum value."""
 
         return min( self._numbers( callback ) )
 
     def max( self, callback: NumberCallback | None = None ) -> float:
-        """Return maximum value."""
+        """Returns the maximum value."""
 
         return max( self._numbers( callback ) )
 
     def sum( self, callback: NumberCallback | None = None ) -> float:
-        """Return sum of values."""
+        """Returns the sum of values."""
 
         return sum( self._numbers( callback ) )
 
     def avg( self, callback: NumberCallback | None = None ) -> float:
-        """Return average value."""
+        """Returns the average value."""
 
         return float( mean( self._numbers( callback ) ) )
 
     def median( self, callback: NumberCallback | None = None ) -> float:
-        """Return median value."""
+        """Returns the median value."""
 
         return float( median( self._numbers( callback ) ) )
 
     @property
     def labels( self ) -> list[ str ]:
-        """Return date labels."""
+        """Returns the date labels."""
 
         return [ point[ "date" ] for point in self ]
 
     @property
     def columns( self ) -> dict[ str, list[ object ] ]:
-        """Return values grouped by column."""
+        """Returns the values grouped by column."""
 
         result: dict[ str, list[ object ] ] = {}
 
@@ -183,17 +183,17 @@ class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
         return result
 
     def values( self, callback: NumberCallback ) -> list[ int | float ]:
-        """Return mapped numeric values."""
+        """Returns the mapped numeric values."""
 
         return [ callback( point ) for point in self ]
 
     def column( self, key: str ) -> list[ object ]:
-        """Return all values of a column."""
+        """Returns all values of a column."""
 
         return [ point[ key ] for point in self ]
 
     def aggregate( self, period: AggregatePeriod | Callable[ [ R ], str ] ) -> AggregatedTimeSeries:
-        """Aggregate points by period."""
+        """Aggregates points by period."""
 
         groups: dict[ str, list[ R ] ] = defaultdict( list )
 
