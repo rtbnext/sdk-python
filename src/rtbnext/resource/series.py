@@ -10,6 +10,7 @@ from collections import defaultdict
 from datetime import date as date_type
 from statistics import mean, median
 from typing import Callable, Generic, Literal, TypedDict, TypeVar, cast
+
 from rtbnext.core.loader import ResourceStateLoader
 from rtbnext.core.parser import ParserFn
 from rtbnext.resource.base import Resource
