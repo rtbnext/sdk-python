@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from rtbnext.endpoint.base import EndpointBase
 from rtbnext.resource.base import Resource
+from rtbnext.resource.dateable import DateableResource
 from rtbnext.utils import ymd
 
 
@@ -22,3 +23,9 @@ class MoverEndpoint( EndpointBase ):
         """Returns a mover snapshot for a given date."""
 
         return self._resource( f"v2/mover/{ ymd( date ) }.json" )
+
+    @property
+    def index( self ) -> DateableResource:
+        """Returns the root mover index resource."""
+
+        return self._dateable( "v2/mover/index.json", date= self.snapshot )
