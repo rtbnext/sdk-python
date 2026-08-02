@@ -26,7 +26,7 @@ ListIndex = TypedDict( "ListIndex", {
 } )
 
 ListItem = TypedDict( "ListItem", {
-    "uri": NotRequired[ str ],
+    "uri": str,
     "sourceUri": str,
     "name": str,
     "rank": int,
