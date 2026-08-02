@@ -15,16 +15,10 @@ from rtbnext.resource.base import Resource
 from rtbnext.resource.collection import CursorCollectionBase, ItemFactory
 from rtbnext.utils import sanitize
 
-
-class CollectItem( TypedDict ):
-    """Ensure `uri` is included in the dict."""
-
-    uri: str
-
+CollectItem = TypedDict( "CollectItem", { "uri": str } )
 
 class CollectData[ T: CollectItem ]( TypedDict ):
     """Ensure `items` is a list of collect items."""
-
     items: list[ T ]
 
 

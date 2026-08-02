@@ -13,11 +13,7 @@ from rtbnext.core.parser import ParserFn
 from rtbnext.resource.base import Resource
 from rtbnext.resource.collection import DateCollectionBase
 
-
-class DateData( TypedDict ):
-    """Ensure `dates` is included in the dict."""
-
-    dates: list[ str ]
+DateData = TypedDict( "DateData", { "dates": list[ str ] } )
 
 D = TypeVar( "D", bound= DateData )
 R = TypeVar( "R" )

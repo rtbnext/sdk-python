@@ -13,13 +13,7 @@ from typing import Callable, Generic, Literal, TypedDict, TypeVar, cast
 
 from rtbnext.resource.collection import DateCollectionBase
 
-
-class TimePoint( TypedDict ):
-    """Ensure `date` is included in the dict."""
-
-    date: str
-
-
+TimePoint = TypedDict( "TimePoint", { "date": str } )
 type TimeSeriesRow = list[ str | int | float ]
 
 D = TypeVar( "D", bound= list[ TimeSeriesRow ] )
