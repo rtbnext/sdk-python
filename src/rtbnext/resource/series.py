@@ -10,7 +10,8 @@ from collections import defaultdict
 from datetime import date as date_type
 from statistics import mean, median
 from typing import Callable, Generic, Literal, TypedDict, TypeVar, cast
-
+from rtbnext.core.loader import ResourceStateLoader
+from rtbnext.core.parser import ParserFn
 from rtbnext.resource.base import Resource
 from rtbnext.resource.collection import DateCollectionBase
 
@@ -22,6 +23,7 @@ R = TypeVar( "R", bound= TimePoint )
 
 type AggregatePeriod = Literal[ "week", "month", "quarter", "year" ]
 type NumberCallback[ R ] = Callable[ [ R ], int | float ]
+type PointFn[ D, R ] = Callable[ [ D ], R ]
 type AggregatedTimeSeries = TimeSeriesCollection[ AggregatePoint ]
 
 AggregateValue = TypedDict( "AggregateValue", {
@@ -229,3 +231,10 @@ class TimeSeriesResource( Resource[ D ], Generic[ D, R ] ):
     This class converts raw CSV rows into typed time-series points and
     exposes them through a time-series collection.
     """
+
+    def __init__(
+        self, path: str, loader: ResourceStateLoader, parser: ParserFn[ D ], *,
+        point: PointFn[ TimeSeriesRow, R ]
+    ) -> None:
+        super().__init__( path, loader, parser )
+        self._point = point
