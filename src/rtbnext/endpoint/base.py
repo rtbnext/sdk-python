@@ -12,6 +12,7 @@ from rtbnext.core.loader import ResourceStateLoader
 from rtbnext.core.parser import Parser, ParserMode, parser
 from rtbnext.resource.base import Resource, ResourcePool
 from rtbnext.resource.collectable import CollectableResource, EntityFn, FindFn, SearchFn
+from rtbnext.resource.dateable import DateableResource, DateFn
 from rtbnext.resource.indexable import IndexableResource, IndexFn, KeysFn
 
 if TYPE_CHECKING:
@@ -51,9 +52,12 @@ class EndpointBase:
             path, self._loader, Parser.json, entity= entity, find= find, search= search
         ) )
 
-    def _dateable( self ) -> Resource:
+    def _dateable( self, path: str, *, date: DateFn ) -> DateableResource:
         """Returns a dateable resource."""
-        ...
+
+        return self._pool.get( path, lambda: DateableResource(
+            path, self._loader, Parser.json, date= date
+        ) )
 
     def _indexable(
         self, path: str, *,
