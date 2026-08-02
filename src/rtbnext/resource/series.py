@@ -7,7 +7,7 @@ Implements the resource wrapper for time-series endpoints.
 from __future__ import annotations
 
 from typing import Callable, Generic, TypedDict, TypeVar
-
+from statistics import mean, median
 from rtbnext.resource.collection import DateCollectionBase
 
 
@@ -55,3 +55,18 @@ class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
         """Return maximum value."""
 
         return max( self._numbers( callback ) )
+
+    def sum( self, callback: NumberCallback | None = None ) -> float:
+        """Return sum of values."""
+
+        return sum( self._numbers( callback ) )
+
+    def avg( self, callback: NumberCallback | None = None ) -> float:
+        """Return average value."""
+
+        return float( mean( self._numbers( callback ) ) )
+
+    def median( self, callback: NumberCallback | None = None ) -> float:
+        """Return median value."""
+
+        return float( median( self._numbers( callback ) ) )
