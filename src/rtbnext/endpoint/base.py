@@ -6,13 +6,16 @@ Implements the base endpoint class.
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING
 
 from rtbnext.core.loader import ResourceStateLoader
 from rtbnext.core.parser import Parser, ParserMode, parser
 from rtbnext.resource.base import Resource, ResourcePool
 from rtbnext.resource.collectable import CollectableResource, EntityFn, FindFn, SearchFn
 from rtbnext.resource.indexable import IndexableResource, IndexFn, KeysFn
+
+if TYPE_CHECKING:
+    from rtbnext.rtbnext import Endpoints
 
 
 class EndpointBase:
@@ -23,7 +26,12 @@ class EndpointBase:
     indexable, time series, and dateable resources.
     """
 
-    def __init__( self, loader: ResourceStateLoader, pool: ResourcePool, endpoints: Any ) -> None:
+    def __init__(
+        self,
+        loader: ResourceStateLoader,
+        pool: ResourcePool,
+        endpoints: Endpoints
+    ) -> None:
         self._loader, self._pool, self._endpoints = loader, pool, endpoints
 
     def _resource( self, path: str, mode: ParserMode = "json" ) -> Resource:
