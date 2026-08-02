@@ -32,40 +32,40 @@ class FilterEndpoint( EndpointBase ):
 
     @property
     def deceased( self ) -> FilterCollection:
-        """Returns the deceased profiles filter collection."""
+        """Returns the filter collection for deceased profiles."""
 
         return self._filter( "v2/filter/special/deceased.json" )
 
     @property
     def drop_off( self ) -> FilterCollection:
-        """Returns the drop-off profiles filter collection."""
+        """Returns the filter collection for dropped off profiles."""
 
         return self._filter( "v2/filter/special/dropOff.json" )
 
     @property
     def family( self ) -> FilterCollection:
-        """Returns the family profiles filter collection."""
+        """Returns the filter collection for family profiles."""
 
         return self._filter( "v2/filter/special/family.json" )
 
     @property
     def self_made( self ) -> FilterCollection:
-        """Returns the self-made profiles filter collection."""
+        """Returns the filter collection for self-made profiles."""
 
         return self._filter( "v2/filter/special/selfMade.json" )
 
     def industry( self, key: Industry ) -> FilterCollection:
-        """Returns the industry filter collection."""
+        """Returns the filter collection by industry."""
 
-        return self._filter( f"v2/filter/industry/{ key.lower() }.json" )
+        return self._filter( f"v2/filter/industry/{ sanitize( key ) }.json" )
 
     def age( self, key: AgeGroup ) -> FilterCollection:
-        """Returns the age group filter collection."""
+        """Returns the filter collection by age group."""
 
         return self._filter( f"v2/filter/age/{ key }.json" )
 
     def gender( self, key: Gender ) -> FilterCollection:
-        """Returns the gender filter collection."""
+        """Returns the filter collection by gender."""
 
         return self._filter( f"v2/filter/gender/{ sanitize( key ) }.json" )
 
