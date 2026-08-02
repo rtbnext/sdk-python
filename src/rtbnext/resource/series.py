@@ -45,3 +45,13 @@ class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
                 if key != "date" and isinstance( value, ( int, float ) )
             ]
         )
+
+    def min( self, callback: NumberCallback | None = None ) -> float:
+        """Return minimum value."""
+
+        return min( self._numbers( callback ) )
+
+    def max( self, callback: NumberCallback | None = None ) -> float:
+        """Return maximum value."""
+
+        return max( self._numbers( callback ) )
