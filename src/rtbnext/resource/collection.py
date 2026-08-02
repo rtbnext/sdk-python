@@ -136,6 +136,12 @@ class DateCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
         super().__init__( items, factory= factory, total= total )
         self._date = date or ( lambda item: item )
 
+    @property
+    def dates( self ) -> list[ str ]:
+        """Return the resolved date values."""
+
+        return [ self._date( item ) for item in self._items ]
+
 
 class CursorCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
     """
