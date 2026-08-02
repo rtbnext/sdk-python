@@ -56,3 +56,8 @@ class DateableResource( Resource[ D ], Generic[ D, R ] ):
         """Creates a date collection."""
 
         return DateCollection( dates, factory= self._date )
+
+    async def get( self ) -> DateCollection[ R ]:
+        """Returns the indexed date collection."""
+
+        return await self._transform( lambda data: self._collect_dates( data[ "dates" ][ ::-1 ] ) )
