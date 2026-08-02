@@ -6,6 +6,7 @@ and the index listing all available lists.
 """
 
 from __future__ import annotations
+
 from rtbnext.endpoint.base import EndpointBase
 
 
