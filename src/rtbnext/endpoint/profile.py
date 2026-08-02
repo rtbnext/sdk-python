@@ -12,12 +12,9 @@ from typing import Generic
 
 from rtbnext.endpoint.base import EndpointBase
 from rtbnext.resource.base import Resource
-from rtbnext.resource.collectable import (
-    CollectableResource, CollectData, CollectItem, FindFn, I, SearchFn
-)
+from rtbnext.resource.collectable import CollectableResource, CollectItem, FindFn, I, SearchFn
 from rtbnext.schema.profile import (
-    ProfileData, ProfileHistory, ProfileIndex, ProfileIndexItem, ProfileMeta, SearchIndex,
-    SearchIndexItem
+    ProfileData, ProfileIndex, ProfileIndexItem, ProfileMeta, SearchIndex, SearchIndexItem
 )
 from rtbnext.utils import sanitize
 
@@ -97,7 +94,7 @@ class ProfileEndpoint( EndpointBase ):
 
         return self._resource( f"v2/profile/{ sanitize( uri ) }/profile.json" )
 
-    def history( self, uri: str ):
+    def history( self ):
         """Returns profile history time-series data for the given URI."""
         ...
 
