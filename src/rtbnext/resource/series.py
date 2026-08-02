@@ -6,6 +6,7 @@ Implements the resource wrapper for time-series endpoints.
 
 from __future__ import annotations
 
+from collections import defaultdict
 from datetime import date as date_type
 from statistics import mean, median
 from typing import Callable, Generic, Literal, TypedDict, TypeVar, cast
@@ -26,6 +27,7 @@ R = TypeVar( "R", bound= TimePoint )
 
 type AggregatePeriod = Literal[ "week", "month", "quarter", "year" ]
 type NumberCallback[ R ] = Callable[ [ R ], int | float ]
+type AggregatedTimeSeries = TimeSeriesCollection[ AggregatePoint ]
 
 AggregateValue = TypedDict( "AggregateValue", {
     "first": float,
@@ -180,3 +182,19 @@ class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
         """Return all values of a column."""
 
         return [ point[ key ] for point in self ]
+
+    def aggregate( self, period: AggregatePeriod | Callable[ [ R ], str ] ) -> AggregatedTimeSeries:
+        """Aggregate points by period."""
+
+        groups: dict[ str, list[ R ] ] = defaultdict( list )
+
+        for point in self:
+            groups[ (
+                period( point ) if callable( period )
+                else self._period( point[ "date" ], period )
+            ) ].append( point )
+
+        return TimeSeriesCollection(
+            [ self._aggregate( group, label ) for label, group in groups.items() ],
+            factory= lambda item: item, date= lambda item: item[ "date" ]
+        )
