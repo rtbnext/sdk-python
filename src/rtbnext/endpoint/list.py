@@ -25,8 +25,8 @@ type ListEntity = _ListEntity
 class _ListEntity:
     """Lazy entity for list index items."""
 
-    def __init__( self, list: ListEndpoint, item: ListIndexItem ) -> None:
-        self._list, self._item = list, item
+    def __init__( self, endpoint: ListEndpoint, item: ListIndexItem ) -> None:
+        self._endpoint, self._item = endpoint, item
 
     def __getattr__( self, name: str ) -> object:
         """Forward unknown attributes to the underlying profile item."""
@@ -46,7 +46,7 @@ class _ListEntity:
     def dates( self ) -> ListDateIndex:
         """Returns the lazily loaded list date index resource."""
 
-        return self._list.get( self.uri )
+        return self._endpoint.get( self.uri )
 
 
 class ListEndpoint( EndpointBase ):
