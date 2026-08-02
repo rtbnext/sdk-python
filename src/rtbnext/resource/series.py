@@ -33,6 +33,7 @@ AggregateValue = TypedDict( "AggregateValue", {
     "min": float,
     "max": float,
     "avg": float,
+    "median": float,
     "sum": float
 } )
 
@@ -123,6 +124,7 @@ class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
                 "min": min( values ),
                 "max": max( values ),
                 "avg": float( mean( values ) ),
+                "median": float( median( values ) ),
                 "sum": sum( values )
             }
 
