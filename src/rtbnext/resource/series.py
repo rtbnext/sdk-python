@@ -88,3 +88,13 @@ class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
                 result.setdefault( key, [] ).append( value )
 
         return result
+
+    def values( self, callback: NumberCallback ) -> list[ int | float ]:
+        """Return mapped numeric values."""
+
+        return [ callback( point ) for point in self ]
+
+    def column( self, key: str ) -> list[ object ]:
+        """Return all values of a column."""
+
+        return [ point[ key ] for point in self ]
