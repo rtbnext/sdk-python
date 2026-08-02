@@ -82,11 +82,11 @@ class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
             return f"{ year }-Q{ ( month - 1 ) // 3 + 1 }"
 
         if period == "month":
-            return f"{ year }-{ month:02d }"
+            return f"{ year }-{month:02d}"
 
         if period == "week":
-            current, first = date_type( year, month, day ), date_type( year, 1, 1 )
-            return f"{ year }-W{ ( ( current - first ).days // 7 + 1 ):02d }"
+            iso_year, iso_week, _ = date_type( year, month, day ).isocalendar()
+            return f"{ iso_year }-W{iso_week:02d}"
 
         raise ValueError( f"Invalid aggregate period: { period }" )
 

@@ -166,7 +166,7 @@ class DateCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
     def month( self, year: int, month: int ) -> Self:
         """Filters resources by month."""
 
-        prefix = f"{ year }-{ month:02d }-"
+        prefix = f"{ year }-{month:02d}-"
 
         return self._clone( [
             item for item in self._items
