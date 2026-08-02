@@ -247,3 +247,8 @@ class TimeSeriesResource( Resource[ D ], Generic[ D, R ] ):
             factory= lambda item: item,
             date= lambda point: point[ "date" ]
         )
+
+    async def series( self ) -> TimeSeriesCollection[ R ]:
+        """Returns the parsed time-series data as a typed collection."""
+
+        return await self._transform( self._collect_points )
