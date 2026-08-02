@@ -185,6 +185,24 @@ class DateCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
         target = ymd( date )
         return self._clone( [ item for item in self._items if self._date( item ) > target ] )
 
+    def since( self, date: str ) -> Self:
+        """Return resources from a date onward."""
+
+        target = ymd( date )
+        return self._clone( [ item for item in self._items if self._date( item ) >= target ] )
+
+    def until( self, date: str ) -> Self:
+        """Return resources up to a date."""
+
+        target = ymd( date )
+        return self._clone( [ item for item in self._items if self._date( item ) <= target ] )
+
+    def between( self, start: str, end: str ) -> Self:
+        """Return resources inside a date range."""
+
+        s, e = ymd( start ), ymd( end )
+        return self._clone( [ item for item in self._items if s <= self._date( item ) <= e ] )
+
 
 class CursorCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
     """
