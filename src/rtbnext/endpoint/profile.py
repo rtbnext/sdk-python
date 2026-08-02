@@ -8,15 +8,25 @@ and search index.
 from __future__ import annotations
 
 from functools import cached_property
-from typing import Generic
+from typing import Generic, TypedDict
 
 from rtbnext.endpoint.base import EndpointBase
 from rtbnext.resource.base import Resource
 from rtbnext.resource.collectable import CollectableResource, CollectItem, FindFn, I, SearchFn
+from rtbnext.resource.series import TimeSeriesResource
 from rtbnext.schema.profile import (
-    ProfileData, ProfileIndex, ProfileIndexItem, ProfileMeta, SearchIndex, SearchIndexItem
+    ProfileData, ProfileHistory, ProfileHistoryItem, ProfileIndex, ProfileIndexItem, ProfileMeta,
+    SearchIndex, SearchIndexItem
 )
 from rtbnext.utils import sanitize
+
+ProfileHistoryPoint = TypedDict( "ProfileHistoryPoint", {
+    "date": str,
+    "rank": int,
+    "networth": float,
+    "change": float,
+    "percent": float
+} )
 
 
 class ProfileEntity( Generic[ I ] ):
@@ -84,6 +94,12 @@ class ProfileEndpoint( EndpointBase ):
         """Returns a profile collection resource from a JSON endpoint."""
 
         return self._collectable( path, entity= self.entity, find= find, search= search )
+
+    def point( self, point: ProfileHistoryItem ) -> ProfileHistoryPoint:
+        """Converts a raw profile history row into a typed history point."""
+
+        date, rank, ntw, change, pct = point
+        return { "date": date, "rank": rank, "networth": ntw, "change": change, "percent": pct }
 
     def meta( self, uri: str ) -> Resource[ ProfileMeta ]:
         """Returns profile metadata for the given URI."""
