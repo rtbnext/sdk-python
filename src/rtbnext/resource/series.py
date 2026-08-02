@@ -70,3 +70,9 @@ class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
         """Return median value."""
 
         return float( median( self._numbers( callback ) ) )
+
+    @property
+    def labels( self ) -> list[ str ]:
+        """Return date labels."""
+
+        return [ point[ "date" ] for point in self ]
