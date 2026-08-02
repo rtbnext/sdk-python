@@ -6,7 +6,7 @@ Implement the resource wrapper for nested indexable endpoints.
 
 from __future__ import annotations
 
-from typing import Any, Callable, Generic, TypeVar
+from typing import Callable, Generic, TypeVar
 
 from rtbnext.core.loader import ResourceStateLoader
 from rtbnext.core.parser import ParserFn
@@ -26,7 +26,7 @@ class _IndexAccessor( Generic[ R ] ):
     def __init__( self, factory: IndexFn[ R ], keys: KeysFn, path: Path, value: object ) -> None:
         self._factory, self._keys, self._path, self._value = factory, keys, path, value
 
-    def __getattr__( self, key: str ) -> Any:
+    def __getitem__( self, key: str ) -> R | _IndexAccessor[ R ]:
         """Resolve a nested index key."""
 
         available = self._keys( self._value )
@@ -88,7 +88,7 @@ class IndexableResource( Resource[ D ], Generic[ D, R ] ):
 
         return _IndexAccessor( self._factory, self._keys, path, value )
 
-    async def get( self ) -> _IndexAccessor[ R ]:
+    async def get( self ) -> R:
         """Return the lazily generated index tree."""
 
         return await self._transform( self._traverse )
