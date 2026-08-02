@@ -95,9 +95,9 @@ class ProfileEndpoint( EndpointBase ):
 
         return self._resource( f"v2/profile/{ sanitize( uri ) }/profile.json" )
 
-    def history( self, uri: str ):
+    def history( self, _uri: str ):
         """Returns profile history time-series data for the given URI."""
-        del( uri )
+        ...
 
     def get( self, uri: str ) -> ProfileEntity[ CollectItem ]:
         """Returns the profile entity for a URI."""
