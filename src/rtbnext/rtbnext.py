@@ -14,6 +14,7 @@ from rtbnext.core.loader import CacheMode, CacheType, ResourceStateLoader
 from rtbnext.defaults import (
     DEFAULT_API_URL, DEFAULT_CACHE_MODE, DEFAULT_CACHE_TYPE, DEFAULT_TIMEOUT
 )
+from rtbnext.endpoint.filter import FilterEndpoint
 from rtbnext.endpoint.profile import ProfileEndpoint
 from rtbnext.endpoint.stats import StatsEndpoint
 from rtbnext.endpoint.system import SystemEndpoint
@@ -25,6 +26,7 @@ class Endpoints:
     """Endpoints available in the RTBNext SDK."""
 
     profile: ProfileEndpoint
+    filter: FilterEndpoint
     stats: StatsEndpoint
     system: SystemEndpoint
 
@@ -53,6 +55,7 @@ class RTBNext:
         args = ( self._loader, self._pool, endpoints )
 
         self.profile = endpoints.profile = ProfileEndpoint( *args )
+        self.filter = endpoints.filter = FilterEndpoint( *args )
         self.stats = endpoints.stats = StatsEndpoint( *args )
         self.system = endpoints.system = SystemEndpoint( *args )
 
