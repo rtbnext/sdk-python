@@ -54,7 +54,7 @@ class ResourceStateLoader:
             case _: raise ValueError( f"Invalid cache type: { cache }" )
 
     def _state( self, res: HttpResponse, prev: ResourceState | None = None ) -> ResourceState:
-        """Create a cached resource state from an HTTP response."""
+        """Creates a cached resource state from an HTTP response."""
 
         created = time()
 
@@ -85,7 +85,7 @@ class ResourceStateLoader:
         mode: RateLimitMode = DEFAULT_RATE_LIMIT_MODE,
         timeout: float | None = None
     ) -> ResourceState:
-        """Fetch a resource from the network."""
+        """Fetches a resource from the network."""
 
         headers = httpx.Headers( headers or {} )
 
@@ -103,7 +103,7 @@ class ResourceStateLoader:
         mode: RateLimitMode = DEFAULT_RATE_LIMIT_MODE,
         timeout: float | None = None
     ) -> ResourceState:
-        """Refresh a cached resource."""
+        """Refreshes a cached resource."""
 
         state = await self._fetch(
             path, await self._cache.get( path ),
@@ -114,12 +114,12 @@ class ResourceStateLoader:
         return state
 
     def _is_expired( self, state: ResourceState ) -> bool:
-        """Determine whether a cached resource has expired."""
+        """Determines whether a cached resource has expired."""
 
         return state.expires is not None and state.expires <= time()
 
     def valid( self, state: ResourceState | None ) -> bool:
-        """Determine whether a cached resource is valid."""
+        """Determines whether a cached resource is valid."""
 
         return ( state is not None and ( self._mode == "session" or (
             self._mode == "ttl" and not self._is_expired( state )
@@ -131,7 +131,7 @@ class ResourceStateLoader:
         mode: RateLimitMode = DEFAULT_RATE_LIMIT_MODE,
         timeout: float | None = None
     ) -> ResourceState:
-        """Load a resource using the configured cache policy."""
+        """Loads a resource using the configured cache policy."""
 
         if self._mode == "revalidate":
             return await self.refresh( path, headers= headers, mode= mode, timeout= timeout )
@@ -147,16 +147,16 @@ class ResourceStateLoader:
 
     @property
     def size( self ) -> int:
-        """Return the number of cached resource states."""
+        """Returns the number of cached resource states."""
 
         return self._cache.size
 
     async def delete( self, path: str ) -> None:
-        """Remove a resource from the cache."""
+        """Removes a resource from the cache."""
 
         await self._cache.delete( path )
 
     async def clear( self ) -> None:
-        """Remove all cached resource states."""
+        """Removes all cached resource states."""
 
         await self._cache.clear()

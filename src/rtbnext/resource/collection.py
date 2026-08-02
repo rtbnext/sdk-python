@@ -36,7 +36,7 @@ class CollectionBase( Generic[ T, R ] ):
         self._total = len( items ) if total is None else total
 
     def _clone( self, items: list[ T ] ) -> Self:
-        """Create a new collection instance with replaced items."""
+        """Creates a new collection instance with replaced items."""
 
         return self.__class__( items, factory= self._factory, total= self._total )
 
@@ -67,13 +67,13 @@ class CollectionBase( Generic[ T, R ] ):
 
     @property
     def total( self ) -> int:
-        """Return the total number of available items."""
+        """Returns the total number of available items."""
 
         return self._total
 
     @property
     def count( self ) -> int:
-        """Return the number of items currently contained."""
+        """Returns the number of items currently contained."""
 
         return len( self._items )
 
@@ -95,27 +95,27 @@ class CollectionBase( Generic[ T, R ] ):
         return [ self._factory( item ) for item in self._items ]
 
     def map( self, callback: Callable[ [ R, int ], U ] ) -> list[ U ]:
-        """Map resolved items."""
+        """Maps resolved items."""
 
         return [ callback( item, index ) for index, item in enumerate( self ) ]
 
     def reversed( self ) -> Self:
-        """Return a collection containing reversed items."""
+        """Returns a collection containing reversed items."""
 
         return self._clone( self._items[ ::-1 ] )
 
     def take( self, count: int ) -> Self:
-        """Return a collection containing the first items."""
+        """Returns a collection containing the first items."""
 
         return self._clone( self._items[ : count ] )
 
     def skip( self, count: int ) -> Self:
-        """Return a collection without the first items."""
+        """Returns a collection without the first items."""
 
         return self._clone( self._items[ count : ] )
 
     def slice( self, start: int | None = None, end: int | None = None ) -> Self:
-        """Return a collection containing a sliced range of items."""
+        """Returns a collection containing a sliced range of items."""
 
         return self._clone( self._items[ start : end ] )
 
@@ -139,12 +139,12 @@ class DateCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
 
     @property
     def dates( self ) -> list[ str ]:
-        """Return the resolved date values."""
+        """Returns the resolved date values."""
 
         return [ self._date( item ) for item in self._items ]
 
     def find( self, date: str ) -> R | None:
-        """Get the item by exact date."""
+        """Gets the item by exact date."""
 
         target = ymd( date )
 
@@ -154,7 +154,7 @@ class DateCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
         ), None )
 
     def year( self, year: int ) -> Self:
-        """Filter resources by year."""
+        """Filters resources by year."""
 
         prefix = f"{ year }-"
 
@@ -164,7 +164,7 @@ class DateCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
         ] )
 
     def month( self, year: int, month: int ) -> Self:
-        """Filter resources by month."""
+        """Filters resources by month."""
 
         prefix = f"{ year }-{ month:02d }-"
 
@@ -174,31 +174,31 @@ class DateCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
         ] )
 
     def before( self, date: str ) -> Self:
-        """Return resources before a date."""
+        """Returns resources before a date."""
 
         target = ymd( date )
         return self._clone( [ item for item in self._items if self._date( item ) < target ] )
 
     def after( self, date: str ) -> Self:
-        """Return resources after a date."""
+        """Returns resources after a date."""
 
         target = ymd( date )
         return self._clone( [ item for item in self._items if self._date( item ) > target ] )
 
     def since( self, date: str ) -> Self:
-        """Return resources from a date onward."""
+        """Returns resources from a date onward."""
 
         target = ymd( date )
         return self._clone( [ item for item in self._items if self._date( item ) >= target ] )
 
     def until( self, date: str ) -> Self:
-        """Return resources up to a date."""
+        """Returns resources up to a date."""
 
         target = ymd( date )
         return self._clone( [ item for item in self._items if self._date( item ) <= target ] )
 
     def between( self, start: str, end: str ) -> Self:
-        """Return resources inside a date range."""
+        """Returns resources inside a date range."""
 
         s, e = ymd( start ), ymd( end )
         return self._clone( [ item for item in self._items if s <= self._date( item ) <= e ] )
@@ -222,61 +222,61 @@ class CursorCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
 
     @property
     def position( self ) -> int:
-        """Return the current cursor position."""
+        """Returns the current cursor position."""
 
         return self._cursor
 
     @property
     def current( self ) -> R | None:
-        """Return the current resolved item."""
+        """Returns the current resolved item."""
 
         return self.at( self._cursor )
 
     @property
     def next( self ) -> R | None:
-        """Return the next resolved item."""
+        """Returns the next resolved item."""
 
         self._cursor += 1
         return self.at( self._cursor )
 
     @property
     def prev( self ) -> R | None:
-        """Return the previous resolved item."""
+        """Returns the previous resolved item."""
 
         self._cursor -= 1
         return self.at( self._cursor )
 
     @property
     def has_next( self ) -> bool:
-        """Return whether a next item exists."""
+        """Returns whether a next item exists."""
 
         return self._cursor + 1 < self.count
 
     @property
     def has_prev( self ) -> bool:
-        """Return whether a previous item exists."""
+        """Returns whether a previous item exists."""
 
         return self._cursor > 0
 
     def reset( self ) -> Self:
-        """Reset the cursor."""
+        """Resets the cursor."""
 
         self._cursor = -1
         return self
 
     def at( self, index: int ) -> R | None:
-        """Return the resolved item at the given index."""
+        """Returns the resolved item at the given index."""
 
         return self._factory( self._items[ index ] ) if 0 <= index < self.count else None
 
     def page( self, page: int, per_page: int = DEFAULT_PER_PAGE ) -> Self:
-        """Return a collection containing one page."""
+        """Returns a collection containing one page."""
 
         start = max( page - 1, 0 ) * per_page
         return self._clone( self._items[ start : start + per_page ] )
 
     def pages( self, per_page: int = DEFAULT_PER_PAGE ) -> list[ Self ]:
-        """Return all pages."""
+        """Returns all pages."""
 
         return [
             self._clone( self._items[ i : i + per_page ] )

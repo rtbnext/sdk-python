@@ -58,7 +58,7 @@ class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
     """
 
     def _numbers( self, callback: NumberCallback | None = None ) -> list[ float ]:
-        """Return numeric values from points."""
+        """Returns numeric values from points."""
 
         return (
             [ float( callback( point ) ) for point in self ]
@@ -70,7 +70,7 @@ class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
         )
 
     def _period( self, date: str, period: AggregatePeriod ) -> str:
-        """Create an aggregation key from a date."""
+        """Creates an aggregation key from a date."""
 
         year, month, day = map( int, date.split( "-" ) )
 
@@ -90,7 +90,7 @@ class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
         raise ValueError( f"Invalid aggregate period: { period }" )
 
     def _aggregate( self, points: list[ R ], label: str | None = None ) -> AggregatePoint:
-        """Aggregate a group of points."""
+        """Aggregates a group of points."""
 
         sorted_points = sorted( points, key= lambda point: point[ "date" ] )
 
@@ -247,7 +247,7 @@ class TimeSeriesResource( Resource[ D ], Generic[ D, R ] ):
         self._point = point
 
     def _collect_points( self, rows: D ) -> TimeSeriesCollection[ R ]:
-        """Create a time-series collection from raw rows."""
+        """Creates a time-series collection from raw rows."""
 
         return TimeSeriesCollection(
             [ self._point( row ) for row in reversed( rows ) ],

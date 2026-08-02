@@ -80,7 +80,7 @@ class HttpClient:
         await self.aclose()
 
     def _create_headers( self ) -> httpx.Headers:
-        """Create the default headers sent with every request."""
+        """Creates the default headers sent with every request."""
 
         client = self._client_info
         info = "; ".join( value for value in ( client.contact, client.email ) if value )
@@ -106,7 +106,7 @@ class HttpClient:
         mode: RateLimitMode = DEFAULT_RATE_LIMIT_MODE,
         timeout: float | None = None
     ) -> HttpResponse:
-        """Execute a single HTTP request."""
+        """Executes a single HTTP request."""
 
         await self._limiter.acquire( mode )
 
@@ -130,7 +130,7 @@ class HttpClient:
         mode: RateLimitMode = DEFAULT_RATE_LIMIT_MODE,
         timeout: float | None = None
     ) -> HttpResponse:
-        """Send a request relative to the configured base URL."""
+        """Sends a request relative to the configured base URL."""
 
         url = urljoin( self._base_url, path )
 
@@ -147,6 +147,6 @@ class HttpClient:
             self._pending.pop( url, None )
 
     async def aclose( self ) -> None:
-        """Close the underlying HTTP client and release network resources."""
+        """Closes the underlying HTTP client and release network resources."""
 
         await self._client.aclose()

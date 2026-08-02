@@ -27,23 +27,23 @@ class Cache( Protocol ):
 
     @property
     def size( self ) -> int:
-        """Return the number of cached resource states."""
+        """Returns the number of cached resource states."""
         ...
 
     async def get( self, key: str ) -> ResourceState | None:
-        """Retrieve a cached resource state."""
+        """Retrieves a cached resource state."""
         ...
 
     async def set( self, key: str, value: ResourceState ) -> None:
-        """Store a resource state."""
+        """Stores a resource state."""
         ...
 
     async def delete( self, key: str ) -> None:
-        """Remove a resource state from the cache."""
+        """Removes a resource state from the cache."""
         ...
 
     async def clear( self ) -> None:
-        """Remove all resource states from the cache."""
+        """Removes all resource states from the cache."""
         ...
 
 

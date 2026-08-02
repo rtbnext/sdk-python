@@ -47,21 +47,21 @@ class Resource( Generic[ D ] ):
         self._transformed: Any | Awaitable[ Any ] | None = None
 
     def _emit( self, *events: str ) -> None:
-        """Emit lifecycle events."""
+        """Emits lifecycle events."""
 
         for event in events:
             for handler in self._hooks.get( event, _EMPTY_HOOKS ):
                 handler( self )
 
     def _reset( self ) -> None:
-        """Reset parsed values after loading or refreshing."""
+        """Resets parsed values after loading or refreshing."""
 
         self._parsed = False
         self._value = None
         self._transformed = None
 
     def _parse( self ) -> D:
-        """Parse the loaded HTTP response."""
+        """Parses the loaded HTTP response."""
 
         if self._state is None:
             raise RuntimeError( "Resource has not been loaded." )
@@ -73,7 +73,7 @@ class Resource( Generic[ D ] ):
         return self._value
 
     async def _transform( self, fn: TransformFn[ D ] ) -> Any:
-        """Transform parsed resource data and cache the result."""
+        """Transforms parsed resource data and cache the result."""
 
         if self._transformed is None:
             async def execute () -> Any:
@@ -92,7 +92,7 @@ class Resource( Generic[ D ] ):
         return await self._transformed
 
     def _value_or_raise( self ) -> D:
-        """Return the parsed resource value or raise an error if unavailable."""
+        """Returns the parsed resource value or raise an error if unavailable."""
 
         if self._value is None:
             raise RuntimeError( "Resource value unavailable." )
@@ -100,20 +100,20 @@ class Resource( Generic[ D ] ):
         return self._value
 
     def on( self, event: str, handler: Callable[ [ Self ], None ] ) -> Self:
-        """Register an event handler."""
+        """Registers an event handler."""
 
         self._hooks.setdefault( event, set() ).add( handler )
         return self
 
     def off( self, event: str, handler: Callable[ [ Self ], None ] ) -> Self:
-        """Remove an event handler."""
+        """Removes an event handler."""
 
         self._hooks.get( event, set() ).discard( handler )
         return self
 
     @property
     def valid( self ) -> bool:
-        """Return whether the current resource state is still valid."""
+        """Returns whether the current resource state is still valid."""
 
         return not self._loaded or self._state is None or self._loader.valid( self._state )
 
@@ -123,7 +123,7 @@ class Resource( Generic[ D ] ):
         mode: RateLimitMode = DEFAULT_RATE_LIMIT_MODE,
         timeout: float | None = None
     ) -> None:
-        """Load the resource if it has not already been loaded."""
+        """Loads the resource if it has not already been loaded."""
 
         if self._loaded:
             return
@@ -152,7 +152,7 @@ class Resource( Generic[ D ] ):
         mode: RateLimitMode = DEFAULT_RATE_LIMIT_MODE,
         timeout: float | None = None
     ) -> None:
-        """Refresh the resource from the network."""
+        """Refreshes the resource from the network."""
 
         self._state = await self._loader.refresh(
             self._path, headers= headers, mode= mode, timeout= timeout
@@ -163,7 +163,7 @@ class Resource( Generic[ D ] ):
         self._emit( "refresh", "update" )
 
     async def data( self ) -> D:
-        """Return parsed resource data."""
+        """Returns parsed resource data."""
 
         await self.load()
         return self._parse() if not self._parsed else self._value_or_raise()
@@ -181,7 +181,7 @@ class ResourcePool( Generic[ R ] ):
         self._resources: dict[ str, R ] = {}
 
     def get( self, path: str, factory: Callable[ [], R ] ) -> R:
-        """Return an existing valid resource or create a new one."""
+        """Returns an existing valid resource or create a new one."""
 
         if ( res := self._resources.get( path ) ) and res.valid:
             return res
@@ -191,16 +191,16 @@ class ResourcePool( Generic[ R ] ):
 
     @property
     def size( self ) -> int:
-        """Return the number of pooled resources."""
+        """Returns the number of pooled resources."""
 
         return len( self._resources )
 
     def delete( self, path: str ) -> None:
-        """Delete a resource from the cache by path."""
+        """Deletes a resource from the cache by path."""
 
         self._resources.pop( path, None )
 
     def clear( self ) -> None:
-        """Remove all pooled resources."""
+        """Removes all pooled resources."""
 
         self._resources.clear()

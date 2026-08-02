@@ -54,14 +54,14 @@ class CollectCollection( CursorCollectionBase[ I, E ], Generic[ I, E ] ):
 
     @staticmethod
     def _default_find( items: list[ I ], uri_like: str ) -> I | None:
-        """Return the first item matching a URI-like string."""
+        """Returns the first item matching a URI-like string."""
 
         uri = sanitize( uri_like )
         return next( ( item for item in items if item[ "uri" ] == uri ), None )
 
     @staticmethod
     def _default_search( item: I, query: str, terms: list[ str ] ) -> bool:
-        """Return whether an item matches a search query."""
+        """Returns whether an item matches a search query."""
 
         name = item.get( "searchName" ) or sanitize( item.get( "name", "" ) )
         text = item.get( "text", "" )
@@ -72,7 +72,7 @@ class CollectCollection( CursorCollectionBase[ I, E ], Generic[ I, E ] ):
         )
 
     def _clone( self, items: list[ I ] ) -> Self:
-        """Create a new collection preserving configuration."""
+        """Creates a new collection preserving configuration."""
 
         return self.__class__(
             items, factory= self._factory, total= self._total,
@@ -80,19 +80,19 @@ class CollectCollection( CursorCollectionBase[ I, E ], Generic[ I, E ] ):
         )
 
     def get( self, uri: str ) -> E | None:
-        """Return an item by its exact URI."""
+        """Returns an item by its exact URI."""
 
         return next( (
             self._factory( item ) for item in self._items if item[ "uri" ] == uri
         ), None )
 
     def filter( self, predicate: Callable[ [ I ], bool ] ) -> Self:
-        """Return items matching a predicate."""
+        """Returns items matching a predicate."""
 
         return self._clone( [ item for item in self._items if predicate( item ) ] )
 
     def find( self, uri_like: str ) -> E | None:
-        """Return the first matching URI-like item."""
+        """Returns the first matching URI-like item."""
 
         if item := self._find( self._items, uri_like ):
             return self._factory( item )
@@ -101,7 +101,7 @@ class CollectCollection( CursorCollectionBase[ I, E ], Generic[ I, E ] ):
 
 
     def search( self, query: str ) -> Self:
-        """Return items matching a search query."""
+        """Returns items matching a search query."""
 
         query, terms = sanitize( query ), query.split()
 
@@ -111,19 +111,19 @@ class CollectCollection( CursorCollectionBase[ I, E ], Generic[ I, E ] ):
         ] )
 
     def intersect( self, other: Self ) -> Self:
-        """Return items also contained in another collection."""
+        """Returns items also contained in another collection."""
 
         uris = { item[ "uri" ] for item in other.items }
         return self._clone( [ item for item in self._items if item[ "uri" ] in uris ] )
 
     def exclude( self, other: Self ) -> Self:
-        """Return items not contained in another collection."""
+        """Returns items not contained in another collection."""
 
         uris = { item[ "uri" ] for item in other.items }
         return self._clone( [ item for item in self._items if item[ "uri" ] not in uris ] )
 
     def union( self, other: Self ) -> Self:
-        """Return the union of two collections."""
+        """Returns the union of two collections."""
 
         seen: set[ str ] = set()
         merged: list[ I ] = []
@@ -136,7 +136,7 @@ class CollectCollection( CursorCollectionBase[ I, E ], Generic[ I, E ] ):
         return self._clone( merged )
 
     def group_by( self, callback: Callable[ [ I ], K ] ) -> dict[ K, Self ]:
-        """Group items using a callback."""
+        """Groups items using a callback."""
 
         groups: defaultdict[ K, list[ I ] ] = defaultdict( list )
 
@@ -149,7 +149,7 @@ class CollectCollection( CursorCollectionBase[ I, E ], Generic[ I, E ] ):
         }
 
     def order_by( self, key: str, descending: bool = False ) -> Self:
-        """Return items ordered by a dictionary key."""
+        """Returns items ordered by a dictionary key."""
 
         return self._clone( sorted(
             self._items,
@@ -162,7 +162,7 @@ class CollectCollection( CursorCollectionBase[ I, E ], Generic[ I, E ] ):
         key: Callable[ [ I ], str | int | float | bool ],
         reverse: bool = False
     ) -> Self:
-        """Return items sorted using a custom key."""
+        """Returns items sorted using a custom key."""
 
         return self._clone( sorted( self._items, key= key, reverse= reverse ) )
 
@@ -189,13 +189,13 @@ class CollectableResource( Resource[ D ], Generic[ D, I, E ] ):
         self._search = search
 
     def _collect( self, items: list[ I ] ) -> CollectCollection[ I, E ]:
-        """Create a collection from collectable items."""
+        """Creates a collection from collectable items."""
 
         return CollectCollection(
             items, factory= self._entity, find= self._find, search= self._search
         )
 
     async def collection( self ) -> CollectCollection[ I, E ]:
-        """Return the collection."""
+        """Returns the collection."""
 
         return await self._transform( lambda data: self._collect( data[ "items" ] ) )

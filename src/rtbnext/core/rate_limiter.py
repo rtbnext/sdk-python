@@ -43,7 +43,7 @@ class RateLimiter:
         self._lock = asyncio.Lock()
 
     async def _spread_refill( self ) -> None:
-        """Wait until the next evenly distributed request is allowed."""
+        """Waits until the next evenly distributed request is allowed."""
 
         async with self._lock:
             now = monotonic()
@@ -56,7 +56,7 @@ class RateLimiter:
 
     async def burst( self ) -> None:
         """
-        Allow up to max_requests immediately.
+        Allows up to max_requests immediately.
         Further requests wait until the rolling window expires.
         """
 
@@ -76,11 +76,11 @@ class RateLimiter:
             await asyncio.sleep( wait )
 
     async def spread( self ) -> None:
-        """Distribute requests evenly across the configured time window."""
+        """Distributes requests evenly across the configured time window."""
 
         await self._spread_refill()
 
     async def acquire( self, mode: RateLimitMode = "burst" ) -> None:
-        """Acquire permission to perform a request."""
+        """Acquires permission to perform a request."""
 
         await getattr( self, mode )()

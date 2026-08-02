@@ -27,7 +27,7 @@ class _IndexAccessor( Generic[ R ] ):
         self._factory, self._keys, self._path, self._value = factory, keys, path, value
 
     def __getitem__( self, key: str ) -> R | _IndexAccessor[ R ]:
-        """Resolve a nested index key."""
+        """Resolves a nested index key."""
 
         available = self._keys( self._value )
 
@@ -45,7 +45,7 @@ class _IndexAccessor( Generic[ R ] ):
         return self._factory( path )
 
     def __dir__( self ) -> list[ str ]:
-        """Return available index keys."""
+        """Returns available index keys."""
 
         return sorted( [ *super().__dir__(), *( self._keys( self._value ) or [] ) ] )
 
@@ -73,7 +73,7 @@ class IndexableResource( Resource[ D ], Generic[ D, R ] ):
 
     @staticmethod
     def _default_keys( value: object ) -> list[ str ] | None:
-        """Extract keys from common index structures."""
+        """Extracts keys from common index structures."""
 
         if isinstance( value, dict ):
             return list( value.keys() )
@@ -84,11 +84,11 @@ class IndexableResource( Resource[ D ], Generic[ D, R ] ):
         return None
 
     def _traverse( self, value: object, path: Path = () ) -> _IndexAccessor[ R ]:
-        """Create the lazy accessor tree."""
+        """Creates the lazy accessor tree."""
 
         return _IndexAccessor( self._factory, self._keys, path, value )
 
     async def get( self ) -> R:
-        """Return the lazily generated index tree."""
+        """Returns the lazily generated index tree."""
 
         return await self._transform( self._traverse )
