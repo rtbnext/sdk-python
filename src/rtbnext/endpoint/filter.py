@@ -11,7 +11,8 @@ from rtbnext.endpoint.base import EndpointBase
 from rtbnext.endpoint.profile import ProfileEntity
 from rtbnext.resource.collectable import CollectableResource
 from rtbnext.schema.filter import Filter, FilterIndex, FilterItem
-from rtbnext.schema.generic import AgeGroup, Gender, Industry
+from rtbnext.schema.generic import AgeGroup, Gender, Industry, MaritalStatus
+from rtbnext.utils import sanitize
 
 type FilterCollection = CollectableResource[ Filter, FilterItem, ProfileEntity[ FilterItem ] ]
 
@@ -66,4 +67,9 @@ class FilterEndpoint( EndpointBase ):
     def gender( self, key: Gender ) -> FilterCollection:
         """Returns the gender filter collection."""
 
-        return self._filter( f"v2/filter/gender/{ key.lower() }.json" )
+        return self._filter( f"v2/filter/gender/{ sanitize( key ) }.json" )
+
+    def marital_status( self, key: MaritalStatus ) -> FilterCollection:
+        """Returns the filter collection by marital status."""
+
+        return self._filter( f"v2/filter/maritalStatus/{ sanitize( key ) }.json" )
