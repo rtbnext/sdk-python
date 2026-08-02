@@ -8,7 +8,6 @@ all API endpoints.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any
 
 from rtbnext.core.http_client import ClientIdentity, HttpClient
 from rtbnext.core.loader import CacheMode, CacheType, ResourceStateLoader
@@ -21,7 +20,7 @@ from rtbnext.endpoint.system import SystemEndpoint
 from rtbnext.resource.base import ResourcePool
 
 
-@dataclass( frozen= True, slots= True, kw_only= True )
+@dataclass( slots= True, kw_only= True )
 class Endpoints:
     """Endpoints available in the RTBNext SDK."""
 
