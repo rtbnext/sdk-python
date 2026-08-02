@@ -4,13 +4,16 @@ Endpoint
 Declares all available SDK endpoint types.
 """
 
-from typing import TypedDict
+from typing import TYPE_CHECKING, TypedDict
 
-from rtbnext.endpoint.profile import ProfileEntity
 from rtbnext.resource.collectable import CollectableResource
 from rtbnext.resource.indexable import IndexableResource
 from rtbnext.schema.filter import Filter, FilterItem
 from rtbnext.schema.generic import AgeGroup, Gender, Industry, MaritalStatus
+
+if TYPE_CHECKING:
+    from rtbnext.endpoint.profile import ProfileEntity
+
 
 # Filter endpoints
 
