@@ -17,7 +17,7 @@ from rtbnext.resource.base import Resource
 from rtbnext.resource.collection import DateCollectionBase
 
 TimePoint = TypedDict( "TimePoint", { "date": str } )
-type TimeSeriesRow = list[ str | int | float ]
+type TimeSeriesRow = tuple
 
 D = TypeVar( "D", bound= list[ TimeSeriesRow ] )
 R = TypeVar( "R", bound= TimePoint )
