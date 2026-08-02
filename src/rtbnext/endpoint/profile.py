@@ -101,7 +101,7 @@ class ProfileEndpoint( EndpointBase ):
     def get( self, uri: str ) -> ProfileEntity[ CollectItem ]:
         """Returns the profile entity for a URI."""
 
-        return self._entity( CollectItem( uri= uri ) )
+        return self._entity( CollectItem( uri= sanitize( uri ) ) )
 
     @property
     def index( self ) -> CollectableResource[
