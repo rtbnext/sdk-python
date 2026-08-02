@@ -70,19 +70,19 @@ class ProfileEndpoint( EndpointBase ):
     index, and search index.
     """
 
-    def _entity( self, item: I ) -> ProfileEntity[ I ]:
+    def entity( self, item: I ) -> ProfileEntity[ I ]:
         """Creates a profile entity with lazy-loaded related resources."""
 
         return ProfileEntity( self, item )
 
-    def _collect(
+    def collect(
         self, path: str, *,
         find: FindFn[ I ] | None = None,
         search: SearchFn[ I ] | None = None
     ) -> CollectableResource:
         """Returns a profile collection resource from a JSON endpoint."""
 
-        return self._collectable( path, entity= self._entity, find= find, search= search )
+        return self._collectable( path, entity= self.entity, find= find, search= search )
 
     def meta( self, uri: str ) -> Resource[ ProfileMeta ]:
         """Returns profile metadata for the given URI."""
@@ -101,7 +101,7 @@ class ProfileEndpoint( EndpointBase ):
     def get( self, uri: str ) -> ProfileEntity[ CollectItem ]:
         """Returns the profile entity for a URI."""
 
-        return self._entity( CollectItem( uri= sanitize( uri ) ) )
+        return self.entity( CollectItem( uri= sanitize( uri ) ) )
 
     @property
     def index( self ) -> CollectableResource[
@@ -109,7 +109,7 @@ class ProfileEndpoint( EndpointBase ):
     ]:
         """Returns the profile index collection."""
 
-        return self._collect( "v2/profile/index.json" )
+        return self.collect( "v2/profile/index.json" )
 
     @property
     def search_index( self ) -> CollectableResource[
@@ -117,4 +117,4 @@ class ProfileEndpoint( EndpointBase ):
     ]:
         """Returns the profile search index collection."""
 
-        return self._collect( "v2/profile/search.json" )
+        return self.collect( "v2/profile/search.json" )
