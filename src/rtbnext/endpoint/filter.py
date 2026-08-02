@@ -11,6 +11,7 @@ from rtbnext.endpoint.base import EndpointBase
 from rtbnext.endpoint.profile import ProfileEntity
 from rtbnext.resource.collectable import CollectableResource
 from rtbnext.schema.filter import Filter, FilterIndex, FilterItem
+from rtbnext.schema.generic import Industry
 
 type FilterCollection = CollectableResource[ Filter, FilterItem, ProfileEntity[ FilterItem ] ]
 
@@ -51,3 +52,8 @@ class FilterEndpoint( EndpointBase ):
         """Returns the self-made profiles filter collection."""
 
         return self._filter( "v2/filter/special/selfMade.json" )
+
+    def industry( self, industry: Industry ) -> FilterCollection:
+        """Returns the industry filter collection."""
+
+        return self._filter( f"v2/filter/industry/{ industry.lower() }.json" )
