@@ -162,6 +162,16 @@ class DateCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
             if self._date( item ).startswith( prefix )
         ] )
 
+    def month( self, year: int, month: int ) -> Self:
+        """Filter resources by month."""
+
+        prefix = f"{ year }-{ month:02d }-"
+
+        return self._clone( [
+            item for item in self._items
+            if self._date( item ).startswith( prefix )
+        ] )
+
 
 class CursorCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
     """
