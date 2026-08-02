@@ -76,3 +76,15 @@ class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
         """Return date labels."""
 
         return [ point[ "date" ] for point in self ]
+
+    @property
+    def columns( self ) -> dict[ str, list[ object ] ]:
+        """Return values grouped by column."""
+
+        result: dict[ str, list[ object ] ] = {}
+
+        for point in self:
+            for key, value in point.items():
+                result.setdefault( key, [] ).append( value )
+
+        return result
