@@ -58,7 +58,7 @@ class EndpointBase:
     def _indexable(
         self, path: str, *,
         index: IndexFn,
-        keys: KeysFn | None
+        keys: KeysFn | None = None
     ) -> IndexableResource:
         """Returns a indexable resource."""
 
