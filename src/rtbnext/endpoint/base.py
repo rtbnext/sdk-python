@@ -6,15 +6,15 @@ Implements the base endpoint class.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 from rtbnext.core.loader import ResourceStateLoader
-from rtbnext.core.parser import Parser, ParserMode, parser
+from rtbnext.core.parser import Parser, ParserFn, ParserMode, parser
 from rtbnext.resource.base import Resource, ResourcePool
 from rtbnext.resource.collectable import CollectableResource, EntityFn, FindFn, SearchFn
 from rtbnext.resource.dateable import DateableResource, DateFn
 from rtbnext.resource.indexable import IndexableResource, IndexFn, KeysFn
-from rtbnext.resource.series import PointFn, TimeSeriesResource
+from rtbnext.resource.series import PointFn, TimeSeriesResource, TimeSeriesRow
 
 if TYPE_CHECKING:
     from rtbnext.rtbnext import Endpoints
@@ -75,5 +75,6 @@ class EndpointBase:
         """Returns a time series resource."""
 
         return self._pool.get( path, lambda: TimeSeriesResource(
-            path, self._loader, Parser.csv, point= point
+            path, self._loader, cast( ParserFn[ list[ TimeSeriesRow ] ], Parser.csv ),
+            point= point
         ) )

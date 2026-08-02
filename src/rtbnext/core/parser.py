@@ -41,7 +41,7 @@ class Parser( Generic[ D ] ):
 
     @staticmethod
     def text( res: HttpResponse ) -> str:
-        """Convert an HTTP response body to UTF-8 text."""
+        """Converts an HTTP response body to UTF-8 text."""
 
         if not res.ok:
             raise RuntimeError( f"Request failed with status { res.status }." )
@@ -55,7 +55,7 @@ class Parser( Generic[ D ] ):
 
     @staticmethod
     def json( res: HttpResponse ) -> D:
-        """Parse an HTTP response body as JSON."""
+        """Parses an HTTP response body as JSON."""
 
         try:
             return json.loads( Parser.text( res ) )
@@ -64,7 +64,7 @@ class Parser( Generic[ D ] ):
 
     @staticmethod
     def csv( res: HttpResponse, delimiter: str = "," ) -> list[ list[ str | int | float ] ]:
-        """Parse an HTTP response body as CSV."""
+        """Parses an HTTP response body as CSV."""
 
         return [
             [ Parser._number( value ) for value in row ]
@@ -74,7 +74,7 @@ class Parser( Generic[ D ] ):
 
 def parser( mode: ParserMode ) -> ParserFn[ D ]:
     """
-    Return the parser function based on the given mode.
+    Returns the parser function based on the given mode.
     Raises if the parser for the given mode is not implemented.
     """
 

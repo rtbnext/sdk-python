@@ -41,7 +41,7 @@ class ProfileEntity( Generic[ I ] ):
         self._endpoint, self._item = endpoint, item
 
     def __getattr__( self, name: str ) -> object:
-        """Forward unknown attributes to the underlying profile item."""
+        """Forwards unknown attributes to the underlying profile item."""
 
         try:
             return self._item[ name ]
@@ -50,25 +50,25 @@ class ProfileEntity( Generic[ I ] ):
 
     @property
     def uri( self ) -> str:
-        """Return the profile URI."""
+        """Returns the profile URI."""
 
         return self._item[ "uri" ]
 
     @cached_property
     def meta( self ) -> Resource[ ProfileMeta ]:
-        """Return the lazily loaded profile metadata resource."""
+        """Returns the lazily loaded profile metadata resource."""
 
         return self._endpoint.meta( self.uri )
 
     @cached_property
     def data( self ) -> Resource[ ProfileData ]:
-        """Return the lazily loaded profile data resource."""
+        """Returns the lazily loaded profile data resource."""
 
         return self._endpoint.data( self.uri )
 
     @cached_property
     def history( self ) -> TimeSeriesResource[ ProfileHistory, ProfileHistoryPoint ]:
-        """Return the lazily loaded profile history resource."""
+        """Returns the lazily loaded profile history resource."""
 
         return self._endpoint.history( self.uri )
 
