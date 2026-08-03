@@ -14,7 +14,7 @@ async def main() -> None:
         print( "Female profiles:", female.count )
 
         for item in female.take( 10 ):
-            print( item["name"], item["uri"] )
+            print( item.raw["name"], item.raw["uri"] )
 
         # use filter index ---
 
@@ -23,7 +23,7 @@ async def main() -> None:
         print( "U.S. profiles:", us.count )
 
         for item in us.take( 10 ):
-            print( item["name"], item["uri"] )
+            print( item.raw["name"], item.raw["uri"] )
 
         # complex filter queries
         tech = await client.filter.industry( "technology" ).collection()
@@ -33,7 +33,7 @@ async def main() -> None:
         print( "Matching profiles:", profiles.count )
 
         for item in profiles:
-            print( item["name"], item["uri"] )
+            print( item.raw["name"], item.raw["uri"] )
 
 
 asyncio.run( main() )

@@ -18,7 +18,7 @@ async def main() -> None:
         print( "Total:", index.total )
 
         for item in index.search( "space" ).order_by( "networth", descending= True ).take( 5 ):
-            print( item["name"], item["uri"] )
+            print( item.raw["name"], item.raw["uri"] )
 
         # work with profile history
         history = await client.profile.get( "elon-musk" ).history.series()

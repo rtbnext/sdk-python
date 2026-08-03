@@ -21,7 +21,7 @@ async def main() -> None:
         print( "Scatter points:", scatter.count )
 
         for point in scatter.take( 10 ):
-            print( point["name"], point["networth"], point["age"] )
+            print( point.raw["name"], point.raw["networth"], point.raw["age"] )
 
         # access history time series
         history = await client.stats.history.series()

@@ -14,7 +14,7 @@ async def main() -> None:
         print( "Available lists:", lists.count )
 
         for list in lists:
-            print( list["name"], list["uri"] )
+            print( list.raw["name"], list.raw["uri"] )
 
         # access list snapshots
         if ( billionaires := lists.find( "billionaires" ) ) is not None:
@@ -24,7 +24,7 @@ async def main() -> None:
                 print( "Latest Snapshot:", snapshot.count )
 
                 for item in snapshot.take( 10 ):
-                    print( item["name"], item["rank"] )
+                    print( item.raw["name"], item.raw["rank"] )
 
 
 asyncio.run( main() )
