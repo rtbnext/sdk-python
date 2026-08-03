@@ -120,3 +120,9 @@ The cache interface requires the following operations:
 
 - Python 3.12+
 - httpx 0.28+
+
+## License
+
+**Copyright © 2026 RTBNext**  
+Created and maintained by [Paul Köhler](https://komed3.de) (komed3).  
+Licensed under the [MIT License](./LICENSE).
