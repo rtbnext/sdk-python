@@ -145,27 +145,27 @@ class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
 
         return self._items
 
-    def min( self, callback: NumberCallback | None = None ) -> float:
+    def min( self, callback: NumberCallback[ R ] | None = None ) -> float:
         """Returns the minimum value."""
 
         return min( self._numbers( callback ) )
 
-    def max( self, callback: NumberCallback | None = None ) -> float:
+    def max( self, callback: NumberCallback[ R ] | None = None ) -> float:
         """Returns the maximum value."""
 
         return max( self._numbers( callback ) )
 
-    def sum( self, callback: NumberCallback | None = None ) -> float:
+    def sum( self, callback: NumberCallback[ R ] | None = None ) -> float:
         """Returns the sum of values."""
 
         return sum( self._numbers( callback ) )
 
-    def avg( self, callback: NumberCallback | None = None ) -> float:
+    def avg( self, callback: NumberCallback[ R ] | None = None ) -> float:
         """Returns the average value."""
 
         return float( mean( self._numbers( callback ) ) )
 
-    def median( self, callback: NumberCallback | None = None ) -> float:
+    def median( self, callback: NumberCallback[ R ] | None = None ) -> float:
         """Returns the median value."""
 
         return float( median( self._numbers( callback ) ) )
