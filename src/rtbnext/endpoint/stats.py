@@ -98,3 +98,8 @@ class StatsEndpoint( EndpointBase ):
         """Returns time series for a specific industry."""
 
         return self._series( f"v2/stats/industry/{ sanitize( key ) }.csv", point= self._point )
+
+    def citizenship( self, key: str ) -> TimeSeriesResource[ History, HistoryPoint ]:
+        """Returns time series for a specific citizenship, indexed by ISO code."""
+
+        return self._series( f"v2/stats/citizenship/{ key.upper() }.csv", point= self._point )
