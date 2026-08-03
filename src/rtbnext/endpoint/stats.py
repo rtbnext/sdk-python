@@ -7,7 +7,7 @@ data, and grouped indices.
 
 from __future__ import annotations
 
-from typing import TypedDict
+from typing import TypedDict, cast
 
 from rtbnext.endpoint.base import EndpointBase
 from rtbnext.endpoint.profile import ProfileEntity
@@ -109,3 +109,16 @@ class StatsEndpoint( EndpointBase ):
         """Returns time series for a specific citizenship, indexed by ISO code."""
 
         return self._series( f"v2/stats/citizenship/{ key.upper() }.csv", point= self._point )
+
+    @property
+    def industry_index( self ):
+        """Returns the industry stats group index."""
+
+        return self._indexable( "v2/stats/industry/index.json",
+            index= lambda path: self.industry( cast( Industry, path[ -1 ] ) ),
+            keys= self._keys
+        )
+
+    @property
+    def citizenship_index( self ):
+        ...
