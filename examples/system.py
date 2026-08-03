@@ -5,7 +5,8 @@ from rtbnext import ClientIdentity, rtbnext
 async def main() -> None:
     async with rtbnext( client= ClientIdentity(
         name= "python-sdk-test",
-        version= "1.0.0"
+        version= "1.0.0",
+        contact="https://pypi.org/project/rtbnext"
     ) ) as client:
 
         # get current system status
