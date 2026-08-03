@@ -18,3 +18,28 @@ Install the package using pip:
 pip install rtbnext
 ```
 
+## First usage
+
+Every client application **must identify** itself when creating an SDK instance. This information is sent with API requests and helps to provide transparency about API consumers.
+
+```py
+import asyncio
+
+from rtbnext import ClientIdentity, rtbnext
+
+
+async def main() -> None:
+    async with rtbnext(
+        client= ClientIdentity(
+            name= "my-application",
+            version= "1.0.0",
+            contact= "https://example.com/contact"
+        )
+    ) as client:
+
+        stats = await client.stats.global_.data()
+        print( stats["count"] )
+
+
+asyncio.run( main() )
+```
