@@ -13,7 +13,7 @@ from typing import Generic, TypedDict
 from rtbnext.endpoint.base import EndpointBase
 from rtbnext.resource.base import Resource
 from rtbnext.resource.collectable import CollectableResource, CollectItem, FindFn, I, SearchFn
-from rtbnext.resource.series import TimeSeriesResource
+from rtbnext.resource.series import AggregateRange, AggregateValue, TimeSeriesResource
 from rtbnext.schema.profile import (
     ProfileData, ProfileHistory, ProfileHistoryItem, ProfileIndex, ProfileIndexItem, ProfileMeta,
     SearchIndex, SearchIndexItem
@@ -27,6 +27,20 @@ ProfileHistoryPoint = TypedDict( "ProfileHistoryPoint", {
     "change": float,
     "percent": float
 } )
+
+ProfileHistoryAggregatePoint = TypedDict( "ProfileHistoryAggregatePoint", {
+    "date": str,
+    "label": str,
+    "range": AggregateRange,
+    "rank": AggregateValue,
+    "networth": AggregateValue,
+    "change": AggregateValue,
+    "percent": AggregateValue
+} )
+
+type ProfileHistorySeries = TimeSeriesResource[
+    ProfileHistory, ProfileHistoryPoint, ProfileHistoryAggregatePoint
+]
 
 
 class ProfileEntity( Generic[ I ] ):
@@ -67,7 +81,7 @@ class ProfileEntity( Generic[ I ] ):
         return self._endpoint.data( self.uri )
 
     @cached_property
-    def history( self ) -> TimeSeriesResource[ ProfileHistory, ProfileHistoryPoint ]:
+    def history( self ) -> ProfileHistorySeries:
         """Returns the lazily loaded profile history resource."""
 
         return self._endpoint.history( self.uri )
@@ -111,7 +125,7 @@ class ProfileEndpoint( EndpointBase ):
 
         return self._resource( f"v2/profile/{ sanitize( uri ) }/profile.json" )
 
-    def history( self, uri: str ) -> TimeSeriesResource[ ProfileHistory, ProfileHistoryPoint ]:
+    def history( self, uri: str ) -> ProfileHistorySeries:
         """Returns profile history time-series data for the given URI."""
 
         return self._series( f"v2/profile/{ sanitize( uri ) }/history.csv", point= self._point )
