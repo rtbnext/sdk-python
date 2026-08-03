@@ -276,6 +276,12 @@ class CursorCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
         self._cursor = -1
         return self
 
+    def seek( self, index: int ) -> Self:
+        """Moves the cursor to a specific index."""
+
+        self._cursor = index
+        return self
+
     def at( self, index: int ) -> R | None:
         """Returns the resolved item at the given index."""
 
