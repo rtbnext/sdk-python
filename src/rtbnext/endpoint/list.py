@@ -28,12 +28,18 @@ class ListEntity:
         self._endpoint, self._item = endpoint, item
 
     def __getitem__( self, name: str ) -> object:
-        """Forwards unknown properties to the underlying profile item."""
+        """Forwards unknown properties to the underlying list item."""
 
         try:
             return self._item[ name ]
         except KeyError:
             raise AttributeError( name ) from None
+
+    @property
+    def raw( self ) -> ListIndexItem:
+        """Returns the raw list item passed to list entity."""
+
+        return self._item
 
     @property
     def uri( self ) -> str:
