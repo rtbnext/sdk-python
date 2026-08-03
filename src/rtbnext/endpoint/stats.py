@@ -27,7 +27,7 @@ HistoryPoint = TypedDict( "HistoryPoint", {
     "count": int,
     "total": float,
     "woman": int,
-    "quote": float,
+    "quota": float,
     "change": float,
     "percent": float
 } )
@@ -48,11 +48,11 @@ class StatsEndpoint( EndpointBase ):
     def _point( self, point: HistoryItem ) -> HistoryPoint:
         """Converts a raw history row into a typed history point."""
 
-        date, count, total, woman, quote, change, percent = point
+        date, count, total, woman, quota, change, percent = point
 
         return {
             "date": date, "count": count, "total": total, "woman": woman,
-            "quote": quote, "change": change, "percent": percent
+            "quota": quota, "change": change, "percent": percent
         }
 
     def _keys( self, value: object ) -> list[ str ] | None:
