@@ -32,5 +32,11 @@ async def main() -> None:
         for year in history.aggregate( "year" ):
             print( year["label"], year["count"]["last"], year["total"]["avg"] )
 
+        # navigate through time series points
+
+        page = history.page( 1 )
+        while ( item := page.next ) is not None:
+            print( item["date"], item["count"], item["total"] )
+
 
 asyncio.run( main() )
