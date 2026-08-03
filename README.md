@@ -93,3 +93,25 @@ history.seek( "2026-01-01" )
 while ( point := history.next ) is not None:
     print( point["date"], point["networth"] )
 ```
+
+## Cache behavior
+
+The SDK includes a configurable resource cache layer that follows HTTP cache semantics. Resources are cached according to the selected cache mode and server-provided cache headers.
+
+Supported cache modes:
+
+- `ttl` — uses the server-defined cache lifetime (`Cache-Control`)
+- `revalidate` — performs conditional requests using validators such as `ETag` and `Last-Modified`
+- `session` — keeps resources during the lifetime of the SDK instance
+
+The SDK does not bypass HTTP cache validation. Expired resources are refreshed according to the configured mode to prevent serving outdated data indefinitely.
+
+A custom cache implementation can be provided by implementing the `Cache` protocol. This allows applications to integrate their own storage solutions, such as databases, filesystem caches or distributed cache systems.
+
+The cache interface requires the following operations:
+
+- retrieve a cached resource state
+- store a resource state
+- delete a resource
+- clear the cache
+- report the current cache size
