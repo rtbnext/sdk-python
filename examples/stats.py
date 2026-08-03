@@ -26,7 +26,7 @@ async def main() -> None:
         # access history time series
         history = await client.stats.history.series()
         print( "History points:", history.count )
-        print( "Newest:", history.first )
+        print( "Newest:", history.latest )
         print( "Average profiles:", history.avg( lambda p : p["count"] ) )
 
         for year in history.aggregate( "year" ):

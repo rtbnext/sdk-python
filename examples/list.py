@@ -19,8 +19,8 @@ async def main() -> None:
         # access list snapshots
         if ( billionaires := lists.find( "billionaires" ) ) is not None:
             dates = await billionaires.dates.get()
-            if ( first := dates.year( 2026 ).first ) is not None:
-                snapshot = await first.collection()
+            if ( latest := dates.year( 2026 ).latest ) is not None:
+                snapshot = await latest.collection()
                 print( "Latest Snapshot:", snapshot.count )
 
                 for item in snapshot.take( 10 ):

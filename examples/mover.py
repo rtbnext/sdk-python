@@ -12,8 +12,8 @@ async def main() -> None:
         # get daily winner / loser
         mover = await client.mover.index.get()
 
-        if ( first := mover.first ) is not None:
-            snapshot = await first.data()
+        if ( latest := mover.latest ) is not None:
+            snapshot = await latest.data()
 
             print( "Mover snapshot:", snapshot["date"] )
             print( "Today net worth winners:", snapshot["today"]["networth"]["winner"] )

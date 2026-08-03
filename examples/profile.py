@@ -23,7 +23,7 @@ async def main() -> None:
         # work with profile history
         history = await client.profile.get( "elon-musk" ).history.series()
         print( "Points:", history.count )
-        print( "Latest:", history.first )
+        print( "Latest:", history.latest )
         print( "Average:", history.avg( lambda p: p["networth"] ) )
 
 
