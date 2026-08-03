@@ -143,6 +143,18 @@ class DateCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
 
         return [ self._date( item ) for item in self._items ]
 
+    @property
+    def latest( self ) -> R | None:
+        """Returns the latest dated item."""
+
+        return self.first
+
+    @property
+    def oldest( self ) -> R | None:
+        """Returns the oldest dated item."""
+
+        return self.last
+
     def find( self, date: str ) -> R | None:
         """Gets the item by exact date."""
 
