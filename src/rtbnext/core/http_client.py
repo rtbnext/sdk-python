@@ -10,6 +10,7 @@ from __future__ import annotations
 import asyncio
 from dataclasses import dataclass
 from time import perf_counter
+from typing import Self
 from urllib.parse import urljoin
 
 import httpx
@@ -73,7 +74,7 @@ class HttpClient:
         self._client = httpx.AsyncClient( headers= self._create_headers(), follow_redirects= True )
         self._pending: dict[ str, asyncio.Task[ HttpResponse ] ] = {}
 
-    async def __aenter__( self ) -> HttpClient:
+    async def __aenter__( self ) -> Self:
         return self
 
     async def __aexit__( self, *_ ) -> None:

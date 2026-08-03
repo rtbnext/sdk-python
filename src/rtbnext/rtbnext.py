@@ -8,6 +8,7 @@ all API endpoints.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Self
 
 from rtbnext.core.http_client import ClientIdentity, HttpClient
 from rtbnext.core.loader import CacheMode, CacheType, ResourceStateLoader
@@ -66,6 +67,17 @@ class RTBNext:
         self.system = endpoints.system = SystemEndpoint( *args )
 
         self.endpoints = endpoints
+
+    async def __aenter__( self ) -> Self:
+        return self
+
+    async def __aexit__( self, *_ ) -> None:
+        await self.close()
+
+    async def close( self ) -> None:
+        """Closes the underlying HTTP client and release network resources."""
+
+        await self._loader.aclose()
 
 
 def rtbnext(

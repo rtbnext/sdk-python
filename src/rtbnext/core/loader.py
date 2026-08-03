@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from time import time
-from typing import Literal
+from typing import Literal, Self
 
 import httpx
 
@@ -52,6 +52,12 @@ class ResourceStateLoader:
             case False: self._cache = EmptyCache()
             case _ if isinstance( cache, Cache ): self._cache = cache
             case _: raise ValueError( f"Invalid cache type: { cache }" )
+
+    async def __aenter__( self ) -> Self:
+        return self
+
+    async def __aexit__( self, *_ ) -> None:
+        await self.aclose()
 
     def _state( self, res: HttpResponse, prev: ResourceState | None = None ) -> ResourceState:
         """Creates a cached resource state from an HTTP response."""
@@ -160,3 +166,8 @@ class ResourceStateLoader:
         """Removes all cached resource states."""
 
         await self._cache.clear()
+
+    async def aclose( self ) -> None:
+        """Closes the underlying HTTP client and release network resources."""
+
+        await self._client.aclose()
