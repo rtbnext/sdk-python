@@ -112,7 +112,7 @@ class StatsEndpoint( EndpointBase ):
 
     @property
     def industry_index( self ):
-        """Returns the industry stats group index."""
+        """Returns the industry stats index."""
 
         return self._indexable( "v2/stats/industry/index.json",
             index= lambda path: self.industry( cast( Industry, path[ -1 ] ) ),
@@ -121,4 +121,9 @@ class StatsEndpoint( EndpointBase ):
 
     @property
     def citizenship_index( self ):
-        ...
+        """Returns the citizenship stats index."""
+
+        return self._indexable( "v2/stats/citizenship/index.json",
+            index= lambda path: self.citizenship( path[ -1 ] ),
+            keys= self._keys
+        )
