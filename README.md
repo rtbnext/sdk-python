@@ -43,3 +43,10 @@ async def main() -> None:
 
 asyncio.run( main() )
 ```
+
+The client identity consists of:
+
+- `name` — application or project name
+- `version` — application version
+- `contact` — optional contact URL
+- `email` — optional contact email address
