@@ -90,7 +90,7 @@ class HttpClient:
             "User-Agent": (
                 f"{ client.name }/{ client.version }"
                 f"{ f' ({ info })' if info else '' }"
-                f" @rtbnext/sdk/{ __version__ }"
+                f" python-sdk/{ __version__ }"
             ),
             "X-Client-Name": client.name,
             "X-Client-Version": client.version
