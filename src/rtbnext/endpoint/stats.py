@@ -50,6 +50,12 @@ class StatsEndpoint( EndpointBase ):
             "quote": quote, "change": change, "percent": percent
         }
 
+    def _keys( self, value: object ) -> list[ str ] | None:
+        """Returns the keys of value['items'], otherwise none."""
+
+        if isinstance( value, dict ) and isinstance( items := value.get( "items" ), dict ):
+            return list( items.keys() )
+
     @property
     def db( self ) -> Resource[ DBStats ]:
         """Returns the database statistics resource."""
