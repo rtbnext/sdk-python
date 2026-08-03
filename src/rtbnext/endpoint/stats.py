@@ -7,12 +7,13 @@ data, and grouped indices.
 
 from __future__ import annotations
 
-from typing import TypedDict, cast
+from typing import Literal, TypedDict
 
 from rtbnext.endpoint.base import EndpointBase
 from rtbnext.endpoint.profile import ProfileEntity
 from rtbnext.resource.base import Resource
 from rtbnext.resource.collectable import CollectableResource
+from rtbnext.resource.indexable import IndexableResource
 from rtbnext.resource.series import TimeSeriesResource
 from rtbnext.schema.generic import Industry
 from rtbnext.schema.stats import (
@@ -55,6 +56,14 @@ class StatsEndpoint( EndpointBase ):
 
         if isinstance( value, dict ) and isinstance( items := value.get( "items" ), dict ):
             return list( items.keys() )
+
+    def _group( self, group: Literal[ "industry", "citizenship" ] ) -> IndexableResource:
+        """Builds an industry or citizenship index."""
+
+        return self._indexable( f"v2/stats/{ group }/index.json",
+            index= lambda path: getattr( self, group )( path[ -1 ] ),
+            keys= self._keys
+        )
 
     @property
     def db( self ) -> Resource[ DBStats ]:
@@ -114,16 +123,10 @@ class StatsEndpoint( EndpointBase ):
     def industry_index( self ):
         """Returns the industry stats index."""
 
-        return self._indexable( "v2/stats/industry/index.json",
-            index= lambda path: self.industry( cast( Industry, path[ -1 ] ) ),
-            keys= self._keys
-        )
+        return self._group( "industry" )
 
     @property
     def citizenship_index( self ):
         """Returns the citizenship stats index."""
 
-        return self._indexable( "v2/stats/citizenship/index.json",
-            index= lambda path: self.citizenship( path[ -1 ] ),
-            keys= self._keys
-        )
+        return self._group( "citizenship" )
