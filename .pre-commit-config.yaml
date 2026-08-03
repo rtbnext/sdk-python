@@ -1,0 +1,9 @@
+repos:
+  # Run isort to sort imports
+  - repo: https://github.com/PyCQA/isort
+    rev: 8.0.1
+    hooks:
+      - id: isort
+        name: isort (sort imports)
+        args: [ "." ]
+        pass_filenames: false
