@@ -94,7 +94,7 @@ class StatsEndpoint( EndpointBase ):
 
         return self._resource( "v2/stats/top10.json" )
 
-    def industry( self, key: Industry ):
+    def industry( self, key: Industry ) -> TimeSeriesResource[ History, HistoryPoint ]:
         """Returns time series for a specific industry."""
 
         return self._series( f"v2/stats/industry/{ sanitize( key ) }.csv", point= self._point )
