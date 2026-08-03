@@ -63,6 +63,12 @@ class ProfileEntity( Generic[ I ] ):
             raise AttributeError( name ) from None
 
     @property
+    def raw( self ) -> I:
+        """Returns the raw item passed to profile entity."""
+
+        return self._item
+
+    @property
     def uri( self ) -> str:
         """Returns the profile URI."""
 
