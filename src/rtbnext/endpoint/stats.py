@@ -56,10 +56,16 @@ class StatsEndpoint( EndpointBase ):
         }
 
     def _keys( self, value: object ) -> list[ str ] | None:
-        """Returns the keys of value['items'], otherwise none."""
+        """Returns available index keys."""
 
-        if isinstance( value, dict ) and isinstance( items := value.get( "items" ), dict ):
-            return list( items.keys() )
+        if not isinstance( value, dict ):
+            return None
+
+        if isinstance( items := value.get( "items" ), dict ):
+            value.clear()
+            value.update( items )
+
+        return [] if "date" in value else list( value.keys() )
 
     def _group( self, group: Literal[ "industry", "citizenship" ] ) -> IndexableResource:
         """Builds an industry or citizenship index."""
