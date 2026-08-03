@@ -120,7 +120,93 @@ class CollectionBase( Generic[ T, R ] ):
         return self._clone( self._items[ start : end ] )
 
 
-class DateCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
+class CursorCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
+    """
+    Provides cursor-related immutable collection operations.
+
+    This class extends the base collection adding methods to handle cursor
+    operations for items.
+    """
+
+    def __init__(
+        self, items: list[ T ], *,
+        factory: ItemFactory[ T, R ] = lambda item: cast( R, item ),
+        total: int | None = None
+    ) -> None:
+        super().__init__( items, factory= factory, total= total )
+        self._cursor: int = -1
+
+    @property
+    def position( self ) -> int:
+        """Returns the current cursor position."""
+
+        return self._cursor
+
+    @property
+    def current( self ) -> R | None:
+        """Returns the current resolved item."""
+
+        return self.at( self._cursor )
+
+    @property
+    def next( self ) -> R | None:
+        """Returns the next resolved item."""
+
+        self._cursor += 1
+        return self.at( self._cursor )
+
+    @property
+    def prev( self ) -> R | None:
+        """Returns the previous resolved item."""
+
+        self._cursor -= 1
+        return self.at( self._cursor )
+
+    @property
+    def has_next( self ) -> bool:
+        """Returns whether a next item exists."""
+
+        return self._cursor + 1 < self.count
+
+    @property
+    def has_prev( self ) -> bool:
+        """Returns whether a previous item exists."""
+
+        return self._cursor > 0
+
+    def reset( self ) -> Self:
+        """Resets the cursor."""
+
+        self._cursor = -1
+        return self
+
+    def seek( self, pos: int ) -> Self:
+        """Moves the cursor to a specific index."""
+
+        self._cursor = pos
+        return self
+
+    def at( self, index: int ) -> R | None:
+        """Returns the resolved item at the given index."""
+
+        return self._factory( self._items[ index ] ) if 0 <= index < self.count else None
+
+    def page( self, page: int, per_page: int = DEFAULT_PER_PAGE ) -> Self:
+        """Returns a collection containing one page."""
+
+        start = max( page - 1, 0 ) * per_page
+        return self._clone( self._items[ start : start + per_page ] )
+
+    def pages( self, per_page: int = DEFAULT_PER_PAGE ) -> list[ Self ]:
+        """Returns all pages."""
+
+        return [
+            self._clone( self._items[ i : i + per_page ] )
+            for i in range( 0, self.count, per_page )
+        ]
+
+
+class DateCollectionBase( CursorCollectionBase[ T, R ], Generic[ T, R ] ):
     """
     Provides date-related immutable collection operations.
 
@@ -214,89 +300,3 @@ class DateCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
 
         s, e = ymd( start ), ymd( end )
         return self._clone( [ item for item in self._items if s <= self._date( item ) <= e ] )
-
-
-class CursorCollectionBase( CollectionBase[ T, R ], Generic[ T, R ] ):
-    """
-    Provides cursor-related immutable collection operations.
-
-    This class extends the base collection adding methods to handle cursor
-    operations for items.
-    """
-
-    def __init__(
-        self, items: list[ T ], *,
-        factory: ItemFactory[ T, R ] = lambda item: cast( R, item ),
-        total: int | None = None
-    ) -> None:
-        super().__init__( items, factory= factory, total= total )
-        self._cursor: int = -1
-
-    @property
-    def position( self ) -> int:
-        """Returns the current cursor position."""
-
-        return self._cursor
-
-    @property
-    def current( self ) -> R | None:
-        """Returns the current resolved item."""
-
-        return self.at( self._cursor )
-
-    @property
-    def next( self ) -> R | None:
-        """Returns the next resolved item."""
-
-        self._cursor += 1
-        return self.at( self._cursor )
-
-    @property
-    def prev( self ) -> R | None:
-        """Returns the previous resolved item."""
-
-        self._cursor -= 1
-        return self.at( self._cursor )
-
-    @property
-    def has_next( self ) -> bool:
-        """Returns whether a next item exists."""
-
-        return self._cursor + 1 < self.count
-
-    @property
-    def has_prev( self ) -> bool:
-        """Returns whether a previous item exists."""
-
-        return self._cursor > 0
-
-    def reset( self ) -> Self:
-        """Resets the cursor."""
-
-        self._cursor = -1
-        return self
-
-    def seek( self, index: int ) -> Self:
-        """Moves the cursor to a specific index."""
-
-        self._cursor = index
-        return self
-
-    def at( self, index: int ) -> R | None:
-        """Returns the resolved item at the given index."""
-
-        return self._factory( self._items[ index ] ) if 0 <= index < self.count else None
-
-    def page( self, page: int, per_page: int = DEFAULT_PER_PAGE ) -> Self:
-        """Returns a collection containing one page."""
-
-        start = max( page - 1, 0 ) * per_page
-        return self._clone( self._items[ start : start + per_page ] )
-
-    def pages( self, per_page: int = DEFAULT_PER_PAGE ) -> list[ Self ]:
-        """Returns all pages."""
-
-        return [
-            self._clone( self._items[ i : i + per_page ] )
-            for i in range( 0, self.count, per_page )
-        ]
