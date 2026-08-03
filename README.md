@@ -115,3 +115,8 @@ The cache interface requires the following operations:
 - delete a resource
 - clear the cache
 - report the current cache size
+
+## Requirements
+
+- Python 3.12+
+- httpx 0.28+
