@@ -1,5 +1,9 @@
 # rtbnext
 
+[![Static Badge](https://img.shields.io/badge/sdk-rtbnext?style=for-the-badge&label=rtbnext&color=%23d3ff1a)](https://rtbnext.de)
+[![PyPI License](https://img.shields.io/pypi/l/rtbnext?style=for-the-badge)](https://github.com/rtbnext/sdk-python/blob/master/LICENSE)
+[![PyPI Version](https://img.shields.io/pypi/v/rtbnext?style=for-the-badge)](https://pypi.org/project/rtbnext)
+
 **Official Python SDK for the RTBNext API.**
 
 The RTBNext SDK provides a typed, asynchronous interface for accessing billionaire profiles, lists, filters, statistics, historical data and system information from the [RTBNext API](https://api.rtbnext.de).
