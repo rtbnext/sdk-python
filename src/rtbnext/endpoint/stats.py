@@ -14,7 +14,7 @@ from rtbnext.endpoint.profile import ProfileEntity
 from rtbnext.resource.base import Resource
 from rtbnext.resource.collectable import CollectableResource
 from rtbnext.schema.stats import (
-    DBStats, GlobalStats, ProfileStats, Scatter, ScatterItem, Top10, WealthStats
+    DBStats, GlobalStats, ProfileStats, Scatter, ScatterItem, Top10, WealthStats, HistoryItem, History
 )
 
 HistoryPoint = TypedDict( "HistoryPoint", {
@@ -22,7 +22,7 @@ HistoryPoint = TypedDict( "HistoryPoint", {
     "count": int,
     "total": float,
     "woman": int,
-    "quota": float,
+    "quote": float,
     "change": float,
     "percent": float
 } )
@@ -35,6 +35,16 @@ class StatsEndpoint( EndpointBase ):
     Provides access to stats resources, scatter collections,
     historic data, and grouped indices.
     """
+
+    def _point( self, point: HistoryItem ) -> HistoryPoint:
+        """Converts a raw history row into a typed history point."""
+        
+        date, count, total, woman, quote, change, percent = point
+
+        return {
+            "date": date, "count": count, "total": total, "woman": woman,
+            "quote": quote, "change": change, "percent": percent
+        }
 
     @property
     def db( self ) -> Resource[ DBStats ]:
