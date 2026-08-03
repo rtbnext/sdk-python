@@ -14,10 +14,12 @@ from rtbnext.endpoint.profile import ProfileEntity
 from rtbnext.resource.base import Resource
 from rtbnext.resource.collectable import CollectableResource
 from rtbnext.resource.series import TimeSeriesResource
+from rtbnext.schema.generic import Industry
 from rtbnext.schema.stats import (
     DBStats, GlobalStats, History, HistoryItem, ProfileStats, Scatter, ScatterItem, Top10,
     WealthStats
 )
+from rtbnext.utils import sanitize
 
 HistoryPoint = TypedDict( "HistoryPoint", {
     "date": str,
@@ -91,3 +93,8 @@ class StatsEndpoint( EndpointBase ):
         """Returns the top 10 billionaires list resource."""
 
         return self._resource( "v2/stats/top10.json" )
+
+    def industry( self, key: Industry ):
+        """Returns time series for a specific industry."""
+
+        return self._series( f"v2/stats/industry/{ sanitize( key ) }.csv", point= self._point )
