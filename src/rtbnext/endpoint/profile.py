@@ -55,7 +55,7 @@ class ProfileEntity( Generic[ I ] ):
         self._endpoint, self._item = endpoint, item
 
     def __getitem__( self, name: str ) -> object:
-        """Forwards unknown attributes to the underlying profile item."""
+        """Forwards unknown properties to the underlying profile item."""
 
         try:
             return self._item[ name ]
