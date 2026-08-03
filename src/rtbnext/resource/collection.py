@@ -241,6 +241,17 @@ class DateCollectionBase( CursorCollectionBase[ T, R ], Generic[ T, R ] ):
 
         return self.last
 
+    def seek( self, pos: str ) -> Self:
+        """Moves the cursor to a specific date."""
+
+        target = ymd( pos )
+        self._cursor = next( (
+            index for index, item in enumerate( self._items )
+            if self._date( item ) == target
+        ), -1 )
+
+        return self
+
     def find( self, date: str ) -> R | None:
         """Gets the item by exact date."""
 
