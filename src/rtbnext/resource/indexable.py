@@ -36,11 +36,8 @@ class _IndexAccessor( Generic[ R ] ):
 
         path = ( *self._path, key )
 
-        if isinstance( self._value, dict ):
-            child = self._value[ key ]
-
-            if isinstance( child, ( dict, list ) ):
-                return _IndexAccessor( self._factory, self._keys, path, child )
+        if isinstance( self._value, dict ) and self._keys( child := self._value[ key ] ):
+            return _IndexAccessor( self._factory, self._keys, path, child )
 
         return self._factory( path )
 
