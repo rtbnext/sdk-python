@@ -50,3 +50,46 @@ The client identity consists of:
 - `version` — application version
 - `contact` — optional contact URL
 - `email` — optional contact email address
+
+## Core concepts
+
+### Lazy resources
+
+Resources are not downloaded when they are created. Data is loaded only when it is requested.
+
+```py
+profile = client.profile.get( "bill-gates" )
+
+# No request has been made yet.
+
+data = await profile.meta.data()
+```
+
+### Collections
+
+Collection resources provide filtering, searching, sorting and paging helpers.
+
+```py
+profiles = await client.profile.index.collection()
+
+for profile in profiles.search( "bill" ).order_by( "networth", descending= True ).take( 5 ):
+    print( item.raw["name"], item.raw["uri"] )
+```
+
+### Time series
+
+Historical data can be accessed through typed time-series resources.
+
+```py
+history = await client.profile.get( "bill-gates" ).history.series()
+print( history.latest )
+```
+
+Time series collections support date-based navigation and cursor operations:
+
+```py
+history.seek( "2026-01-01" )
+
+while ( point := history.next ) is not None:
+    print( point["date"], point["networth"] )
+```
