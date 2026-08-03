@@ -48,6 +48,9 @@ Repository = "https://github.com/rtbnext/sdk-python"
 
 [project.optional-dependencies]
 dev = [
+    "build >= 1.5",
+    "hatchling >= 1.27",
+    "twine >= 7.0",
     "pylint >= 4.0",
     "isort >= 8.0",
     "pre-commit >= 4.6"
@@ -64,6 +67,9 @@ include = [
     "LICENSE",
     "README.md"
 ]
+
+[tool.hatch.build.targets.wheel.force-include]
+"src/rtbnext/py.typed" = "rtbnext/py.typed"
 
 [tool.pylint]
 ignore = [
