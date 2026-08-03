@@ -13,8 +13,10 @@ from rtbnext.endpoint.base import EndpointBase
 from rtbnext.endpoint.profile import ProfileEntity
 from rtbnext.resource.base import Resource
 from rtbnext.resource.collectable import CollectableResource
+from rtbnext.resource.series import TimeSeriesResource
 from rtbnext.schema.stats import (
-    DBStats, GlobalStats, ProfileStats, Scatter, ScatterItem, Top10, WealthStats, HistoryItem, History
+    DBStats, GlobalStats, History, HistoryItem, ProfileStats, Scatter, ScatterItem, Top10,
+    WealthStats
 )
 
 HistoryPoint = TypedDict( "HistoryPoint", {
@@ -38,7 +40,7 @@ class StatsEndpoint( EndpointBase ):
 
     def _point( self, point: HistoryItem ) -> HistoryPoint:
         """Converts a raw history row into a typed history point."""
-        
+
         date, count, total, woman, quote, change, percent = point
 
         return {
@@ -77,6 +79,12 @@ class StatsEndpoint( EndpointBase ):
         """Returns the wealth statistics resource."""
 
         return self._resource( "v2/stats/wealth.json" )
+
+    @property
+    def history( self ) -> TimeSeriesResource[ History, HistoryPoint ]:
+        """Returns the historical stats time series resource."""
+
+        return self._series( "v2/stats/history.csv", point= self._point )
 
     @property
     def top10( self ) -> Resource[ Top10 ]:
