@@ -14,7 +14,7 @@ from rtbnext.endpoint.profile import ProfileEntity
 from rtbnext.resource.base import Resource
 from rtbnext.resource.collectable import CollectableResource
 from rtbnext.resource.indexable import IndexableResource
-from rtbnext.resource.series import TimeSeriesResource
+from rtbnext.resource.series import AggregateRange, AggregateValue, TimeSeriesResource
 from rtbnext.schema.generic import Industry
 from rtbnext.schema.stats import (
     CitizenshipStatsIndex, DBStats, GlobalStats, History, HistoryItem, IndustryStatsIndex,
@@ -32,7 +32,19 @@ HistoryPoint = TypedDict( "HistoryPoint", {
     "percent": float
 } )
 
-type HistorySeries = TimeSeriesResource[ History, HistoryPoint ]
+HistoryAggregatePoint = TypedDict( "HistoryAggregatePoint", {
+    "date": str,
+    "label": str,
+    "range": AggregateRange,
+    "count": AggregateValue,
+    "total": AggregateValue,
+    "woman": AggregateValue,
+    "quota": AggregateValue,
+    "change": AggregateValue,
+    "percent": AggregateValue
+} )
+
+type HistorySeries = TimeSeriesResource[ History, HistoryPoint, HistoryAggregatePoint ]
 type CitizenshipIndexTree = dict[ str, HistorySeries ]
 type IndustryIndexTree = dict[ Industry, HistorySeries ]
 
@@ -108,7 +120,7 @@ class StatsEndpoint( EndpointBase ):
         return self._resource( "v2/stats/wealth.json" )
 
     @property
-    def history( self ) -> TimeSeriesResource[ History, HistoryPoint ]:
+    def history( self ) -> HistorySeries:
         """Returns the historical stats time series resource."""
 
         return self._series( "v2/stats/history.csv", point= self._point )
@@ -119,12 +131,12 @@ class StatsEndpoint( EndpointBase ):
 
         return self._resource( "v2/stats/top10.json" )
 
-    def industry( self, key: Industry ) -> TimeSeriesResource[ History, HistoryPoint ]:
+    def industry( self, key: Industry ) -> HistorySeries:
         """Returns time series for a specific industry."""
 
         return self._series( f"v2/stats/industry/{ sanitize( key ) }.csv", point= self._point )
 
-    def citizenship( self, key: str ) -> TimeSeriesResource[ History, HistoryPoint ]:
+    def citizenship( self, key: str ) -> HistorySeries:
         """Returns time series for a specific citizenship, indexed by ISO code."""
 
         return self._series( f"v2/stats/citizenship/{ key.upper() }.csv", point= self._point )
