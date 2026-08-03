@@ -17,8 +17,8 @@ from rtbnext.resource.indexable import IndexableResource
 from rtbnext.resource.series import TimeSeriesResource
 from rtbnext.schema.generic import Industry
 from rtbnext.schema.stats import (
-    DBStats, GlobalStats, History, HistoryItem, ProfileStats, Scatter, ScatterItem, Top10,
-    WealthStats
+    CitizenshipStatsIndex, DBStats, GlobalStats, History, HistoryItem, IndustryStatsIndex,
+    ProfileStats, Scatter, ScatterItem, Top10, WealthStats
 )
 from rtbnext.utils import sanitize
 
@@ -31,6 +31,10 @@ HistoryPoint = TypedDict( "HistoryPoint", {
     "change": float,
     "percent": float
 } )
+
+type HistorySeries = TimeSeriesResource[ History, HistoryPoint ]
+type CitizenshipIndexTree = dict[ str, HistorySeries ]
+type IndustryIndexTree = dict[ Industry, HistorySeries ]
 
 
 class StatsEndpoint( EndpointBase ):
