@@ -27,8 +27,8 @@ class ListEntity:
     def __init__( self, endpoint: ListEndpoint, item: ListIndexItem ) -> None:
         self._endpoint, self._item = endpoint, item
 
-    def __getattr__( self, name: str ) -> object:
-        """Forwards unknown attributes to the underlying profile item."""
+    def __getitem__( self, name: str ) -> object:
+        """Forwards unknown properties to the underlying profile item."""
 
         try:
             return self._item[ name ]
