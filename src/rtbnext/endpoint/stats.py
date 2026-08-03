@@ -130,13 +130,15 @@ class StatsEndpoint( EndpointBase ):
         return self._series( f"v2/stats/citizenship/{ key.upper() }.csv", point= self._point )
 
     @property
-    def industry_index( self ):
+    def industry_index( self ) -> IndexableResource[ IndustryStatsIndex, IndustryIndexTree ]:
         """Returns the industry stats index."""
 
         return self._group( "industry" )
 
     @property
-    def citizenship_index( self ):
+    def citizenship_index( self ) -> IndexableResource[
+        CitizenshipStatsIndex, CitizenshipIndexTree
+    ]:
         """Returns the citizenship stats index."""
 
         return self._group( "citizenship" )
