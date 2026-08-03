@@ -19,14 +19,6 @@ from rtbnext.resource.collection import DateCollectionBase
 TimePoint = TypedDict( "TimePoint", { "date": str } )
 type TimeSeriesRow = tuple
 
-D = TypeVar( "D", bound= list[ TimeSeriesRow ] )
-R = TypeVar( "R", bound= TimePoint )
-
-type AggregatePeriod = Literal[ "week", "month", "quarter", "year" ]
-type NumberCallback[ R ] = Callable[ [ R ], int | float ]
-type PointFn[ D, R ] = Callable[ [ D ], R ]
-type AggregatedTimeSeries = TimeSeriesCollection[ AggregatePoint ]
-
 AggregateValue = TypedDict( "AggregateValue", {
     "first": float,
     "last": float,
@@ -48,8 +40,16 @@ AggregatePoint = TypedDict( "AggregatePoint", {
     "range": AggregateRange
 } )
 
+A = TypeVar( "A", bound= AggregatePoint )
+D = TypeVar( "D", bound= list[ TimeSeriesRow ] )
+R = TypeVar( "R", bound= TimePoint )
 
-class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
+type AggregatePeriod = Literal[ "week", "month", "quarter", "year" ]
+type NumberCallback[ R ] = Callable[ [ R ], int | float ]
+type PointFn[ D, R ] = Callable[ [ D ], R ]
+
+
+class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R, A ] ):
     """
     Collection wrapper for time-series resources.
 
@@ -90,7 +90,7 @@ class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
 
         raise ValueError( f"Invalid aggregate period: { period }" )
 
-    def _aggregate( self, points: list[ R ], label: str | None = None ) -> AggregatePoint:
+    def _aggregate( self, points: list[ R ], label: str | None = None ) -> A:
         """Aggregates a group of points."""
 
         sorted_points = sorted( points, key= lambda point: point[ "date" ] )
@@ -128,9 +128,9 @@ class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
                 "sum": sum( values )
             }
 
-        return cast( AggregatePoint, result )
+        return cast( A, result )
 
-    def _aggregated_series( self, points: list[ AggregatePoint ] ) -> AggregatedTimeSeries:
+    def _aggregated_series( self, points: list[ A ] ) -> TimeSeriesCollection[ A, A ]:
         """Returns a time series collection of aggregated points."""
 
         return TimeSeriesCollection(
@@ -198,7 +198,10 @@ class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
 
         return [ point[ key ] for point in self ]
 
-    def aggregate( self, period: AggregatePeriod | Callable[ [ R ], str ] ) -> AggregatedTimeSeries:
+    def aggregate(
+        self,
+        period: AggregatePeriod | Callable[ [ R ], str ]
+    ) -> TimeSeriesCollection[ A, A ]:
         """Aggregates points by period."""
 
         groups: dict[ str, list[ R ] ] = defaultdict( list )
@@ -214,7 +217,7 @@ class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
             for label, group in groups.items()
         ] )
 
-    def buckets( self, count: int ) -> AggregatedTimeSeries:
+    def buckets( self, count: int ) -> TimeSeriesCollection[ A, A ]:
         """Splits points into equally sized buckets."""
 
         if count >= self.count:
@@ -224,7 +227,7 @@ class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
             ] )
 
         size, points = self.count / count, self.items
-        result: list[ AggregatePoint ] = []
+        result: list[ A ] = []
 
         for index in range( count ):
             start, end = int( index * size ), int( ( index + 1 ) * size )
@@ -233,7 +236,7 @@ class TimeSeriesCollection( DateCollectionBase[ R, R ], Generic[ R ] ):
         return self._aggregated_series( result )
 
 
-class TimeSeriesResource( Resource[ D ], Generic[ D, R ] ):
+class TimeSeriesResource( Resource[ D ], Generic[ D, R, A ] ):
     """
     Resource wrapper for time-series endpoints.
 
@@ -248,7 +251,7 @@ class TimeSeriesResource( Resource[ D ], Generic[ D, R ] ):
         super().__init__( path, loader, parser )
         self._point = point
 
-    def _collect_points( self, rows: D ) -> TimeSeriesCollection[ R ]:
+    def _collect_points( self, rows: D ) -> TimeSeriesCollection[ R, A ]:
         """Creates a time-series collection from raw rows."""
 
         return TimeSeriesCollection(
@@ -257,7 +260,7 @@ class TimeSeriesResource( Resource[ D ], Generic[ D, R ] ):
             date= lambda point: point[ "date" ]
         )
 
-    async def series( self ) -> TimeSeriesCollection[ R ]:
+    async def series( self ) -> TimeSeriesCollection[ R, A ]:
         """Returns the parsed time-series data as a typed collection."""
 
         return await self._transform( self._collect_points )
