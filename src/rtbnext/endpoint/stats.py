@@ -44,9 +44,19 @@ HistoryAggregatePoint = TypedDict( "HistoryAggregatePoint", {
     "percent": AggregateValue
 } )
 
-type HistorySeries = TimeSeriesResource[ History, HistoryPoint, HistoryAggregatePoint ]
-type CitizenshipIndexTree = dict[ str, HistorySeries ]
-type IndustryIndexTree = dict[ Industry, HistorySeries ]
+type DBStatsResource = Resource[ DBStats ]
+type GlobalStatsResource = Resource[ GlobalStats ]
+type ProfileStatsResource = Resource[ ProfileStats ]
+type ScatterResource = CollectableResource[ Scatter, ScatterItem, ProfileEntity[ ScatterItem ] ]
+type WealthStatsResource = Resource[ WealthStats ]
+type HistoryResource = TimeSeriesResource[ History, HistoryPoint, HistoryAggregatePoint ]
+type Top10Resource = Resource[ Top10 ]
+
+type CitizenshipIndexTree = dict[ str, HistoryResource ]
+type IndustryIndexTree = dict[ Industry, HistoryResource ]
+
+type IndustryIndexResource = IndexableResource[ IndustryStatsIndex, IndustryIndexTree ]
+type CitizenshipIndexResource = IndexableResource[ CitizenshipStatsIndex, CitizenshipIndexTree ]
 
 
 class StatsEndpoint( EndpointBase ):
@@ -88,69 +98,65 @@ class StatsEndpoint( EndpointBase ):
         )
 
     @property
-    def db( self ) -> Resource[ DBStats ]:
+    def db( self ) -> DBStatsResource:
         """Returns the database statistics resource."""
 
         return self._resource( "v2/stats/db.json" )
 
     @property
-    def global_( self ) -> Resource[ GlobalStats ]:
+    def global_( self ) -> GlobalStatsResource:
         """Returns the global statistics resource."""
 
         return self._resource( "v2/stats/global.json" )
 
     @property
-    def profile( self ) -> Resource[ ProfileStats ]:
+    def profile( self ) -> ProfileStatsResource:
         """Returns the profile statistics resource."""
 
         return self._resource( "v2/stats/profile.json" )
 
     @property
-    def scatter( self ) -> CollectableResource[
-        Scatter, ScatterItem, ProfileEntity[ ScatterItem ]
-    ]:
+    def scatter( self ) -> ScatterResource:
         """Returns the profile scatter stats collection resource."""
 
         return self._endpoints.profile.collect( "v2/stats/scatter.json" )
 
     @property
-    def wealth( self ) -> Resource[ WealthStats ]:
+    def wealth( self ) -> WealthStatsResource:
         """Returns the wealth statistics resource."""
 
         return self._resource( "v2/stats/wealth.json" )
 
     @property
-    def history( self ) -> HistorySeries:
+    def history( self ) -> HistoryResource:
         """Returns the historical stats time series resource."""
 
         return self._series( "v2/stats/history.csv", point= self._point )
 
     @property
-    def top_10( self ) -> Resource[ Top10 ]:
+    def top_10( self ) -> Top10Resource:
         """Returns the top 10 billionaires list resource."""
 
         return self._resource( "v2/stats/top10.json" )
 
-    def industry( self, key: Industry ) -> HistorySeries:
+    def industry( self, key: Industry ) -> HistoryResource:
         """Returns time series for a specific industry."""
 
         return self._series( f"v2/stats/industry/{ sanitize( key ) }.csv", point= self._point )
 
-    def citizenship( self, key: str ) -> HistorySeries:
+    def citizenship( self, key: str ) -> HistoryResource:
         """Returns time series for a specific citizenship, indexed by ISO code."""
 
         return self._series( f"v2/stats/citizenship/{ key.upper() }.csv", point= self._point )
 
     @property
-    def industry_index( self ) -> IndexableResource[ IndustryStatsIndex, IndustryIndexTree ]:
+    def industry_index( self ) -> IndustryIndexResource:
         """Returns the industry stats index."""
 
         return self._group( "industry" )
 
     @property
-    def citizenship_index( self ) -> IndexableResource[
-        CitizenshipStatsIndex, CitizenshipIndexTree
-    ]:
+    def citizenship_index( self ) -> CitizenshipIndexResource:
         """Returns the citizenship stats index."""
 
         return self._group( "citizenship" )
