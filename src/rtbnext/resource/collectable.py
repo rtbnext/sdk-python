@@ -83,7 +83,8 @@ class CollectCollection( CursorCollectionBase[ I, E ], Generic[ I, E ] ):
         """Returns an item by its exact URI."""
 
         return next( (
-            self._factory( item ) for item in self._items if item[ "uri" ] == uri
+            self._factory( item ) for item in self._items
+            if item[ "uri" ] == uri
         ), None )
 
     def filter( self, predicate: Callable[ [ I ], bool ] ) -> Self:
@@ -105,10 +106,7 @@ class CollectCollection( CursorCollectionBase[ I, E ], Generic[ I, E ] ):
 
         query, terms = sanitize( query ), query.split()
 
-        return self._clone( [
-            item for item in self._items
-            if self._search( item, query, terms )
-        ] )
+        return self._clone( [ item for item in self._items if self._search( item, query, terms ) ] )
 
     def intersect( self, other: Self ) -> Self:
         """Returns items also contained in another collection."""
@@ -183,10 +181,7 @@ class CollectableResource( Resource[ D ], Generic[ D, I, E ] ):
         search: SearchFn[ I ] | None = None
     ) -> None:
         super().__init__( path, loader, parser )
-
-        self._entity = entity
-        self._find = find
-        self._search = search
+        self._entity, self._find, self._search = entity, find, search
 
     def _collect( self, items: list[ I ] ) -> CollectCollection[ I, E ]:
         """Creates a collection from collectable items."""
