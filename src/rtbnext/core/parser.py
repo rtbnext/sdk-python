@@ -45,6 +45,7 @@ class Parser( Generic[ D ] ):
 
         if not res.ok:
             raise RuntimeError( f"Request failed with status { res.status }." )
+
         if not res.body:
             raise RuntimeError( "Response contains no data." )
 
