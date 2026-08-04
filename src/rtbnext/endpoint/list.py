@@ -17,8 +17,9 @@ from rtbnext.schema.generic import DateIndex
 from rtbnext.schema.list import List, ListIndex, ListIndexItem, ListItem
 from rtbnext.utils import sanitize, ymd
 
-type ListSnapshot = CollectableResource[ List, ListItem, ProfileEntity[ ListItem ] ]
-type ListDateIndex = DateableResource[ DateIndex, ListSnapshot ]
+type ListSnapshotResource = CollectableResource[ List, ListItem, ProfileEntity[ ListItem ] ]
+type ListDateIndexResource = DateableResource[ DateIndex, ListSnapshotResource ]
+type ListIndexResource = CollectableResource[ ListIndex, ListIndexItem, ListEntity ]
 
 
 class ListEntity:
@@ -48,7 +49,7 @@ class ListEntity:
         return self._item[ "uri" ]
 
     @cached_property
-    def dates( self ) -> ListDateIndex:
+    def dates( self ) -> ListDateIndexResource:
         """Returns the lazily loaded list date index resource."""
 
         return self._endpoint.get( self.uri )
@@ -62,14 +63,14 @@ class ListEndpoint( EndpointBase ):
     and the index listing all available lists.
     """
 
-    def snapshot( self, uri: str, date: str ) -> ListSnapshot:
+    def snapshot( self, uri: str, date: str ) -> ListSnapshotResource:
         """Returns a snapshot collection for a list URI at a specific date."""
 
         return self._endpoints.profile.collect(
             f"v2/list/{ sanitize( uri ) }/{ ymd( date ) }.json"
         )
 
-    def get( self, uri: str ) -> ListDateIndex:
+    def get( self, uri: str ) -> ListDateIndexResource:
         """Returns a date-indexed list resource for a list URI."""
 
         return self._dateable( f"v2/list/{ sanitize( uri ) }/index.json",
@@ -77,7 +78,7 @@ class ListEndpoint( EndpointBase ):
         )
 
     @property
-    def index( self ) -> CollectableResource[ ListIndex, ListIndexItem, ListEntity ]:
+    def index( self ) -> ListIndexResource:
         """Returns the root list index resource."""
 
         return self._collectable( "v2/list/index.json",
