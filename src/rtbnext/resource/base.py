@@ -8,7 +8,7 @@ Resource instance pooling is intended to optimize memory allocation.
 from __future__ import annotations
 
 import asyncio
-from typing import Any, Awaitable, Callable, Generic, Self, TypeVar
+from typing import Any, Awaitable, Callable, Generic, Literal, Self, TypeVar
 
 from rtbnext.core.http_client import HttpHeader
 from rtbnext.core.loader import ResourceState, ResourceStateLoader
@@ -20,6 +20,7 @@ D = TypeVar( "D" )
 R = TypeVar( "R", bound= "Resource[ Any ]" )
 
 type TransformFn[ D ] = Callable[ [ D ], Awaitable[ Any ] | Any ]
+type ResourceEvent = Literal[ "load", "update", "refresh", "parse", "transform" ]
 
 _EMPTY_HOOKS: frozenset = frozenset()
 
@@ -46,7 +47,7 @@ class Resource( Generic[ D ] ):
 
         self._transformed: Any | Awaitable[ Any ] | None = None
 
-    def _emit( self, *events: str ) -> None:
+    def _emit( self, *events: ResourceEvent ) -> None:
         """Emits lifecycle events."""
 
         for event in events:
