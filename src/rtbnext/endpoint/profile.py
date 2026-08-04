@@ -50,7 +50,7 @@ type ProfileIndexResource = CollectableResource[
     ProfileIndex, ProfileIndexItem, ProfileEntity[ ProfileIndexItem ]
 ]
 
-type ProfileSearchIndexResoure = CollectableResource[
+type ProfileSearchIndexResource = CollectableResource[
     SearchIndex, SearchIndexItem, ProfileEntity[ SearchIndexItem ]
 ]
 
@@ -160,7 +160,7 @@ class ProfileEndpoint( EndpointBase ):
         return self.collect( "v2/profile/index.json" )
 
     @property
-    def search_index( self ) -> ProfileSearchIndexResoure:
+    def search_index( self ) -> ProfileSearchIndexResource:
         """Returns the profile search index collection."""
 
         return self.collect( "v2/profile/search.json" )
