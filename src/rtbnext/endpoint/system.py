@@ -10,6 +10,8 @@ from rtbnext.endpoint.base import EndpointBase
 from rtbnext.resource.base import Resource
 from rtbnext.schema.system import SystemStatus
 
+type SystemStatusResource = Resource[ SystemStatus ]
+
 
 class SystemEndpoint( EndpointBase ):
     """
@@ -19,7 +21,7 @@ class SystemEndpoint( EndpointBase ):
     """
 
     @property
-    def status( self ) -> Resource[ SystemStatus ]:
+    def status( self ) -> SystemStatusResource:
         """Returns the current system status resource."""
 
         return self._resource( "v2/system/status.json" )
