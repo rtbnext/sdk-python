@@ -36,7 +36,7 @@ class Resource( Generic[ D ] ):
     def __init__( self, path: str, loader: ResourceStateLoader, parser: ParserFn[ D ] ) -> None:
         self._path, self._loader, self._parser = path, loader, parser
 
-        self._hooks: dict[ str, set[ Callable[ [ Self ], None ] ] ] = {}
+        self._hooks: dict[ ResourceEvent, set[ Callable[ [ Self ], None ] ] ] = {}
 
         self._state: ResourceState | None = None
         self._loading: asyncio.Task[ None ] | None = None
@@ -100,13 +100,13 @@ class Resource( Generic[ D ] ):
 
         return self._value
 
-    def on( self, event: str, handler: Callable[ [ Self ], None ] ) -> Self:
+    def on( self, event: ResourceEvent, handler: Callable[ [ Self ], None ] ) -> Self:
         """Registers an event handler."""
 
         self._hooks.setdefault( event, set() ).add( handler )
         return self
 
-    def off( self, event: str, handler: Callable[ [ Self ], None ] ) -> Self:
+    def off( self, event: ResourceEvent, handler: Callable[ [ Self ], None ] ) -> Self:
         """Removes an event handler."""
 
         self._hooks.get( event, set() ).discard( handler )
