@@ -38,8 +38,20 @@ ProfileHistoryAggregatePoint = TypedDict( "ProfileHistoryAggregatePoint", {
     "percent": AggregateValue
 } )
 
-type ProfileHistorySeries = TimeSeriesResource[
+type ProfileMetaResource = Resource[ ProfileMeta ]
+type ProfileDataResource = Resource[ ProfileData ]
+type ProfileResource = ProfileEntity[ CollectItem ]
+
+type ProfileHistoryResource = TimeSeriesResource[
     ProfileHistory, ProfileHistoryPoint, ProfileHistoryAggregatePoint
+]
+
+type ProfileIndexResource = CollectableResource[
+    ProfileIndex, ProfileIndexItem, ProfileEntity[ ProfileIndexItem ]
+]
+
+type ProfileSearchIndexResoure = CollectableResource[
+    SearchIndex, SearchIndexItem, ProfileEntity[ SearchIndexItem ]
 ]
 
 
@@ -75,19 +87,19 @@ class ProfileEntity( Generic[ I ] ):
         return self._item[ "uri" ]
 
     @cached_property
-    def meta( self ) -> Resource[ ProfileMeta ]:
+    def meta( self ) -> ProfileMetaResource:
         """Returns the lazily loaded profile metadata resource."""
 
         return self._endpoint.meta( self.uri )
 
     @cached_property
-    def data( self ) -> Resource[ ProfileData ]:
+    def data( self ) -> ProfileDataResource:
         """Returns the lazily loaded profile data resource."""
 
         return self._endpoint.data( self.uri )
 
     @cached_property
-    def history( self ) -> ProfileHistorySeries:
+    def history( self ) -> ProfileHistoryResource:
         """Returns the lazily loaded profile history resource."""
 
         return self._endpoint.history( self.uri )
@@ -121,38 +133,34 @@ class ProfileEndpoint( EndpointBase ):
 
         return self._collectable( path, entity= self._entity, find= find, search= search )
 
-    def meta( self, uri: str ) -> Resource[ ProfileMeta ]:
+    def meta( self, uri: str ) -> ProfileMetaResource:
         """Returns profile metadata for the given URI."""
 
         return self._resource( f"v2/profile/{ sanitize( uri ) }/meta.json" )
 
-    def data( self, uri: str ) -> Resource[ ProfileData ]:
+    def data( self, uri: str ) -> ProfileDataResource:
         """Returns profile data for the given URI."""
 
         return self._resource( f"v2/profile/{ sanitize( uri ) }/profile.json" )
 
-    def history( self, uri: str ) -> ProfileHistorySeries:
+    def history( self, uri: str ) -> ProfileHistoryResource:
         """Returns profile history time-series data for the given URI."""
 
         return self._series( f"v2/profile/{ sanitize( uri ) }/history.csv", point= self._point )
 
-    def get( self, uri: str ) -> ProfileEntity[ CollectItem ]:
+    def get( self, uri: str ) -> ProfileResource:
         """Returns the profile entity for a URI."""
 
         return self._entity( CollectItem( uri= sanitize( uri ) ) )
 
     @property
-    def index( self ) -> CollectableResource[
-        ProfileIndex, ProfileIndexItem, ProfileEntity[ ProfileIndexItem ]
-    ]:
+    def index( self ) -> ProfileIndexResource:
         """Returns the profile index collection."""
 
         return self.collect( "v2/profile/index.json" )
 
     @property
-    def search_index( self ) -> CollectableResource[
-        SearchIndex, SearchIndexItem, ProfileEntity[ SearchIndexItem ]
-    ]:
+    def search_index( self ) -> ProfileSearchIndexResoure:
         """Returns the profile search index collection."""
 
         return self.collect( "v2/profile/search.json" )
