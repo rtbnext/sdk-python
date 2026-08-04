@@ -97,6 +97,7 @@ class ResourceStateLoader:
 
         if prev and prev.etag:
             headers[ "If-None-Match" ] = prev.etag
+
         if prev and prev.last_modified:
             headers[ "If-Modified-Since" ] = prev.last_modified
 
