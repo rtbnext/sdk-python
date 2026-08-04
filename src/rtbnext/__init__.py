@@ -16,6 +16,7 @@ from rtbnext._version import __version__
 from rtbnext.core.http_client import ClientIdentity
 from rtbnext.core.loader import CacheMode, CacheType
 from rtbnext.core.rate_limiter import RateLimitMode
+from rtbnext.resource.base import ResourceEvent
 from rtbnext.rtbnext import RTBNext, rtbnext
 
 __all__ = [
@@ -24,5 +25,6 @@ __all__ = [
     "ClientIdentity",
     "RateLimitMode",
     "CacheType",
-    "CacheMode"
+    "CacheMode",
+    "ResourceEvent"
 ]
