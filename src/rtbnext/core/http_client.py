@@ -37,6 +37,7 @@ class ClientIdentity:
     def __post_init__( self ) -> None:
         if not self.name.strip():
             raise ValueError( "Client name is required." )
+
         if not self.version.strip():
             raise ValueError( "Client version is required." )
 
@@ -90,7 +91,7 @@ class HttpClient:
             "User-Agent": (
                 f"{ client.name }/{ client.version }"
                 f"{ f' ({ info })' if info else '' }"
-                f" python-sdk/{ __version__ }"
+                f" rtbnext-sdk-python/{ __version__ }"
             ),
             "X-Client-Name": client.name,
             "X-Client-Version": client.version
