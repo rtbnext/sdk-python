@@ -15,12 +15,14 @@ License: MIT
 from rtbnext._version import __version__
 from rtbnext.core.http_client import ClientIdentity
 from rtbnext.core.loader import CacheMode, CacheType
+from rtbnext.core.rate_limiter import RateLimitMode
 from rtbnext.rtbnext import RTBNext, rtbnext
 
 __all__ = [
     "RTBNext",
     "rtbnext",
     "ClientIdentity",
+    "RateLimitMode",
     "CacheType",
     "CacheMode"
 ]
