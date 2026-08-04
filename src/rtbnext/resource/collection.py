@@ -242,12 +242,12 @@ class DateCollectionBase( CursorCollectionBase[ T, R ], Generic[ T, R ] ):
         return self.last
 
     def seek( self, pos: str ) -> Self:
-        """Moves the cursor to a specific date."""
+        """Moves the cursor to the nearest available date on or before the target date."""
 
         target = ymd( pos )
         self._cursor = next( (
             index for index, item in enumerate( self._items )
-            if self._date( item ) == target
+            if self._date( item ) <= target
         ), -1 )
 
         return self
