@@ -126,7 +126,7 @@ class StatsEndpoint( EndpointBase ):
         return self._series( "v2/stats/history.csv", point= self._point )
 
     @property
-    def top10( self ) -> Resource[ Top10 ]:
+    def top_10( self ) -> Resource[ Top10 ]:
         """Returns the top 10 billionaires list resource."""
 
         return self._resource( "v2/stats/top10.json" )
