@@ -6,7 +6,7 @@ requires = [
 
 [project]
 name = "rtbnext"
-version = "1.0.0"
+version = "1.0.1"
 description = "Official Python SDK for the RTBNext API."
 readme = "README.md"
 license = "MIT"
