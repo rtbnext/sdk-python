@@ -13,8 +13,8 @@ ListIndexItem = TypedDict( "ListIndexItem", {
     "uri": str,
     "name": str,
     "text": str,
-    "shortName": str,
-    "desc": str,
+    "shortName": NotRequired[ str ],
+    "desc": NotRequired[ str ],
     "columns": list[ str ],
     "filters": list[ str ]
 } )
