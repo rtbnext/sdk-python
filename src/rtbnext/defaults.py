@@ -12,6 +12,7 @@ if TYPE_CHECKING:
     from rtbnext.core.loader import CacheMode, CacheType
     from rtbnext.core.rate_limiter import RateLimitMode
 
+
 DEFAULT_API_URL: str = "https://api.rtbnext.de"
 
 DEFAULT_MAX_REQUESTS: int = 60
