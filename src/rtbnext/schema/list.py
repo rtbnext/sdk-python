@@ -25,6 +25,11 @@ ListIndex = TypedDict( "ListIndex", {
     "items": list[ ListIndexItem ]
 } )
 
+ListItemFlags = TypedDict( "ListItemFlags", {
+    "family": NotRequired[ bool ],
+    "embargo": NotRequired[ bool ]
+} )
+
 ListItem = TypedDict( "ListItem", {
     "uri": str,
     "sourceUri": str,
