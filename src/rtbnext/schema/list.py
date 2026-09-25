@@ -7,7 +7,9 @@ Declares types for ranking lists and snapshots.
 from typing import NotRequired, TypedDict
 
 from rtbnext.schema.assets import ChangeItem
-from rtbnext.schema.generic import ChangeFlag, Gender, Industry, MetaData, SelfMadeRank, Location, Organization
+from rtbnext.schema.generic import (
+    ChangeFlag, Gender, Industry, Location, MetaData, Organization, SelfMadeRank
+)
 
 ListIndexItem = TypedDict( "ListIndexItem", {
     "uri": str,
