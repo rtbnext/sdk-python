@@ -7,7 +7,7 @@ Declares types for ranking lists and snapshots.
 from typing import NotRequired, TypedDict
 
 from rtbnext.schema.assets import ChangeItem
-from rtbnext.schema.generic import ChangeFlag, Gender, Industry, MetaData, SelfMadeRank
+from rtbnext.schema.generic import ChangeFlag, Gender, Industry, MetaData, SelfMadeRank, Location, Organization
 
 ListIndexItem = TypedDict( "ListIndexItem", {
     "uri": str,
@@ -34,19 +34,22 @@ ListItem = TypedDict( "ListItem", {
     "uri": str,
     "sourceUri": str,
     "name": str,
-    "rank": int,
+    "rank": NotRequired[ int ],
     "networth": NotRequired[ float ],
     "industry": NotRequired[ Industry ],
     "source": NotRequired[ list[ str ] ],
     "gender": NotRequired[ Gender ],
     "age": NotRequired[ int ],
     "citizenship": NotRequired[ str ],
-    "flag": NotRequired[ ChangeFlag ],
-    "rankDiff": NotRequired[ int ],
+    "place": NotRequired[ Location ],
+    "organization": NotRequired[ Organization ],
     "selfMadeRank": NotRequired[ SelfMadeRank ],
     "philanthropyScore": NotRequired[ int ],
+    "flags": NotRequired[ ListItemFlags ],
     "today": NotRequired[ ChangeItem ],
-    "ytd": NotRequired[ ChangeItem ]
+    "ytd": NotRequired[ ChangeItem ],
+    "flag": NotRequired[ ChangeFlag ],
+    "rankDiff": NotRequired[ int ]
 } )
 
 ListStats = TypedDict( "ListStats", {
